@@ -42,6 +42,7 @@ onready var _deploy   = get_node('deploy')
 onready var _devices  = get_node('devices')
 onready var _options  = get_node('_options_menu')
 onready var _settings = get_node('settings_window')
+onready var _progress = get_node('progress_bar')
 
 # ------------------------------------------------------------------------------
 #                                     Overrides
@@ -183,6 +184,8 @@ func _deploy_to_device():
 func _on_pressed():
 	print('Apple Button Pressed')
 
+	_progress.set_value(0)
+	_progress.show()
 	make_deploy_queue()
 	_tasks.begin()
 	set_disabled(true)
@@ -217,7 +220,14 @@ func _on_deploy_success():
 # -- task_queue
 func _on_task_queue_finished(stack):
 	print('Task Queueu Finished')
+	_progress.hide()
 	set_disabled(false)
+
+func _on_task_queue_finished_task(task, task_index, task_count):
+	print('fin task ', task_index, task_count, ' ', task_index / task_count)
+	_progress.set_value(float(task_index) / task_count)
+	if _tasks.head != null:
+		_progress.set_tooltip('processing ' + _tasks.head.function.fun)
 
 # -- options_menu
 func _on_options_menu_item_pressed( ID ):

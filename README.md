@@ -94,7 +94,7 @@ hard limitation.
 - [X] _FIXME_ reconnect all disconnected signals
 - [ ] Code software requirements and offer to install as much as possible.
 - [ ] Support iPad
-- [ ] Some sort of visual of deploy status
+- [X] Some sort of visual of deploy status
 - [ ] Default device chosen stored in project settings
 - [ ] Look into copying godot project into bundle if binary already installed
     - Faster

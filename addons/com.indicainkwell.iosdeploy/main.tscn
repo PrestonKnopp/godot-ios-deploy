@@ -83,6 +83,7 @@ autostart = false
 
 [node name="deploy" type="PopupMenu" parent="."]
 
+editor/display_folded = true
 visibility/visible = false
 anchor/left = 1
 anchor/right = 1
@@ -173,6 +174,29 @@ popup/exclusive = false
 items = [ "Show Settings", null, false, false, false, 0, 0, null, "", false, "Show Devices", null, false, false, false, 1, 0, null, "", false, "-", null, false, false, false, 2, 0, null, "", true, "Build Xcodeproj", null, false, false, false, 3, 0, null, "", false, "Item 4", null, false, false, false, 4, 0, null, "", true, "Deploy Options", null, false, false, false, 5, 0, null, "", false ]
 hide_on_item_selection = false
 
+[node name="progress_bar" type="ProgressBar" parent="."]
+
+visibility/visible = false
+anchor/top = 1
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 5.0
+margin/right = 0.0
+margin/bottom = -1.0
+range/min = 0.0
+range/max = 1.0
+range/step = 0.1
+range/page = 0.0
+range/value = 0.0
+range/exp_edit = false
+range/rounded = false
+percent/visible = false
+
 [connection signal="pressed" from="." to="." method="_on_pressed"]
 
 [connection signal="built" from="xcode" to="." method="_on_xcode_project_built"]
@@ -220,6 +244,8 @@ hide_on_item_selection = false
 [connection signal="dir_selected" from="settings_window/FileDialog" to="settings_window" method="_on_file_dialog_xcodeproj_chosen"]
 
 [connection signal="finished" from="task_queue" to="." method="_on_task_queue_finished"]
+
+[connection signal="finished_task" from="task_queue" to="." method="_on_task_queue_finished_task"]
 
 [connection signal="item_pressed" from="_options_menu" to="." method="_on_options_menu_item_pressed"]
 
