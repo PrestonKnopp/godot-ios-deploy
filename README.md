@@ -95,7 +95,6 @@ hard limitation.
 - [ ] Code software requirements and offer to install as much as possible.
 - [ ] Support iPad
 - [X] Some sort of visual of deploy status
-- [ ] Default device chosen stored in project settings
 - [ ] Look into copying godot project into bundle if binary already installed
     - Faster
 - [ ] Automate creation of xcode project

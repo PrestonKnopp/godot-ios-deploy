@@ -224,10 +224,9 @@ func _on_task_queue_finished(stack):
 	set_disabled(false)
 
 func _on_task_queue_finished_task(task, task_index, task_count):
-	print('fin task ', task_index, task_count, ' ', task_index / task_count)
 	_progress.set_value(float(task_index) / task_count)
-	if _tasks.head != null:
-		_progress.set_tooltip('processing ' + _tasks.head.function.fun)
+	if task.next != null:
+		_progress.set_tooltip('processing ' + task.next.function.fun)
 
 # -- options_menu
 func _on_options_menu_item_pressed( ID ):
