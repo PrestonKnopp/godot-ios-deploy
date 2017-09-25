@@ -96,7 +96,6 @@ hard limitation.
 - [ ] Support iPad
 - [ ] Some sort of visual of deploy status
 - [ ] Default device chosen stored in project settings
-- [ ] Deploy to multiple devices simultaneously
 - [ ] Look into copying godot project into bundle if binary already installed
     - Faster
 - [ ] Automate creation of xcode project

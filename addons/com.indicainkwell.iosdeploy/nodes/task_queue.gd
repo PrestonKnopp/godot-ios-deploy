@@ -8,7 +8,7 @@ extends Node
 # - each prev func pipes into next
 # - depending on func pipes return value
 
-
+signal finished_task(task, task_index, task_count)
 signal finished(stack)
 
 
@@ -54,6 +54,8 @@ class Task:
 		next = task
 
 
+var _current_count = 0
+var _current_index = 0
 var head = null
 var stack = []
 
@@ -91,13 +93,25 @@ func _handle_retv(retv):
 	if retv.route == WAIT:
 		head.waiting = true
 	elif retv.route == NEXT:
+		emit_signal('finished_task', head, _current_index, _current_count)
+		_current_index += 1
 		_pop()
 		if head and retv.vals != null: 
 			head.vals = retv.vals
 	elif retv.route == STOP:
 		finish()
 
+func _count_tasks():
+	var count = 0
+	var cur = head
+	while cur != null:
+		count += 1
+		cur = cur.next
+	return count
+
 func begin():
+	_current_count = _count_tasks()
+	_current_index = 0
 	set_process(true)
 
 func finish():
