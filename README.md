@@ -31,7 +31,7 @@ Download or clone this repository into a temporary location and then drag and
 drop the com.indicainkwell.iosdeploy folder into the addons folder of your
 project. Create res://addons folder in your project if it does not exist.
 
-I will eventually put up on asset library.
+I will eventually put this up on the asset library.
 
 ### Setting Up Your Project
 
@@ -44,7 +44,7 @@ ios](http://docs.godotengine.org/en/latest/learning/workflow/export/exporting_fo
 to get it ready, but don't add data.pck, drag your  game folder to xcode making
 sure that Copy Files is **unchecked**.
 
-Only need to this once per godot project.
+You only need to setup a xcode project once per godot project.
 
 Here's a checklist to prepare your bundle:
 - **Check automatic signing and provision**
@@ -58,9 +58,14 @@ Here's a checklist to prepare your bundle:
 
 An apple button will appear in Godot's Editor's toolbar that you can
 
-1. *Left click* to deploy to a connected ios device.
-2. *Right click* to select whether to entirely install to device or fire up the
-   remote file system
+1. *Left click* to start deploy pipeline to a connected ios device.
+2. *Right click* to view a menu with options to
+    - rebuild xcode proj
+    - show settings
+    - show and choose from connected devices
+    - deploy options
+        - deploy with remote fs
+        - deploy with fresh install (default)
 
 ^ That's it. If everything is set up, otherwise...
 
@@ -91,6 +96,7 @@ hard limitation.
 
 ### To Do / Roadmap
 
+- [X] show alert with deploy fail reasons
 - [X] _FIXME_ reconnect all disconnected signals
 - [ ] Code software requirements and offer to install as much as possible.
 - [ ] Support iPad

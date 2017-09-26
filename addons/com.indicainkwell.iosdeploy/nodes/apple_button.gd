@@ -213,6 +213,14 @@ func _on_devices_one_detected():
 # -- deploy
 func _on_deploy_failure(reasons):
 	print('deploy failed: ', reasons)
+	for reason in reasons:
+		var a = get_node('alert')
+		if reason == ERR_UNAUTHORIZED:
+			a.set_text('You must verify your app or developer account on your iOS device by going to\nSettings > General > Device Management > Your account and tap verify.')
+			a.popup_centered()
+		elif reason == FAILED:
+			a.set_text('Deploy failed for an undocumented/unknown reason')
+			a.popup_centered()
 
 func _on_deploy_success():
 	print('successfull deploy')
