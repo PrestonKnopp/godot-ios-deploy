@@ -56,14 +56,8 @@ func _init():
 
 
 func _ready():
-	var warnings = meets_software_requirements()
-	if warnings.size() > 0:
-		print('Doesnt meet software requirements')
-		print(warnings)
-		return
-	
 	setup_xcode()
-	
+
 	if _xcode.can_build() and not _xcode.has_app():
 		_xcode.build()
 
@@ -84,12 +78,6 @@ func show_options_menu():
 	var p = get_pos()
 	_options.set_pos(p + s)
 	_options.popup()
-
-func meets_software_requirements():
-	var warnings = []
-	if OS.get_name() != 'OSX':
-		warnings.append('macOS is needed to build and deploy iOS projects')
-	return warnings
 
 func is_config_valid():
 	var conf = _settings.get_config()
@@ -153,7 +141,7 @@ func _task_xcode_built_callback(output):
 func _xcode_settings_set():
 	var retv = _tasks.make_task_retv()
 	setup_xcode()
-	if not _xcode.can_build(): 
+	if not _xcode.can_build():
 		_settings.popup_centered_ratio()
 		return retv.setr(_tasks.Route.STOP)
 	return retv
@@ -162,7 +150,7 @@ func _xcode_has_been_built():
 	var retv = _tasks.make_task_retv()
 	if _xcode.has_app():
 		return retv.setr(_tasks.Route.NEXT)
-	
+
 	_xcode.build()
 	return retv.setr(_tasks.Route.WAIT)
 
@@ -252,5 +240,5 @@ func _on_options_menu_item_pressed( ID ):
 	elif ID == DEPLOY_OPTIONS:
 		_deploy.popup()
 		_deploy.set_pos(_options.get_pos())
-	else: 
+	else:
 		print('Unknown option selected')

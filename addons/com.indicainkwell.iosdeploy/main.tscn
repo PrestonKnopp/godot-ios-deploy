@@ -5,14 +5,17 @@
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/nodes/xcode_project.gd" type="Script" id=3]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/nodes/background_execute.gd" type="Script" id=4]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/nodes/device_button.gd" type="Script" id=5]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/classes/iOSDeployHelper.gd" type="Script" id=6]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/nodes/ios_deploy_helper.gd" type="Script" id=6]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/nodes/deploy_button.gd" type="Script" id=7]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/nodes/settings_button.gd" type="Script" id=8]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/classes/iOSDeployConfig.gd" type="Script" id=9]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/nodes/ios_deploy_config.gd" type="Script" id=9]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/nodes/task_queue.gd" type="Script" id=10]
+
+
 
 [node name="apple_button" type="Button"]
 
+editor/display_folded = true
 hint/tooltip = "Left Click: Deploy
 Right Click: Options"
 focus/ignore_mouse = false

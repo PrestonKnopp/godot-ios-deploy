@@ -97,10 +97,9 @@ hard limitation.
 ### To Do / Roadmap
 
 - [X] show alert with deploy fail reasons
-- [X] _FIXME_ reconnect all disconnected signals
+- [X] Some sort of visual of deploy status
 - [ ] Code software requirements and offer to install as much as possible.
 - [ ] Support iPad
-- [X] Some sort of visual of deploy status
 - [ ] Look into copying godot project into bundle if binary already installed
     - Faster
 - [ ] Automate creation of xcode project

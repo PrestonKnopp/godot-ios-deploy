@@ -97,10 +97,10 @@ func _on_device_list_item_activated(idx):
 # --- ios_deploy
 func _on_ios_deploy_detect_devices_result(devices):
 	last_device_detect_result = devices
-	
+
 	if not _list.is_hidden():
 		update_device_list()
-	
+
 	if _validating:
 		var is_valid = false
 		for dev in devices:

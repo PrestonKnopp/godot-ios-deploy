@@ -71,7 +71,7 @@ func _on_settings_window_about_to_show():
 
 func _on_settings_window_popup_hide():
 	var root = _tree.get_root()
-	
+
 	var config = get_config()
 	if config:
 		var item = root.get_children()
@@ -86,7 +86,7 @@ func _on_settings_window_popup_hide():
 				config.set_value(section, key, key_value)
 				child = child.get_next()
 			item = item.get_next()
-		
+
 		_config_node.save_config()
-	
+
 	_tree.clear()

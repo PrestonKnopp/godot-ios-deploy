@@ -55,9 +55,9 @@ func _on_deploy_finished(arr_status):
 	for val in arr_status:
 		if typeof(val) == TYPE_INT:
 			errors.append(val)
-	
+
 	emit_signal('_finished', errors.size() == 0, errors)
-	
+
 	if errors.size() > 0:
 		emit_signal('failure', errors)
 	else:

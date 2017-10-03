@@ -17,7 +17,7 @@ onready var _exec = get_node('bgexecute')
 # ------------------------------------------------------------------------------
 
 
-#func set_project_path(new_value): 
+#func set_project_path(new_value):
 #	name = path_.get_file().basename()
 #	path_ = Globals.globalize_path(new_value)
 #
@@ -31,10 +31,10 @@ func can_build():
 
 func build():
 	print('building xcode project ', path_)
-	
+
 	var cmd = '/usr/bin/xcodebuild'
 	var args = ['-project', path_, '-scheme', scheme]
-	
+
 	_exec.execute(cmd, args)
 
 func get_release_app_path():
@@ -48,10 +48,10 @@ func has_app():
 	return Directory.new().dir_exists(get_debug_app_path())
 
 func get_build_path():
-	
+
 	# xcodebuild -showBuildSettings | grep TARGET_BUILD_DIR -- to get release
 	# xcodebuild -showBuildSettings | grep BUILD_DIR | head -1 -- to get build dir
-	
+
 	# wrap with $() to avoid | being quoted by engine
 	var cmd = '/bin/echo'
 	var args = ['$(xcodebuild -project \'' + path_ + '\' -showBuildSettings | grep BUILD_DIR | head -1)']

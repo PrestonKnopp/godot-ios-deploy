@@ -40,7 +40,7 @@ func to(device, app_path):
 	_add_to_queue(cmd)
 
 # ------------------------------------------------------------------------------
-#                              Private Types and Funcs                          
+#                              Private Types and Funcs
 # ------------------------------------------------------------------------------
 
 
@@ -74,7 +74,7 @@ func _start_thread():
 	_thread.start(self, '_threaded_deploy_helper')
 
 # ------------------------------------------------------------------------------
-#                                  Thread Helpers                               
+#                                  Thread Helpers
 # ------------------------------------------------------------------------------
 
 func _threaded_deploy_helper(arg):
@@ -114,7 +114,7 @@ func _handle_deploy_commands(command):
 			command.retval.push_back(ERR_UNAUTHORIZED)
 		elif line.find(launch_warn) > -1:
 			command.retval.push_back(FAILED)
-	
+
 	command.retval.push_back(command.output)
 
 
@@ -163,7 +163,7 @@ func _handle_device_command(command):
 					device.name = p
 				else:
 					device.name += " %s" % p
-			
+
 			devices.push_back(device)
 
 	command.retval = devices

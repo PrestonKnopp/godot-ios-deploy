@@ -30,7 +30,7 @@ func _init():
 		if err != OK:
 			_handle_err(err, 'Error Copying Default Config to User Config')
 			return
-	
+
 	err = _config.load(_CONFIG_USER_PATH)
 	_handle_err(err)
 
