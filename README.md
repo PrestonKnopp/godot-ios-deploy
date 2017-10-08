@@ -2,10 +2,9 @@
 
 > Deploy to iOS for testing in one click from within Godot!
 
-Contact me for help at:
-- indicainkwell@gmail.com
-- discord: indicainkwell
-- reddit: indicainkwell
+
+_NOTE:_ Not ready for use
+
 
 ### Prerequisites
 
