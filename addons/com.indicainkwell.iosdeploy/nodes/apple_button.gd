@@ -220,7 +220,7 @@ func _on_task_queue_finished(stack):
 	set_disabled(false)
 
 func _on_task_queue_finished_task(task, task_index, task_count):
-	_progress.set_value(float(task_index) / task_count)
+	_progress.set_value(float(task_index) / float(task_count))
 	if task.next != null:
 		_progress.set_tooltip('processing ' + task.next.function.fun)
 
