@@ -1,0 +1,18 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=3
+
+[application]
+
+config/name="iOSDeploy"
+config/icon="res://addons/com.indicainkwell.iosdeploy/resources/apple-icon@3.png"
+
+[autoload]
+
+test="*res://test.gd"
