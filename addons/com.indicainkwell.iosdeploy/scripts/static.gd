@@ -28,10 +28,13 @@ const shell = {
 static func get_version():
 	# can't use get_gdscript here because
 	# it's recursive
+	var path
 	if OS.has_method('get_engine_version'):
-		return preload('2/version.gd').new()
+		path = GDSCRIPTS_2
 	else:
-		return preload('3/version.gd').new()
+		path = GDSCRIPTS_3
+
+	return load(path.plus_file('version.gd')).new()
 
 
 static func get_provisions_path():

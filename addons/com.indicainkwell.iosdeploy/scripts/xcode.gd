@@ -204,7 +204,8 @@ func _make_project_v2(bundle_id, name, path, team, provision, automanaged):
 		Shell.execute('unzip', [src_template, '-d', templates_path])
 
 		var unzip_path = templates_path.plus_file('godot_ios_xcode')
-		err = dir.rename(unzip_path, dst_template)
+		var dir = Directory.new()
+		var err = dir.rename(unzip_path, dst_template)
 		if err != OK:
 			print('Error<%s> renaming %s to %s' % [err, unzip_path, dst_template])
 		
