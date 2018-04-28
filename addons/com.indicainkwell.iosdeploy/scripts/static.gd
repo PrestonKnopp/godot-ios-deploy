@@ -9,8 +9,8 @@ const ADDON_PREFIX = 'addons/' + PLUGIN_DOMAIN
 const SHELL_SCRIPTS = ADDON_PREFIX + '/shell'
 
 const GDSCRIPTS = ADDON_PREFIX + '/scripts'
-const GDSCRIPTS_2 = GDSCRIPTS  + '/2'
-const GDSCRIPTS_3 = GDSCRIPTS  + '/3'
+const GDSCRIPTS_2 = GDSCRIPTS  + '/_v2'
+const GDSCRIPTS_3 = GDSCRIPTS  + '/_v3'
 
 
 # Get rid of this and just use get_shell_script() with string input
