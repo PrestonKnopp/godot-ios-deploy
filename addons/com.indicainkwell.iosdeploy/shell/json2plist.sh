@@ -1,3 +1,3 @@
-json="$1"
+ijsonfile="$1"
 ofile="$2"
-echo "$json" | plutil -convert xml1 -o "$ofile" -
+plutil -convert xml1 -o "$ofile" -- "$ijsonfile"

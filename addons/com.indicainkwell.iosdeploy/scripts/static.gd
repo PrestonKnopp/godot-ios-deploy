@@ -13,6 +13,7 @@ const GDSCRIPTS_2 = GDSCRIPTS  + '/2'
 const GDSCRIPTS_3 = GDSCRIPTS  + '/3'
 
 
+# Get rid of this and just use get_shell_script() with string input
 const shell = {
 	json2plist       = 'json2plist.sh',
 	plist2json       = 'plist2json.sh',
@@ -35,6 +36,14 @@ static func get_version():
 		path = GDSCRIPTS_3
 
 	return load(path.plus_file('version.gd')).new()
+
+
+static func globalize_path(path):
+	var protocol = 'user://'
+	if path.begins_with(protocol):
+		return OS.get_data_dir().plus_file(path.right(protocol.length()))
+
+	return get_gdscript('globalize_path.gd').globalize_path(path)
 
 
 static func get_provisions_path():
@@ -65,7 +74,7 @@ static func get_ios_export_template_path():
 
 static func get_data_template_path():
 	# user://DOMAIN/templates/iphone.zip
-	return get_templates_dir_path()\
+	return get_data_templates_dir_path()\
 		.plus_file(
 			get_ios_export_template_path().get_file()
 		)
