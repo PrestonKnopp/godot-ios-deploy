@@ -10,13 +10,13 @@ class Result:
 
 class Command:
 	var name
-	var _weak_shell
+	var _shell
 
 	signal finished(this, result)
 
 	func _init(name, shell):
 		self.name = name
-		self._weak_shell = weakref(shell)
+		self._shell = shell
 
 	func run(arg0=null, arg1=null, arg2=null, arg3=null, arg4=null, arg5=null, arg6=null):
 		var _args = [arg0, arg1, arg2, arg3, arg4, arg5, arg6]
@@ -30,7 +30,7 @@ class Command:
 				args.append(arg)
 			else:
 				args.append(str(arg))
-		return _weak_shell.get_ref().execute(name, args)
+		return _shell.execute(name, args)
 
 	var _thread
 
@@ -49,7 +49,7 @@ class Command:
 		_thread.start(self, '_run_thread', {cmd=name, args=args})
 
 	func _run_thread(data):
-		var res = execute(data.cmd, data.args)
+		var res = _shell.execute(data.cmd, data.args)
 		emit_signal('finished', self, res)
 
 
