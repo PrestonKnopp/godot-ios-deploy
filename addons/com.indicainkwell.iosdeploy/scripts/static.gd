@@ -2,6 +2,7 @@
 extends Object
 
 const PLUGIN_DOMAIN = 'com.indicainkwell.iosdeploy'
+const LOGGER_DOMAIN = PLUGIN_DOMAIN + '.logger'
 
 const PLUGIN_DATA_PATH = 'user://' + PLUGIN_DOMAIN
 
@@ -36,6 +37,13 @@ static func get_version():
 		path = GDSCRIPTS_3
 
 	return load(path.plus_file('version.gd')).new()
+
+
+static func get_logger():
+	var Logger = get_gdscript('logger.gd')
+	if not Logger.has_logger():
+		Logger.new() # adds logger to globals
+	return Logger.get_logger()
 
 
 static func globalize_path(path):
