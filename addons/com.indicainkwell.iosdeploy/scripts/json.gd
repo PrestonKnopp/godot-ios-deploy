@@ -13,7 +13,7 @@ var _result = null
 
 
 func parse(string):
-	assert("Call make on Json class. Don't instance directly.".empty())
+	assert("Don't use json directly, call stc.get_gdscript('json.gd')".empty())
 
 func to_string():
 	assert(false)
