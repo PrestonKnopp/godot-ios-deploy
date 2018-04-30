@@ -1,51 +1,26 @@
-extends Reference
-
-signal built(this, project, result)
-
+# xcode.gd
+#
 # TODO: test this
 # TODO: major refactor
 #  - [ ] Create a project maker class
-#  - [ ] Maybe a factory class for finding devices, provisions, and teams
-#  - [ ] Implement new classes
+#  - [X] Maybe a factory class for finding devices, provisions, and teams
+#  - [X] Implement new classes
 #  - [X] Classes for plist and pbxproj
 #  - [X] Use a logger
+extends Reference
+
+
+# ------------------------------------------------------------------------------
+#                                     Constants
+# ------------------------------------------------------------------------------
+
 
 const stc = preload('static.gd')
 
-var Shell = stc.get_gdscript('shell.gd')
-var Json = stc.get_gdscript('json.gd')
 
-
-class Device:
-	enum Type {
-		Unknown,
-		iPhone,
-		iPad,
-		Simulator,
-		Mac
-	}
-
-	var id
-	var name
-	var type
-
-
-class Team:
-	var id
-	var name
-	var account
-	var type
-	var is_free_account
-	# func get_provisions():
-
-
-class Provision:
-	var id
-	var name
-	var app_id_name
-	#var entitlements
-	var platforms
-	var team_ids
+# ------------------------------------------------------------------------------
+#                                   Inner Classes
+# ------------------------------------------------------------------------------
 
 
 class Project:
@@ -57,136 +32,32 @@ class Project:
 	var name
 
 
-var _shell = Shell.new()
-var _sh = _shell.make_command('/bin/bash')
+# ------------------------------------------------------------------------------
+#                                     Subtypes
+# ------------------------------------------------------------------------------
 
 
-func get_teams():
-
-	var res = _sh.run(stc.get_shell_script(stc.shell.listteamsjson))
-	if res.code != 0:
-		return []
-
-	var json = Json.new().parse(res.output[0])
-	if json.get_result().error != OK:
-		print(json.get_result().error, ' :: ', json.get_result().error_string)
-		return []
-
-	var teams = []
-	for key in json.keys():
-		var team = Team.new()
-		team.account = key
-		teams.append(team)
-		for team_obj in json.get_value(key):
-			if team_obj.has('teamID'):
-				team.id = team_obj['teamID']
-			if team_obj.has('teamName'):
-				team.name = team_obj['teamName']
-			if team_obj.has('teamType'):
-				team.type = team_obj['teamType']
-			if team_obj.has('isFreeProvisioningTeam'):
-				var is_free = team_obj['isFreeProvisioningTeam']
-				team.is_free_account = true
-				if is_free == '0':
-					team.is_free_account = false
-	return teams
+var PList = stc.get_gdscript('xcode/plist.gd')
+var PBX = stc.get_gdscript('xcode/pbx.gd')
 
 
-func get_provisions():
-
-	var dir = Directory.new()
-	var prov_path = stc.get_provisions_path()
-	if not dir.dir_exists(prov_path):
-		return []
-
-	var err = dir.open(prov_path)
-	if err != OK:
-		return []
-
-	err = dir.list_dir_begin()
-	if err != OK:
-		dir.list_dir_end()
-		return []
-
-	var prov2json = stc.get_shell_script(stc.shell.provision2json)
-	var provisions = []
-
-	var cur = dir.get_next()
-	while cur != '':
-		var file = cur
-		cur = dir.get_next()
-		if file.begins_with('.'):
-			continue
-
-		var res = _sh.run(prov2json, prov_path.plus_file(file))
-		if res.code != 0:
-			print('Failed to convert provision<',file,',> to json')
-			continue
-
-		var json = Json.new().parse(res.output[0])
-		if json.get_result().error != OK:
-			print('Failed to parse provision profile: ', file)
-			continue
-
-		var provision = Provision.new()
-		provision.id = json.get_value('UUID', '')
-		provision.name = json.get_value('Name', 'No Name')
-		provision.app_id_name = json.get_value('AppIDName', '')
-		provision.platforms = json.get_value('Platform', [])
-		provision.team_ids = json.get_value('TeamIdentifier', [])
-
-		provisions.append(provision)
-
-	return provisions
+# ------------------------------------------------------------------------------
+#                                     Variables
+# ------------------------------------------------------------------------------
 
 
-# TODO: use ios-deploy to get devices, it's faster than instruments
-func get_devices():
-
-	var listknowndevices = stc.get_shell_script(stc.shell.listknowndevices)
-	var res = _sh.run(listknowndevices)
-	if res.code != 0:
-		return []
-
-	var devices = []
-
-	# for some reason multiline output is all in first element
-	for line in res.output[0].split('\n', false):
-		# skip sims until add support for x86 project gen
-		if line.find('] (Simulator)') != -1:
-			continue
-
-		var device = Device.new()
-		var end_name_idx = line.rfind('[')
-		device.name = line.substr(0, end_name_idx).strip_edges()
+# ------------------------------------------------------------------------------
+#                                Setter and Getters
+# ------------------------------------------------------------------------------
 
 
-		var end_id_idx = line.find(']', end_name_idx)
-
-		# move passed '['
-		end_name_idx += 1
-
-		var id_length = end_id_idx - end_name_idx
-		device.id = line.substr(end_name_idx, id_length)
-
-		device.type = device.Type.Unknown
-		if device.name.findn('macbook') != -1:
-			device.type = device.Type.Mac
-		elif device.name.findn('iphone') != -1:
-			device.type = device.Type.iPhone
-		elif device.name.findn('ipad') != -1:
-			device.type = device.Type.iPad
-
-		devices.append(device)
-	return devices
+var finder = stc.get_gdscript('xcode/finders/finder.gd') setget ,get_finder
+func get_finder(): return finder
 
 
-func build(project):
-	pass
-
-
-func built(project):
-	pass
+# ------------------------------------------------------------------------------
+#                                      Methods
+# ------------------------------------------------------------------------------
 
 
 # TODO: handle not having templates installed
@@ -257,17 +128,11 @@ func _make_project_v3(bundle_id, name, path):
 
 
 func _update_pbxproj(pbxproj_path, name, path):
-
-	pbxproj_path = stc.globalize_path(pbxproj_path)
-
-	var pbxproj2json = stc.get_shell_script(stc.shell.pbxproj2json)
-	var sh_res = _sh.run(pbxproj2json, pbxproj_path)
-
-	var json = Json.new().parse(sh_res.output[0])
-	if json.get_result().error != OK:
-		print('Error parsing pbx json: ', json.get_result().error_string)
+	
+	var pbx = PBX.new()
+	if pbx.open(pbxproj_path) != OK:
 		return
-
+	
 	# Steps:
 	# 1. Add project file ref as PBXFileReference
 	#   - isa = PBXFileReference
@@ -285,64 +150,42 @@ func _update_pbxproj(pbxproj_path, name, path):
 	#   - files = array of ids
 	var project_file_ref_uuid = 'DEADDEADDEADDEADDEADDEAD'
 	var project_build_file_uuid = 'BEEFBEEFBEEFBEEFBEEFBEEF'
-	var objects = json.get_value('objects')
 
-	objects[project_file_ref_uuid] = {
-		isa = 'PBXFileReference',
+	pbx.add_object(project_file_ref_uuid, 'PBXFileReference', {
 		lastKnownFileType = 'folder',
 		name = name,
 		path = path,
-	}
+	})
 
-	objects[project_build_file_uuid] = {
-		isa = 'PBXBuildFile',
+	pbx.add_object(project_build_file_uuid, 'PBXBuildFile', {
 		fileRef = project_file_ref_uuid,
-	}
+	})
 
-	for key in objects.keys():
-		var object = objects[key]
-		if object['isa'] == 'PBXGroup' and not object.has('name'):
-			# add file ref to root pbxgroup
-			object['children'].append(project_file_ref_uuid)
-		elif object['isa'] == 'PBXResourcesBuildPhase':
-			# add build file to build resources
-			object['files'].append(project_build_file_uuid)
+	var root_pbxgroup_q = PBX.Query.new()
+	root_pbxgroup_q.type = 'PBXGroup'
+	root_pbxgroup_q.excludekeypath = 'name'
 	
-	# Write json to file to be converted to plist
+	var resource_build_phase_q = PBX.Query.new()
+	resource_build_phase_q.type = 'PBXResourcesBuildPhase'
 
-	var tmp_json_path = '/tmp/%s.pbxproj.json' % stc.PLUGIN_DOMAIN
-	var tmp_json_f = File.new()
-	var err = tmp_json_f.open(tmp_json_path, File.WRITE_READ)
-	if err != OK:
-		print('Error<',err,'>: failed to open tmp file for writing pbxproj json data')
-		return
+	var res = pbx.find_objects([root_pbxgroup_q, resource_build_phase_q])
+	assert(res[0].size() == 1)
+	assert(res[1].size() == 1)
+	res[0]['children'].append(project_file_ref_uuid)
+	res[1]['files'].append(project_build_file_uuid)
 
-	tmp_json_f.store_string(json.to_string())
-	tmp_json_f.close()
+	pbx.save_plist(pbxproj_path)
 
-	var json2plist = stc.get_shell_script(stc.shell.json2plist)
-	sh_res = _sh.run(json2plist, tmp_json_path, pbxproj_path)
-	if sh_res.code != 0:
-		print('Failed to convert json2plist', sh_res.output)
 
 
 func _update_info_plist(info_plist_path, name, bundle_id):
-
-	info_plist_path = stc.globalize_path(info_plist_path)
-	var pbuddy = _shell.make_command('/usr/libexec/PlistBuddy')
-	var pbuddyargs = []
-
-	var keys = {
-		CFBundleDisplayName = name,
-		CFBundleDisplayIdentifier = bundle_id,
-		godot_path = name
-	}
-
-	for key in keys:
-		pbuddyargs.append('-c')
-		pbuddyargs.append('Set %s %s' % [key,keys[key]])
-
-	var sh_res = pbuddy.run(pbuddyargs, info_plist_path)
-	if sh_res.output.size() > 0 and sh_res.output[0].length() > 0:
-		#print(sh_res.output[0])
-		print('Output from pbuddy goes here')
+	
+	var plist = Plist.new()
+	if plist.open(info_plist_path) != OK:
+		return
+	
+	plist.set_value("CFBundleDisplayName", name)
+	plist.set_value("CFBundleDisplayIdentifier", bundle_id)
+	plist.set_value("godot_path", name)
+	
+	plist.save()
