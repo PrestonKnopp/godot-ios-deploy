@@ -4,10 +4,11 @@ signal built(this, project, result)
 
 # TODO: test this
 # TODO: major refactor
-#  - Create a project maker class
-#  - Classes for plist and pbxproj
-#  - Maybe a factory class for finding devices, provisions, and teams
-#  - Use a logger
+#  - [ ] Create a project maker class
+#  - [ ] Maybe a factory class for finding devices, provisions, and teams
+#  - [ ] Implement new classes
+#  - [X] Classes for plist and pbxproj
+#  - [X] Use a logger
 
 const stc = preload('static.gd')
 
