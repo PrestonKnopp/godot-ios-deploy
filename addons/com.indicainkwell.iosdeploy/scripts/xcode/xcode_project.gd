@@ -22,6 +22,7 @@ const PBXPROJ_UUIDS = {
 # ------------------------------------------------------------------------------
 
 
+var Shell = stc.get_gdscript('shell.gd')
 var PList = stc.get_gdscript('xcode/plist.gd')
 var PBX = stc.get_gdscript('xcode/pbx.gd')
 
@@ -42,6 +43,8 @@ var debug = true
 var custom_info = {}
 
 var _path
+var _shell = Shell.new()
+var _xcodebuild = _shell.make_command('xcodebuild')
 var _log = stc.get_logger()
 var _log_mod = stc.PLUGIN_DOMAIN + '.xcode-project'
 
@@ -76,6 +79,10 @@ func get_path():
 	return _path
 
 
+func get_xcodeproj_path():
+	return get_path().plus_file('godot_ios.xcodeproj')
+
+
 func get_app_path():
 	var build = 'Release'
 	if debug: build = 'Debug'
@@ -83,7 +90,7 @@ func get_app_path():
 
 
 func get_pbx_path():
-	return get_path().plus_file('godot_ios.xcodeproj/project.pbxproj')
+	return get_xcodeproj_path().plus_file('project.pbxproj')
 
 
 func get_info_plist_path():
@@ -169,6 +176,39 @@ func update_info_plist():
 # ------------------------------------------------------------------------------
 
 
-func build(): pass
-func built(): pass
+func build():
+	var args = _build_xcodebuild_args()
+	var res = _xcodebuild.run('build', args)
+	_log.info(res.output[0], _log_mod)
 
+
+func built():
+	return Directory.new().dir_exists(get_app_path())
+
+
+func _build_xcodebuild_args():
+	var args = []
+
+	args.append('-configuration')
+	if debug:
+		args.append('Debug')
+	else:
+		args.append('Release')
+	
+	args.append('-project')
+	args.append(get_xcodeproj_path())
+
+	if automanaged:
+		args.append('-allowProvisioningUpdates')
+		args.append('-allowProvisioningDeviceRegistration')
+	
+	# no provision profile needed if it's automanaged
+	if not automanaged and provision != null:
+		args.append('PROVISIONING_PROFILE_SPECIFIER='+provision.id)
+	
+	if stc.get_version().is3():
+		args.append('ENABLE_BITCODE=false')
+	
+	args.append('DEVELOPMENT_TEAM='+team.id)
+
+	return args

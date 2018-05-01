@@ -16,11 +16,11 @@ fi
 # fi
 
 # optional
-provision_id=${0:-'none'}; shift # provisioning profile for signing
-device_id=${0:-'none'};    shift # id of device to build for
-config=${0:-'none'};       shift # config type: Debug, Release
-automanaged=${0:-'false'}; shift # automanage signing: true, false
-is_godotv3=${0:-'false'};  shift # : true, false
+provision_id=${1:-'none'}; shift # provisioning profile for signing
+automanaged=${1:-'false'}; shift # automanage signing: true, false
+is_godotv3=${1:-'false'};  shift # : true, false
+device_id=${1:-'none'};    shift # id of device to build for
+config=${1:-'none'};       shift # config type: Debug, Release
 
 if [[ $provision_id == 'none' ]]; then
 	extra_build_settings="$extra_build_settings PROVISIONING_PROFILE_SPECIFIER=$provision_id"
