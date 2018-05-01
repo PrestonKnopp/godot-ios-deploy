@@ -54,58 +54,22 @@ static func globalize_path(path):
 	return get_gdscript('globalize_path.gd').globalize_path(path)
 
 
+static func get_project_path():
+	return globalize_path('res://')
+
+
+static func get_project_dir_name():
+	var p = get_project_path()
+	return p.right(p.find_last('/'))
+
+
+# TODO: move this to provision_finder
 static func get_provisions_path():
 	return OS.get_environment('HOME').plus_file('Library/MobileDevice/Provisioning Profiles')
 
 
-static func get_ios_export_template_path():
-	var home = OS.get_environment('HOME')
-	var v = get_version()
-	if v.is2():
-		return home.plus_file('.godot/templates/GodotiOSXCode.zip')
-	else:
-		# TODO: figure out what to do for 3.0 export templates
-		# NOTE: Different template name formats
-		#       - 3.0-stable/
-		#       - 3.0.2.stable/ <-- use this one
-		var tname = '%s.%s.%s.%s' % [
-			v.get_major(), 
-			v.get_minor(), 
-			v.get_patch(),
-			v.get_status()
-		]
-		return home\
-			.plus_file('Library/Application Support/Godot/templates')\
-			.plus_file(tname)\
-			.plus_file('iphone.zip')
-
-
-static func get_data_template_path():
-	# user://DOMAIN/templates/iphone.zip
-	return get_data_templates_dir_path()\
-		.plus_file(
-			get_ios_export_template_path().get_file()
-		)
-
-
-static func get_data_templates_dir_path():
-	# user://DOMAIN/templates
-	return _get_data_path('templates')
-
-
-static func _get_data_path(extended_by=''):
-	var path = PLUGIN_DATA_PATH.plus_file(extended_by)
-	
-	var d = Directory.new()
-	if not d.dir_exists(path):
-		var err = d.make_dir_recursive(path)
-		if err != OK:
-			print('Error<%s> making path<%s>' % [err,path])
-	return path
-
-
-static func get_data_path():
-	return _get_data_path()
+static func get_data_path(extended_by=''):
+	return PLUGIN_DATA_PATH.plus_file(extended_by)
 
 
 static func get_shell_script(shell_script):
