@@ -6,6 +6,14 @@ extends Reference
 
 
 # ------------------------------------------------------------------------------
+#                                      Signals
+# ------------------------------------------------------------------------------
+
+
+signal deployed(this, result)
+
+
+# ------------------------------------------------------------------------------
 #                                     Constants
 # ------------------------------------------------------------------------------
 
@@ -18,9 +26,10 @@ const stc = preload('../static.gd')
 # ------------------------------------------------------------------------------
 
 
-var device_id
+# Handle one bundle at a time and user passes specific
+# device id to deploy to on method call
+# bundle i.e. MyProject.app
 var bundle
-#var bundle_id
 
 var app_args = [] # app args should be joined before passing to ios-deploy
 var ignore_wifi_devices = false
@@ -47,42 +56,43 @@ func detect_devices():
 	This should be used only by device_finder.gd. Cause it does the
 	parsing. This will probably change later.
 	"""
-	var res = _deploy.run('--detect', '--timeout', '1')
+	var args = ['--detect', '--timeout', '1']
+	if ignore_wifi_devices:
+		args.append('--no-wifi')
+	var res = _deploy.run()
 	return res.output[0].split('\n', false)
 
 
-func install_and_launch():
+func install_and_launch_on(device_id, async=true):
 	"""
 	Install and launch bundle to device_id.
 
 	Looks like you can't just install without launching and setting and
 	lldb.
 	"""
-	assert(bundle != null)
-	assert(device_id != null)
-	var res = _deploy.run(
-		'--justlaunch',
-		'--id', device_id,
-		'--bundle', bundle,
-		_build_app_args()
-	)
-	return res.output[0].split('\n', false)
+	return _launch_on(device_id, true, async)
 
 
-func launch():
+func launch_on(device_id, async=true):
 	"""
 	Just launch bundle without installing to device_id.
 	"""
+	return _launch_on(device_id, false, async)
+
+
+func _launch_on(device_id, install, async):
+	"""
+	Launch to device_id optionally installing it and running async.
+	"""
 	assert(bundle != null)
 	assert(device_id != null)
-	var res = _deploy.run(
-		'--justlaunch',
-		'--noinstall',
-		'--id', device_id,
-		'--bundle', bundle,
-		_build_app_args()
-	)
-	return res.output[0].split('\n', false)
+	var args = _build_launch_args(install)
+	if async:
+		_deploy.run_async(args, self, '_deploy_finished')
+	else:
+		var res = _deploy.run(args)
+		return res.output[0].split('\n', false)
+	return []
 
 
 func uninstall():
@@ -90,8 +100,32 @@ func uninstall():
 
 
 # ------------------------------------------------------------------------------
+#                                     Callbacks
+# ------------------------------------------------------------------------------
+
+
+func _deploy_finished(command, result):
+	# TODO: parse result output and detect deploy failure
+	emit_signal('deployed', self, result)
+
+
+# ------------------------------------------------------------------------------
 #                                  Helper Methods
 # ------------------------------------------------------------------------------
+
+
+func _build_launch_args(device_id, install=true):
+	var args = [
+		'--justlaunch',
+		'--id', device_id,
+		'--bundle', bundle
+	]
+	if not install:
+		args.append('--noinstall')
+	
+	args += _build_app_args()
+
+	return args
 
 
 func _build_app_args():

@@ -67,7 +67,7 @@ func _init():
 
 # ios-deploy Output Example, first line is always there:
 # [....] Waiting up to 1 seconds for iOS device to be connected
-# [....] Found 587390ab8390ae890d43000acd9bd8900afe16ba (P105AP, iPad mini, iphoneos, armv7) a.k.a. '00101110' connected through USB.
+# [....] Found 3345abc45b3cab4c5eb5c4bfb3c5998abc3b320a (P105AP, iPad mini, iphoneos, armv7) a.k.a. 'iPad Name' connected through USB.
 func _ios_deploy_find_devices():
 	var result = []
 	
