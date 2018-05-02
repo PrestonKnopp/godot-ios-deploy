@@ -1,8 +1,13 @@
 # xcode_project.gd
-#
-# TODO: impl build
-# DONE: move plist and pbx processing here
 extends Reference
+
+
+# ------------------------------------------------------------------------------
+#                                      Signals
+# ------------------------------------------------------------------------------
+
+
+signal deployed(this, device, result)
 
 
 # ------------------------------------------------------------------------------
@@ -23,6 +28,7 @@ const PBXPROJ_UUIDS = {
 
 
 var Shell = stc.get_gdscript('shell.gd')
+var iOSDeploy = stc.get_gdscript('xcode/ios_deploy.gd')
 var PList = stc.get_gdscript('xcode/plist.gd')
 var PBX = stc.get_gdscript('xcode/pbx.gd')
 
@@ -42,9 +48,15 @@ var automanaged = false
 var debug = true
 var custom_info = {}
 
+var _iosdeploy = iOSDeploy.new()
+var _runningdeploys = 0
+var _devices = []
+
 var _path
+
 var _shell = Shell.new()
 var _xcodebuild = _shell.make_command('xcodebuild')
+
 var _log = stc.get_logger()
 var _log_mod = stc.PLUGIN_DOMAIN + '.xcode-project'
 
@@ -56,6 +68,7 @@ var _log_mod = stc.PLUGIN_DOMAIN + '.xcode-project'
 
 func _init():
 	_log.add_module(_log_mod)
+	_iosdeploy.connect('deployed', self, '_on_deployed')
 
 
 # ------------------------------------------------------------------------------
@@ -68,6 +81,28 @@ func open(xcode_project_path):
 	if not Directory.new().dir_exists(_path):
 		return FAILED
 	return OK
+
+
+# ------------------------------------------------------------------------------
+#                                      Devices
+# ------------------------------------------------------------------------------
+
+
+func get_devices():
+	return _devices
+
+
+func set_devices(devices):
+	"""
+	Add devices to associate with project.
+	
+	When project is built with xcode
+	and automanaged is on devices will automatically be registered to
+	provisioning profile if needed.
+
+	These devices will also be used to deploy to.
+	"""
+	_devices = devices
 
 
 # ------------------------------------------------------------------------------
@@ -177,6 +212,10 @@ func update_info_plist():
 
 
 func build():
+	assert(team != null)
+	assert(bundle_id != null)
+	assert(_path != null)
+	assert(name != null)
 	var args = _build_xcodebuild_args()
 	var res = _xcodebuild.run('build', args)
 	_log.info(res.output[0], _log_mod)
@@ -200,6 +239,12 @@ func _build_xcodebuild_args():
 
 	if automanaged:
 		args.append('-allowProvisioningUpdates')
+		# TODO: xcodebuild needs a device_id specifier for registration
+		# multiple destinations are allowed
+		# How to be passed a device_id?
+		# Only needed for when device has not been registered with
+		# provision
+		# -destination 'platform=iOS,id={device_id}'
 		args.append('-allowProvisioningDeviceRegistration')
 	
 	# no provision profile needed if it's automanaged
@@ -212,3 +257,28 @@ func _build_xcodebuild_args():
 	args.append('DEVELOPMENT_TEAM='+team.id)
 
 	return args
+
+
+# ------------------------------------------------------------------------------
+#                                     Deploying
+# ------------------------------------------------------------------------------
+
+
+func is_deploying():
+	return _runningdeploys > 0
+
+
+func deploy():
+	"""
+	Deploy project to devices associated with project.
+	"""
+	# TODO: shell.gd command should be able to kill running command.
+	# TODO: add option to install or just launch
+	_iosdeploy.bundle = project.get_app_path()
+	_runningdeploys = devices.size()
+	for device in devices:
+		_iosdeploy.launch_on(device.id)
+
+
+func _on_deployed(iosdeploy, result):
+	emit_signal('deployed', self, null, [], result)
