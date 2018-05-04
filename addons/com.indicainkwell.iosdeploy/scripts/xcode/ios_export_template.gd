@@ -49,8 +49,8 @@ func get_zip_path():
 		#       - 3.0-stable/
 		#       - 3.0.2.stable/ <-- use this one
 		var tname = '%s.%s.%s.%s' % [
-			v.get_major(), 
-			v.get_minor(), 
+			v.get_major(),
+			v.get_minor(),
 			v.get_patch(),
 			v.get_status()
 		]
@@ -150,7 +150,7 @@ func _copy_ios_export_template_v2():
 	
 	var err = Directory.new().rename(udst, dst)
 	if err != OK:
-		_log.error('Error<%s> renaming ios export template from %s to s' [ err, udst, dst ], _log_mod)
+		_log.error('Error<%s> renaming ios export template from %s to s'%[ err, udst, dst ], _log_mod)
 	return err
 
 
