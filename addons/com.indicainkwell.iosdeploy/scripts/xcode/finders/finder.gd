@@ -24,15 +24,15 @@ var Json = stc.get_gdscript('json.gd')
 
 
 static func find_teams():
-	stc.get_gdscript('xcode/finders/team_finder.gd').new().find()
+	return stc.get_gdscript('xcode/finders/team_finder.gd').new().find()
 
 
 static func find_provisions():
-	stc.get_gdscript('xcode/finders/provision_finder.gd').new().find()
+	return stc.get_gdscript('xcode/finders/provision_finder.gd').new().find()
 
 
 static func find_devices():
-	stc.get_gdscript('xcode/finders/device_finder.gd').new().find()
+	return stc.get_gdscript('xcode/finders/device_finder.gd').new().find()
 
 
 # ------------------------------------------------------------------------------
