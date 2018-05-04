@@ -42,8 +42,8 @@ var ignore_wifi_devices = false
 
 var _log = stc.get_logger()
 var _log_mod = stc.PLUGIN_DOMAIN + '.ios-deploy'
-var _shell = stc.get_gdscript('shell.gd').new()
-var _deploy = _shell.make_command('ios-deploy')
+var _bash = stc.get_gdscript('shell.gd').new().make_command('/bin/bash')
+var _bashinit = ['-l', '-c']
 
 
 # ------------------------------------------------------------------------------
@@ -59,7 +59,8 @@ func detect_devices():
 	var args = ['--detect', '--timeout', '1']
 	if ignore_wifi_devices:
 		args.append('--no-wifi')
-	var res = _deploy.run()
+	var res = _bash.run(_bashinit, _build_deploy_cmd(args))
+	_log.info(res.output, _log_mod)
 	return res.output[0].split('\n', false)
 
 
@@ -88,9 +89,9 @@ func _launch_on(device_id, install, async):
 	assert(device_id != null)
 	var args = _build_launch_args(install)
 	if async:
-		_deploy.run_async(args, self, '_deploy_finished')
+		_bash.run_async(_bashinit + [_build_deploy_cmd(args)], self, '_deploy_finished')
 	else:
-		var res = _deploy.run(args)
+		var res = _bash.run(_bashinit,  _build_deploy_cmd(args))
 		return res.output[0].split('\n', false)
 	return []
 
@@ -114,6 +115,10 @@ func _deploy_finished(command, result):
 # ------------------------------------------------------------------------------
 
 
+func _build_deploy_cmd(args):
+	return 'ios-deploy ' + _join(args)
+
+
 func _build_launch_args(device_id, install=true):
 	var args = [
 		'--justlaunch',
@@ -122,7 +127,7 @@ func _build_launch_args(device_id, install=true):
 	]
 	if not install:
 		args.append('--noinstall')
-	
+
 	args += _build_app_args()
 
 	return args
@@ -138,7 +143,7 @@ func _join(arr, delim=' '):
 	"""
 	Implementation for joining arrays as Godotv2 does not support it.
 	"""
-	assert(arr)
+	assert(arr != null and typeof(arr) == TYPE_ARRAY)
 	var size = arr.size()
 	if size == 1:
 		return arr[0]
