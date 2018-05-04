@@ -15,7 +15,7 @@ signal deployed(this, device, result)
 # ------------------------------------------------------------------------------
 
 
-const stc = preload('static.gd')
+const stc = preload('../static.gd')
 const PBXPROJ_UUIDS = {
 	FILE_REF = 'DEADDEADDEADDEADDEADDEAD',
 	BUILD_FILE = 'BEEFBEEFBEEFBEEFBEEFBEEF',
@@ -99,7 +99,7 @@ func set_devices(devices):
 	When project is built with xcode
 	and automanaged is on devices will automatically be registered to
 	provisioning profile if needed.
-
+	
 	These devices will also be used to deploy to.
 	"""
 	_devices = devices
@@ -158,7 +158,7 @@ func update_pbx():
 	# 4. Add build file to PBXResourcesBuildPhase
 	#   - isa = PBXResourcesBuildPhase
 	#   - files = array of ids
-
+	
 	var pbx = PBX.new()
 	if pbx.open(get_pbx_path()) != OK:
 		_log.info('Unable to open pbxproj for updating at ' + get_pbx_path(), _log_mod)
@@ -169,29 +169,29 @@ func update_pbx():
 		name = stc.get_project_dir_name(),
 		path = stc.get_project_path(),
 	})
-
+	
 	pbx.add_object(PBXPROJ_UUIDS.BUILD_FILE, 'PBXBuildFile', {
 		fileRef = PBXPROJ_UUIDS.FILE_REF,
 	})
-
+	
 	var root_pbxgroup_q = PBX.Query.new()
 	root_pbxgroup_q.type = 'PBXGroup'
 	root_pbxgroup_q.excludekeypath = 'name'
 	
 	var resource_build_phase_q = PBX.Query.new()
 	resource_build_phase_q.type = 'PBXResourcesBuildPhase'
-
+	
 	var res = pbx.find_objects([root_pbxgroup_q, resource_build_phase_q])
 	res[0]['children'].append(PBXPROJ_UUIDS.FILE_REF)
 	res[1]['files'].append(PBXPROJ_UUIDS.BUILD_FILE)
-
-	pbx.save_plist(pbxproj_path)
+	
+	pbx.save_plist(get_pbx_path())
 
 
 
 func update_info_plist():
 	
-	var plist = Plist.new()
+	var plist = PList.new()
 	if plist.open(get_info_plist_path()) != OK:
 		_log.info('Unable to open infoplist for updating at ' + get_info_plist_path(), _log_mod)
 		return
@@ -199,7 +199,7 @@ func update_info_plist():
 	plist.set_value("CFBundleDisplayName", name)
 	plist.set_value("CFBundleDisplayIdentifier", bundle_id)
 	plist.set_value("godot_path", stc.get_project_dir_name())
-
+	
 	for key in custom_info:
 		plist.set_value(key, custom_info[key])
 	
@@ -227,7 +227,7 @@ func built():
 
 func _build_xcodebuild_args():
 	var args = []
-
+	
 	args.append('-configuration')
 	if debug:
 		args.append('Debug')
@@ -236,7 +236,7 @@ func _build_xcodebuild_args():
 	
 	args.append('-project')
 	args.append(get_xcodeproj_path())
-
+	
 	if automanaged:
 		args.append('-allowProvisioningUpdates')
 		# TODO: xcodebuild needs a device_id specifier for registration
@@ -255,7 +255,7 @@ func _build_xcodebuild_args():
 		args.append('ENABLE_BITCODE=false')
 	
 	args.append('DEVELOPMENT_TEAM='+team.id)
-
+	
 	return args
 
 
@@ -274,9 +274,9 @@ func deploy():
 	"""
 	# TODO: shell.gd command should be able to kill running command.
 	# TODO: add option to install or just launch
-	_iosdeploy.bundle = project.get_app_path()
-	_runningdeploys = devices.size()
-	for device in devices:
+	_iosdeploy.bundle = get_app_path()
+	_runningdeploys = get_devices().size()
+	for device in get_devices():
 		_iosdeploy.launch_on(device.id)
 
 

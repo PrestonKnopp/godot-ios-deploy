@@ -171,7 +171,7 @@ func open(path):
 
 	_json.parse(sh_res.output[0])
 	if _json.get_result().error != OK:
-		_log.error('parsing json: ' + json.get_result().error_string, _log_mod)
+		_log.error('parsing json: ' + _json.get_result().error_string, _log_mod)
 		return _json.get_result().error
 
 	return OK
@@ -184,7 +184,7 @@ func save_json(path):
 		_log.error('('+str(err)+') failed to open '+path+' for writing json data', _log_mod)
 		return err
 
-	f.store_string(json.to_string())
+	f.store_string(_json.to_string())
 	f.close()
 	return OK
 
@@ -194,9 +194,9 @@ func save_plist(path):
 	var err = save_json(tmp_json_path)
 	if err != OK:
 		return err
-
+	
 	var json2plist = stc.get_shell_script(stc.shell.json2plist)
-	var sh_res = _sh.run(json2plist, tmp_json_path, pbxproj_path)
+	var sh_res = _sh.run(json2plist, tmp_json_path, path)
 	if sh_res.code != 0:
 		_log.error('Failed to convert json2plist', sh_res.output)
 	

@@ -60,11 +60,11 @@ func set_value(key, value):
 
 func open(path):
 	_path = stc.globalize_path(path)
-
+	
 	if not File.new().file_exists(_path):
 		_log.error('file not found at ' + _path, _log_mod)
 		return ERR_FILE_NOT_FOUND
-
+	
 	# TODO: some way to verify if it is plist
 	
 	return OK
@@ -78,10 +78,10 @@ func save():
 	var res = open(_path)
 	if res != OK:
 		return res
-
+	
 	var args = _build_pbuddy_args()
 	res = _pbuddy.run(args, _path)
-	if sh_res.output.size() > 0 and sh_res.output[0].length() > 0:
+	if res.output.size() > 0 and res.output[0].length() > 0:
 		_log.info('TODO: check how to find out if pbuddy failed')
 	
 	return OK
