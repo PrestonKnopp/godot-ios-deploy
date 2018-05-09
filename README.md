@@ -2,10 +2,6 @@
 
 > Deploy to iOS for testing in one click from within Godot!
 
-
-_NOTE:_ Not ready for use
-
-
 ### Prerequisites
 
 1. macOS
@@ -17,9 +13,6 @@ _NOTE:_ Not ready for use
     - Open Terminal and type xcodebuild 
         - should ask to install the command line tools
 4. [Godot export templates](https://godotengine.org/download)
-5. Godot binary in your $PATH
-    - In your .bash\_profile include 
-        - `export PATH=$PATH:/Applications/Godot.app/Contents/MacOS/godot`
 6. ios-deploy
     - Install ios-deploy with [homebrew](https://brew.sh)
         - `brew install ios-deploy`
@@ -31,27 +24,6 @@ drop the com.indicainkwell.iosdeploy folder into the addons folder of your
 project. Create res://addons folder in your project if it does not exist.
 
 I will eventually put this up on the asset library.
-
-### Setting Up Your Project
-
-After the above prerequisites, you'll need to unzip the iOS export template,
-`~/.godot/templates/GodotiOSXCode.zip`, move the unzipped xcode project to
-wherever you want, then open it in xcode.
-
-Follow the godot [guide on exporting to
-ios](http://docs.godotengine.org/en/latest/learning/workflow/export/exporting_for_ios.html)
-to get it ready, but don't add data.pck, drag your  game folder to xcode making
-sure that Copy Files is **unchecked**.
-
-You only need to setup a xcode project once per godot project.
-
-Here's a checklist to prepare your bundle:
-- **Check automatic signing and provision**
-- Set bundle identifier and name
-- Info.plist you have set godot\_path to your game folder name
-- Update xcode project image assets with your custom images such as
-    - icon
-    - splash screen
 
 ### Usage
 
@@ -68,6 +40,8 @@ An apple button will appear in Godot's Editor's toolbar that you can
 
 ^ That's it. If everything is set up, otherwise...
 
+### Pipeline
+
 The following stipulations will be checked on click:
 
 - Xcode project has been created and setup
@@ -79,6 +53,8 @@ The following stipulations will be checked on click:
     - if single device is connected it will validate automatically
     - if multiple devices are connected the device menu will popup
 
+### Failures
+
 If all goes well it attempt to deploy it, but can fail for multiple reasons:
 
 1. Security Failure
@@ -88,32 +64,3 @@ If all goes well it attempt to deploy it, but can fail for multiple reasons:
     - turn on automatic code signing in xcode
 3. Unknown
     - We will see...
-
-**Note**: at this time only one ios device at a time is supported, but that is not a
-hard limitation.  
-**Note**: only iPhone is supported, also not a hard limitation.
-
-### To Do / Roadmap
-
-- [X] show alert with deploy fail reasons
-- [X] Some sort of visual of deploy status
-- [ ] Code software requirements and offer to install as much as possible.
-- [ ] Support iPad
-- [ ] Look into copying godot project into bundle if binary already installed
-    - Faster
-- [ ] Automate creation of xcode project
-    - Copy icons and splash images
-    - Check out run script build phase to copy godot project into ios bundle
-    - Modify Info.plist with `plutil`
-        - "CFBundleName" => "${PRODUCT\_NAME}"
-        - "CFBundleIdentifier" => "$(PRODUCT\_BUNDLE\_IDENTIFIER)"
-        - "CFBundleExecutable" => "godot\_opt.iphone"
-        - "CFBundleShortVersionString" => "1.0"
-        - "CFBundleDisplayName" => "Insert Name Here"
-        - "UISupportedInterfaceOrientations"
-            - 0 => "UIInterfaceOrientationLandscapeLeft"
-            - 1 => "UIInterfaceOrientationLandscapeRight"
-        - "UISupportedInterfaceOrientations~ipad"
-            - 0 => "UIInterfaceOrientationLandscapeLeft"
-            - 1 => "UIInterfaceOrientationLandscapeRight"
-
