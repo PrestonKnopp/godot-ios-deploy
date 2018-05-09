@@ -63,11 +63,6 @@ static func get_project_dir_name():
 	return p.right(p.find_last('/'))
 
 
-# TODO: move this to provision_finder
-static func get_provisions_path():
-	return OS.get_environment('HOME').plus_file('Library/MobileDevice/Provisioning Profiles')
-
-
 static func get_data_path(extended_by=''):
 	return PLUGIN_DATA_PATH.plus_file(extended_by)
 

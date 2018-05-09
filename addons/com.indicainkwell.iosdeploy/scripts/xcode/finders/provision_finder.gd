@@ -14,6 +14,19 @@ class Provision:
 	#var entitlements
 	var platforms
 	var team_ids
+	var creation_date
+	var expiration_date
+
+
+# ------------------------------------------------------------------------------
+#                                Setters and Getters
+# ------------------------------------------------------------------------------
+
+
+
+var _provisions_path = OS.get_environment('HOME').plus_file('Library/MobileDevice/Provisioning Profiles')
+func get_provisions_path():
+	return _provisions_path
 
 
 # ------------------------------------------------------------------------------
@@ -22,7 +35,7 @@ class Provision:
 
 
 func find():
-	var prov_path = stc.get_provisions_path()
+	var prov_path = get_provisions_path()
 
 	var dir = Directory.new()
 	var err = dir.open(prov_path)
@@ -54,6 +67,7 @@ func find():
 		var json = Json.new().parse(res.output[0])
 		if json.get_result().error != OK:
 			_log.info('Failed to parse provision<%s> json'%file,_log_mod)
+			_log.info('\t%s'%json.get_result().error_string, _log_mod)
 			continue
 
 		var provision = Provision.new()
@@ -62,7 +76,44 @@ func find():
 		provision.app_id_name = json.get_value('AppIDName', '')
 		provision.platforms = json.get_value('Platform', [])
 		provision.team_ids = json.get_value('TeamIdentifier', [])
+		provision.creation_date = _date_parse(json.get_value('CreationDate'))
+		provision.expiration_date = _date_parse(json.get_value('ExpirationDate'))
 
 		provisions.append(provision)
 
 	return provisions
+
+
+# ------------------------------------------------------------------------------
+#                                      Methods
+# ------------------------------------------------------------------------------
+
+
+func _date_make_dict(year=0, month=0, day=0, hour=0, mint=0, sec=0):
+	return {
+		year = year,
+		month = month,
+		day = day,
+		hour = hour,
+		minute = mint,
+		second = sec
+	}
+
+
+# Provision Profile Date Format: YYYY-MM-DDThh:mm:ssTZD
+func _date_parse(date):
+	if date == null or date.empty():
+		return _date_make_dict()
+	var reg = stc.get_gdscript('regex.gd').new()
+	var err = reg.compile("(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})")
+	assert(err == OK)
+	var captures = reg.search(date)
+	assert(captures.size() == 7) # 6 groups + whole group
+	return _date_make_dict(
+		int(captures[1]),
+		int(captures[2]),
+		int(captures[3]),
+		int(captures[4]),
+		int(captures[5]),
+		int(captures[6])
+	)
