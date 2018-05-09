@@ -16,7 +16,7 @@ class Logfile:
 	var file = null
 	var path = ""
 	var queue_mode = QUEUE_NONE
-	var buffer = StringArray()
+	var buffer = [] # StringArray(), not avail in v3
 	var buffer_idx = 0
 
 	func _init(_path, _queue_mode = QUEUE_NONE):
@@ -238,7 +238,7 @@ const FILE_BUFFER_SIZE = 30
 var default_output_level = INFO
 # TODO: Find (or implement in Godot) a more clever way to achieve that
 var default_output_strategies = [STRATEGY_PRINT, STRATEGY_PRINT, STRATEGY_PRINT, STRATEGY_PRINT, STRATEGY_PRINT]
-var default_logfile_path = "user://%s.log" % Globals.get("application/name")
+var default_logfile_path = "user://com.indicainkwell.ios-deploy.log" # % Globals.get("application/name") # Globals not available in v3
 var default_configfile_path = "user://%s.cfg" % PLUGIN_NAME
 
 # e.g. "[main.INFO]: The young alpaca started growing a goatie."
