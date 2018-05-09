@@ -7,6 +7,11 @@ const LOGGER_DOMAIN = PLUGIN_DOMAIN + '.logger'
 const PLUGIN_DATA_PATH = 'user://' + PLUGIN_DOMAIN
 
 const ADDON_PREFIX = 'addons/' + PLUGIN_DOMAIN
+
+const SCENES = ADDON_PREFIX + '/gui'
+const SCENES_2 = SCENES + '/_v2'
+const SCENES_3 = SCENES + '/_v3'
+
 const SHELL_SCRIPTS = ADDON_PREFIX + '/shell'
 
 const GDSCRIPTS = ADDON_PREFIX + '/scripts'
@@ -67,12 +72,20 @@ static func get_data_path(extended_by=''):
 	return PLUGIN_DATA_PATH.plus_file(extended_by)
 
 
+static func get_scene(scene):
+	# v2 and v3 scenes are incompatible
+	if get_version().is2():
+		return load(SCENES_2.plus_file(scene))
+	else:
+		return load(SCENES_3.plus_file(scene))
+
+
 static func get_shell_script(shell_script):
 	return SHELL_SCRIPTS.plus_file(shell_script)
 
 
 static func get_gdscript(gdscript):
-	
+
 	var f = GDSCRIPTS.plus_file(gdscript)
 
 	if get_version().is2():
@@ -83,5 +96,5 @@ static func get_gdscript(gdscript):
 		var v3f = GDSCRIPTS_3.plus_file(gdscript)
 		if File.new().file_exists(v3f):
 			f = v3f
-	
+
 	return load(f)
