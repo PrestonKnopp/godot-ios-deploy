@@ -54,7 +54,8 @@ func get_group_count():
 
 func search(text, offset=0, end=-1):
 	"""
-	Search for pattern in given text.
+	Search for pattern in given text. Returns an empty array when there is no match.
+	Capture groups that did not match are returned as an empty string.
 	"""
 	assert(false)
 
