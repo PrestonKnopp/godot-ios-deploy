@@ -27,8 +27,7 @@ var Shell = stc.get_gdscript('shell.gd')
 var _path
 var _backing = {}
 var _pbuddy = Shell.new().make_command('/usr/libexec/PlistBuddy')
-var _log = stc.get_logger()
-var _log_mod = stc.PLUGIN_DOMAIN + '.plist'
+var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.plist')
 
 
 # ------------------------------------------------------------------------------
@@ -36,8 +35,8 @@ var _log_mod = stc.PLUGIN_DOMAIN + '.plist'
 # ------------------------------------------------------------------------------
 
 
-func _init():
-	_log.add_module(_log_mod)
+# func _init():
+# 	pass
 
 
 # ------------------------------------------------------------------------------
@@ -62,7 +61,7 @@ func open(path):
 	_path = stc.globalize_path(path)
 	
 	if not File.new().file_exists(_path):
-		_log.error('file not found at ' + _path, _log_mod)
+		_log.error('file not found at ' + _path)
 		return ERR_FILE_NOT_FOUND
 	
 	# TODO: some way to verify if it is plist
@@ -72,7 +71,7 @@ func open(path):
 
 func save():
 	if _path == null:
-		_log.error('must open a path before saving', _log_mod)
+		_log.error('must open a path before saving')
 		return FAILED
 	
 	var res = open(_path)

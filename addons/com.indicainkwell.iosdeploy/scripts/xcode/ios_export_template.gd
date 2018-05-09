@@ -24,8 +24,7 @@ const TEMPLATE_NAME = {
 var _shell = stc.get_gdscript('shell.gd').new()
 var _unzip = _shell.make_command('unzip')
 
-var _log = stc.get_logger()
-var _log_mod = stc.PLUGIN_DOMAIN + '.ios-export-template'
+var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.ios-export-template')
 
 
 # ------------------------------------------------------------------------------
@@ -95,7 +94,7 @@ func get_destination_path(make_dir=false, make_template_file_dir=true):
 		if not d.dir_exists(path):
 			var err = d.make_dir_recursive(path)
 			if err != OK:
-				_log.error('Error<%s> making path<%s>' % [err,path], _log_mod)
+				_log.error('Error<%s> making path<%s>' % [err,path])
 
 	return stc.globalize_path(tpath)
 
@@ -146,11 +145,11 @@ func _copy_ios_export_template_v2():
 	var dbase = dst.get_base_dir()
 	var udst = dbase.plus_file('godot_ios_xcode')
 	var res = _unzip.run(zip,'-d', dbase)
-	_log.info('UNZIP LOG: %s' % res.output[0], _log_mod)
+	_log.info('UNZIP LOG: %s' % res.output[0])
 	
 	var err = Directory.new().rename(udst, dst)
 	if err != OK:
-		_log.error('Error<%s> renaming ios export template from %s to s'%[ err, udst, dst ], _log_mod)
+		_log.error('Error<%s> renaming ios export template from %s to s'%[ err, udst, dst ])
 	return err
 
 
@@ -161,5 +160,5 @@ func _copy_ios_export_template_v3():
 	# Steps:
 	# 1. unzip to destination
 	var res = _unzip.run(get_zip_path(), '-d', get_destination_path(true))
-	_log.info('UNZIP LOG: %s' % res.output[0], _log_mod)
+	_log.info('UNZIP LOG: %s' % res.output[0])
 	return OK

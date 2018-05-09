@@ -238,8 +238,8 @@ const FILE_BUFFER_SIZE = 30
 var default_output_level = INFO
 # TODO: Find (or implement in Godot) a more clever way to achieve that
 var default_output_strategies = [STRATEGY_PRINT, STRATEGY_PRINT, STRATEGY_PRINT, STRATEGY_PRINT, STRATEGY_PRINT]
-var default_logfile_path = "user://com.indicainkwell.ios-deploy.log" # % Globals.get("application/name") # Globals not available in v3
-var default_configfile_path = "user://%s.cfg" % PLUGIN_NAME
+var default_logfile_path = "user://com.indicainkwell.iosdeploy.log" # % Globals.get("application/name") # Globals not available in v3
+var default_configfile_path = "user://com.indicainkwell.iosdeploy.log.cfg" # % PLUGIN_NAME
 
 # e.g. "[main.INFO]: The young alpaca started growing a goatie."
 var output_format = "[{MOD}.{LVL}]: {MSG}"
@@ -328,7 +328,7 @@ func add_module(name, output_level = default_output_level, \
 func get_module(module = "main"):
 	"""Retrieve the given module if it exists; if not, it will be created."""
 	if not modules.has(module):
-		info("The requested module '%s' does not exist. It will be created with default values." \
+		verbose("The requested module '%s' does not exist. It will be created with default values." \
 				% module, PLUGIN_NAME)
 		add_module(module)
 	return modules[module]
@@ -644,3 +644,44 @@ func _initialize():
 
 func _exit_tree():
 	cleanup()
+
+
+
+# indicainkwell extras
+
+func make_module_logger(module):
+	return ModuleLogger.new(self, module)
+
+class ModuleLogger:
+	var logger
+
+	var module setget set_module,get_module
+	func get_module(): return module
+	func set_module(new_val):
+		module = new_val
+		if not logger.get_modules().has(module):
+			logger.add_module(module)
+
+	func _init(logger, module):
+		self.logger = logger
+		self.module = module
+
+	func verbose(message):
+		"""Log a message in the given module with level VERBOSE."""
+		logger.put(VERBOSE, message, module)
+
+	func debug(message):
+		"""Log a message in the given module with level DEBUG."""
+		logger.put(DEBUG, message, module)
+
+	func info(message):
+		"""Log a message in the given module with level INFO."""
+		logger.put(INFO, message, module)
+
+	func warn(message):
+		"""Log a message in the given module with level WARN."""
+		logger.put(WARN, message, module)
+
+	func error(message):
+		"""Log a message in the given module with level ERROR."""
+		logger.put(ERROR, message, module)

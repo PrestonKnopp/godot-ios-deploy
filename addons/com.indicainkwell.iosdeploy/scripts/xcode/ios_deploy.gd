@@ -40,8 +40,7 @@ var ignore_wifi_devices = false
 # ------------------------------------------------------------------------------
 
 
-var _log = stc.get_logger()
-var _log_mod = stc.PLUGIN_DOMAIN + '.ios-deploy'
+var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.ios-deploy')
 var _bash = stc.get_gdscript('shell.gd').new().make_command('/bin/bash')
 var _bashinit = ['-l', '-c']
 
@@ -60,7 +59,7 @@ func detect_devices():
 	if ignore_wifi_devices:
 		args.append('--no-wifi')
 	var res = _bash.run(_bashinit, _build_deploy_cmd(args))
-	_log.info(res.output, _log_mod)
+	_log.info(res.output)
 	return res.output[0].split('\n', false)
 
 

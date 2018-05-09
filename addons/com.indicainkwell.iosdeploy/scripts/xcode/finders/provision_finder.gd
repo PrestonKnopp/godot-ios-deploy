@@ -40,12 +40,12 @@ func find():
 	var dir = Directory.new()
 	var err = dir.open(prov_path)
 	if err != OK:
-		_log.error('%s: failed to open %s'%[err,prov_path], _log_mod)
+		_log.error('%s: failed to open %s'%[err,prov_path])
 		return []
 
 	err = dir.list_dir_begin()
 	if err != OK:
-		_log.error('%s: failed to list dir %s'%[err,prov_path], _log_mod)
+		_log.error('%s: failed to list dir %s'%[err,prov_path])
 		dir.list_dir_end()
 		return []
 
@@ -61,13 +61,13 @@ func find():
 
 		var res = _sh.run(prov2json, prov_path.plus_file(file))
 		if res.code != 0:
-			_log.info('Failed to convert provision<%s> to json'%file,_log_mod)
+			_log.info('Failed to convert provision<%s> to json'%file)
 			continue
 
 		var json = Json.new().parse(res.output[0])
 		if json.get_result().error != OK:
-			_log.info('Failed to parse provision<%s> json'%file,_log_mod)
-			_log.info('\t%s'%json.get_result().error_string, _log_mod)
+			_log.info('Failed to parse provision<%s> json'%file)
+			_log.info('\t%s'%json.get_result().error_string)
 			continue
 
 		var provision = Provision.new()

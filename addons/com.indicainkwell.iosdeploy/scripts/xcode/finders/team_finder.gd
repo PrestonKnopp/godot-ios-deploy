@@ -24,14 +24,14 @@ class Team:
 func find():
 	var res = _sh.run(stc.get_shell_script(stc.shell.listteamsjson))
 	if res.code != 0:
-		_log.error('failed to convert teams to json', _log_mod)
-		_log.error('\t%s'%res.output, _log_mod)
+		_log.error('failed to convert teams to json')
+		_log.error('\t%s'%res.output)
 		return []
 
 	_json.parse(res.output[0])
 	if _json.get_result().error != OK:
-		_log.error('Failed to parse team json', _log_mod)
-		_log.error('\t'+str(_json.get_result().error)+' :: '+_json.get_result().error_string, _log_mod)
+		_log.error('Failed to parse team json')
+		_log.error('\t'+str(_json.get_result().error)+' :: '+_json.get_result().error_string)
 		return []
 
 	var teams = []

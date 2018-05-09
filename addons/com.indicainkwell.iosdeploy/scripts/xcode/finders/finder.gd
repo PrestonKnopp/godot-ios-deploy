@@ -40,8 +40,7 @@ static func find_devices():
 # ------------------------------------------------------------------------------
 
 
-var _log = stc.get_logger()
-var _log_mod = stc.PLUGIN_DOMAIN + '.finder'
+var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.finder')
 var _shell = stc.get_gdscript('shell.gd').new()
 var _sh = _shell.make_command('/bin/bash')
 var _json = Json.new()
@@ -52,8 +51,8 @@ var _json = Json.new()
 # ------------------------------------------------------------------------------
 
 
-func _init():
-	_log.add_module(_log_mod)
+# func _init():
+# 	pass
 
 
 # ------------------------------------------------------------------------------

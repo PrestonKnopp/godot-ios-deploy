@@ -97,8 +97,7 @@ var Shell = stc.get_gdscript('shell.gd')
 
 var _json = Json.new()
 var _sh = Shell.new().make_command('/bin/bash')
-var _log = stc.get_logger()
-var _log_mod = stc.PLUGIN_DOMAIN + '.pbx'
+var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.pbx')
 
 
 # ------------------------------------------------------------------------------
@@ -106,8 +105,8 @@ var _log_mod = stc.PLUGIN_DOMAIN + '.pbx'
 # ------------------------------------------------------------------------------
 
 
-func _init():
-	_log.add_module(_log_mod)
+# func _init():
+# 	pass
 
 
 # ------------------------------------------------------------------------------
@@ -162,7 +161,7 @@ func open(path):
 	path = stc.globalize_path(path)
 
 	if not File.new().file_exists(path):
-		_log.error('file !exists at ' + path, _log_mod)
+		_log.error('file !exists at ' + path)
 		return ERR_FILE_NOT_FOUND
 
 
@@ -171,7 +170,7 @@ func open(path):
 
 	_json.parse(sh_res.output[0])
 	if _json.get_result().error != OK:
-		_log.error('parsing json: ' + _json.get_result().error_string, _log_mod)
+		_log.error('parsing json: ' + _json.get_result().error_string)
 		return _json.get_result().error
 
 	return OK
@@ -181,7 +180,7 @@ func save_json(path):
 	var f = File.new()
 	var err = f.open(path, File.WRITE_READ)
 	if err != OK:
-		_log.error('('+str(err)+') failed to open '+path+' for writing json data', _log_mod)
+		_log.error('('+str(err)+') failed to open '+path+' for writing json data')
 		return err
 
 	f.store_string(_json.to_string())

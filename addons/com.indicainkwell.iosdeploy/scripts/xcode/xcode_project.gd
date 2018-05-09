@@ -57,8 +57,7 @@ var _path
 var _shell = Shell.new()
 var _xcodebuild = _shell.make_command('xcodebuild')
 
-var _log = stc.get_logger()
-var _log_mod = stc.PLUGIN_DOMAIN + '.xcode-project'
+var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.xcode-project')
 
 
 # ------------------------------------------------------------------------------
@@ -67,7 +66,6 @@ var _log_mod = stc.PLUGIN_DOMAIN + '.xcode-project'
 
 
 func _init():
-	_log.add_module(_log_mod)
 	_iosdeploy.connect('deployed', self, '_on_deployed')
 
 
@@ -161,7 +159,7 @@ func update_pbx():
 	
 	var pbx = PBX.new()
 	if pbx.open(get_pbx_path()) != OK:
-		_log.info('Unable to open pbxproj for updating at ' + get_pbx_path(), _log_mod)
+		_log.info('Unable to open pbxproj for updating at ' + get_pbx_path())
 		return
 	
 	pbx.add_object(PBXPROJ_UUIDS.FILE_REF, 'PBXFileReference', {
@@ -193,7 +191,7 @@ func update_info_plist():
 	
 	var plist = PList.new()
 	if plist.open(get_info_plist_path()) != OK:
-		_log.info('Unable to open infoplist for updating at ' + get_info_plist_path(), _log_mod)
+		_log.info('Unable to open infoplist for updating at ' + get_info_plist_path())
 		return
 	
 	plist.set_value("CFBundleDisplayName", name)
@@ -218,7 +216,7 @@ func build():
 	assert(name != null)
 	var args = _build_xcodebuild_args()
 	var res = _xcodebuild.run('build', args)
-	_log.info(res.output[0], _log_mod)
+	_log.info(res.output[0])
 
 
 func built():
