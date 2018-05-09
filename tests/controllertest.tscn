@@ -1,0 +1,35 @@
+[gd_scene load_steps=2 format=1]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends Control
+
+var c = preload('res://addons/com.indicainkwell.iosdeploy/scripts/controller.gd').new()
+
+func _init():
+#	var t = []
+#	OS.execute('/bin/bash', ['-l', '-c', 'ios-deploy --detect --timeout 1'], true, t)
+#	print(t)
+#	var i = preload('res://addons/com.indicainkwell.iosdeploy/scripts/xcode/ios_deploy.gd').new()
+#	print(i.detect_devices())
+	add_child(c.get_view())
+	add_child(c._settings_menu)
+
+func _ready():
+	c.get_view().show()"
+
+[node name="testbutt" type="Control"]
+
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 0.0
+margin/bottom = 0.0
+script/script = SubResource( 1 )
+
+

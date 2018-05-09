@@ -12,7 +12,3 @@ config_version=3
 
 config/name="iOSDeploy"
 config/icon="res://addons/com.indicainkwell.iosdeploy/resources/apple-icon@3.png"
-
-[autoload]
-
-test="*res://test.gd"

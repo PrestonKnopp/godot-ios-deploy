@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>AppIDName</key>
+	<string>appIDName</string>
+	<key>ApplicationIdentifierPrefix</key>
+	<array>
+		<string>appIDPrefix</string>
+	</array>
+	<key>CreationDate</key>
+	<date>2018-04-08T01:41:57Z</date>
+	<key>Platform</key>
+	<array>
+		<string>iOS</string>
+	</array>
+    <key>IsXcodeManaged</key>
+    <false/>
+	<key>DeveloperCertificates</key>
+	<array>
+		<data>thisispemformatthisispemformatthisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformathisispemformat</data>
+	</array>
+	<key>Entitlements</key>
+	<dict>
+		<key>keychain-access-groups</key>
+		<array>
+			<string>appIDPrefix</string>
+		</array>
+		<key>get-task-allow</key>
+		<true/>
+		<key>application-identifier</key>
+		<string>appIDPrefix.com.application.identifier</string>
+		<key>com.apple.developer.team-identifier</key>
+		<string>appIDPrefix</string>
+	</dict>
+	<key>ExpirationDate</key>
+	<date>2019-04-08T01:41:57Z</date>
+	<key>Name</key>
+	<string>name</string>
+	<key>ProvisionedDevices</key>
+	<array>
+		<string>provisionedDeviceID</string>
+	</array>
+	<key>TeamIdentifier</key>
+	<array>
+		<string>appIDPrefix</string>
+	</array>
+	<key>TeamName</key>
+	<string>teamName</string>
+	<key>TimeToLive</key>
+	<integer>365</integer>
+	<key>UUID</key>
+	<string>uuiduuid-uuid-uuid-uuid-uuiduuiduuid</string>
+	<key>Version</key>
+	<integer>1</integer>
+</dict>
+</plist>
