@@ -46,13 +46,9 @@ var _settings_menu = SettingsMenuScene.instance()
 
 
 func _init():
-	_settings_menu.connect('request_fill', self, '_on_request_fill')
-	_settings_menu.connect('finished_editing', self, '_on_finished_editing')
-
-
-func free():
-	get_view().queue_free()
-	.free()
+	get_view().connect('pressed', self, '_one_click_button_pressed')
+	get_menu().connect('request_fill', self, '_on_request_fill')
+	get_menu().connect('finished_editing', self, '_on_finished_editing')
 
 
 # ------------------------------------------------------------------------------
@@ -60,9 +56,17 @@ func free():
 # ------------------------------------------------------------------------------
 
 
+func cleanup():
+	get_view().queue_free()
+	get_menu().queue_free()
+
+
 func get_view():
-	assert(_one_click_button != null)
 	return _one_click_button
+
+
+func get_menu():
+	return _settings_menu
 
 
 # ------------------------------------------------------------------------------
@@ -115,10 +119,12 @@ func _on_request_fill(menu):
 
 
 
-
-
 func _on_finished_editing(menu):
 	pass
 
 
 # -- OneClickButton
+
+
+func _one_click_button_pressed():
+	pass

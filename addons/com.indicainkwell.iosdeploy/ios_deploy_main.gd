@@ -24,6 +24,7 @@ var Controller = stc.get_gdscript('controller.gd')
 
 
 var controller
+var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.main')
 
 
 # ------------------------------------------------------------------------------
@@ -34,27 +35,33 @@ var controller
 func _enter_tree():
 	if not meets_software_requirements():
 		return
+	_log.verbose('Meets software requirements')
 	controller = Controller.new()
 	add_control_to_container(CONTAINER_TOOLBAR, controller.get_view())
 
 
 func _exit_tree():
-	controller = null
+	if controller != null:
+		controller.cleanup()
+		controller = null
 
 
 func meets_software_requirements():
-	var errors = []
+	var meets = true
+
 	if OS.get_name() != 'OSX':
-		errors.append('macOS is needed to build and deploy iOS projects')
-		return errors
+		_log.error('macOS is needed to build and deploy iOS projects')
+		meets = false
 
 	if not ext_sw_exists('ios-deploy'):
-		errors.append('ios-deploy is missing: install ios-deploy with homebrew -- brew install ios-deploy')
+		_log.error('ios-deploy is missing: install ios-deploy with homebrew -- brew install ios-deploy')
+		meets = false
 
 	if not ext_sw_exists('xcodebuild'):
-		errors.append('xcodebuild is missing: install xcode command line tools')
+		_log.error('xcodebuild is missing: install xcode command line tools')
+		meets = false
 
-	return errors
+	return meets
 
 
 func ext_sw_exists(software):
