@@ -1,12 +1,4 @@
 # xcode.gd
-#
-# TODO: test this
-# DONE: major refactor
-#  - [X] Create a project maker class
-#  - [X] Maybe a factory class for finding devices, provisions, and teams
-#  - [X] Implement new classes
-#  - [X] Classes for plist and pbxproj
-#  - [X] Use a logger
 extends Reference
 
 
@@ -51,14 +43,14 @@ func get_finder(): return finder
 
 
 # TODO: handle not having templates installed
-func make_project(bundle_id, name):
+func make_project(bundle_id, display_name):
 	var template = iOSExportTemplate.new()
 	if not template.copy_exists():
 		template.copy_install()
 	
 	var project = Project.new()
 	project.bundle_id = bundle_id
-	project.name = name
+	project.name = display_name
 	project.open(template.get_destination_path())
 
 	return project

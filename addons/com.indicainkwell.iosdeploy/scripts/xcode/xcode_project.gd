@@ -117,8 +117,7 @@ func get_xcodeproj_path():
 
 
 func get_app_path():
-	var build = 'Release'
-	if debug: build = 'Debug'
+	var build = 'Debug' if debug else 'Release'
 	return get_path().plus_file('build/%s-iphoneos/%s.app'%[build,name])
 
 
@@ -145,7 +144,7 @@ func update_pbx():
 	# 1. Add project file ref as PBXFileReference
 	#   - isa = PBXFileReference
 	#   - lastKnownFileType = folder
-	#   - name = project name
+	#   - name = godot project folder name
 	#   - path = "relative path"
 	# 2. Add project as PBXBuildFile
 	#   - isa = PBXBuildFile
