@@ -52,12 +52,18 @@ static func get_logger():
 
 
 static func globalize_path(path):
+	var gpath
 	var protocol = 'user://'
 	if path.begins_with(protocol):
 		var get_data_dir = 'get_data_dir' if get_version().is2() else 'get_user_data_dir'
-		return OS.call(get_data_dir).plus_file(path.right(protocol.length()))
-
-	return get_gdscript('globalize_path.gd').globalize_path(path)
+		gpath = OS.call(get_data_dir).plus_file(path.right(protocol.length()))
+	else:
+		gpath = get_gdscript('globalize_path.gd').globalize_path(path)
+	
+	# strip any ending /'s for paths consistency
+	while gpath.ends_with('/'):
+		gpath = gpath.left(gpath.length() - 1)
+	return gpath
 
 
 static func get_project_path():
@@ -65,11 +71,12 @@ static func get_project_path():
 
 
 static func get_project_dir_name():
-	var p = get_project_path()
-	return p.right(p.find_last('/'))
+	return get_project_path().get_file()
 
 
-static func get_data_path(extended_by=''):
+static func get_data_path(extended_by=null):
+	if extended_by == null:
+		return PLUGIN_DATA_PATH
 	return PLUGIN_DATA_PATH.plus_file(extended_by)
 
 
