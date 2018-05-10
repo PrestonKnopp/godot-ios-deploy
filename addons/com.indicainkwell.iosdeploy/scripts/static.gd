@@ -54,7 +54,8 @@ static func get_logger():
 static func globalize_path(path):
 	var protocol = 'user://'
 	if path.begins_with(protocol):
-		return OS.get_data_dir().plus_file(path.right(protocol.length()))
+		var get_data_dir = 'get_data_dir' if get_version().is2() else 'get_user_data_dir'
+		return OS.call(get_data_dir).plus_file(path.right(protocol.length()))
 
 	return get_gdscript('globalize_path.gd').globalize_path(path)
 
