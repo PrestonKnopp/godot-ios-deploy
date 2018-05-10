@@ -75,7 +75,7 @@ func run_tests():
 	for method in get_method_list():
 		if method.flags == 65 and method.name.begins_with('test_'):
 			_failed_assertions = 0
-			print('---------- Running %s ----------' % method.name)
+			print('\n---------- Running %s ----------' % method.name)
 			
 			indent()
 			
@@ -111,8 +111,21 @@ const stc = preload('res://addons/com.indicainkwell.iosdeploy/scripts/static.gd'
 
 var Regex = stc.get_gdscript('regex.gd')
 var Shell = stc.get_gdscript('shell.gd')
+var iOSExportTemplate = stc.get_gdscript('xcode/ios_export_template.gd')
 var Xcode = stc.get_gdscript('xcode.gd')
 var ProvisionFinder = stc.get_gdscript('xcode/finders/provision_finder.gd')
+
+
+# -- Test Static
+
+
+func test_static_paths():
+	p(stc.get_project_path())
+	p(stc.get_project_dir_name())
+	p(stc.get_data_path())
+	p(stc.globalize_path(stc.get_data_path()))
+	p(stc.globalize_path('res://'))
+	p(stc.globalize_path('user://'))
 
 
 # -- Test Logger
@@ -248,3 +261,38 @@ func test_provisionfinder_find_provisions(f):
 	ae(date.minute, 41)
 	ae(date.second, 57)
 	dedent()
+
+
+# -- iOSExportTemplate Test
+
+
+func test_iosExportTemplate_destination_path():
+	var temp = iOSExportTemplate.new()
+	p(temp.get_destination_path())
+
+
+# -- Xcode Project Test
+
+
+func test_xcodeproject_make():
+	var proj = Xcode.new().make_project('com.my.bundle.id', 'MyTestProject')
+	ane(proj, null)
+
+
+func test_xcodeproject_paths():
+	var proj = Xcode.new().make_project('com.my.bundle.id', 'MyTestProject')
+	p(proj.get_path())
+	p(proj.get_xcodeproj_path())
+	p(proj.get_app_path())
+	p(proj.get_pbx_path())
+	p(proj.get_info_plist_path())
+
+
+
+func _test_xcodeproject_build():
+	var proj = Xcode.new().make_project('com.my.bundle.id', 'MyTestProject')
+	var team = stc.get_gdscript('xcode/finders/team_finder.gd').Team.new()
+	team.id = 'TeamID'
+	team.name = 'TeamName'
+	proj.team = team
+	proj.build()
