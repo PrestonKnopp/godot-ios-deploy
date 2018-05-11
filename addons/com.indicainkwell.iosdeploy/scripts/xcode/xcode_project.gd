@@ -194,7 +194,7 @@ func update_info_plist():
 		return
 	
 	plist.set_value("CFBundleDisplayName", name)
-	plist.set_value("CFBundleDisplayIdentifier", bundle_id)
+	plist.set_value("CFBundleIdentifier", bundle_id)
 	plist.set_value("godot_path", stc.get_project_dir_name())
 	
 	for key in custom_info:
