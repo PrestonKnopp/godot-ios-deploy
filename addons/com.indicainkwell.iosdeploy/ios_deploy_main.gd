@@ -38,12 +38,18 @@ func _enter_tree():
 	_log.verbose('Meets software requirements')
 	controller = Controller.new()
 	add_control_to_container(CONTAINER_TOOLBAR, controller.get_view())
+	add_menu(controller.get_menu())
 
 
 func _exit_tree():
 	if controller != null:
 		controller.cleanup()
 		controller = null
+
+
+# ------------------------------------------------------------------------------
+#                                      Methods
+# ------------------------------------------------------------------------------
 
 
 func meets_software_requirements():
@@ -69,3 +75,9 @@ func ext_sw_exists(software):
 	OS.execute('command', ['-v', software], true, out)
 	return out.size() > 0
 
+
+func add_menu(menu):
+	if stc.get_version().is2():
+		get_base_control().add_child(menu)
+	else:
+		get_editor_interface().get_base_control().add_child(menu)
