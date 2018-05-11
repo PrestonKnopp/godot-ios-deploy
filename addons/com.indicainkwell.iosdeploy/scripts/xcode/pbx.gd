@@ -144,7 +144,7 @@ func find_objects(queries):
 	for uuid in objects.keys():
 		var object = objects[uuid]
 		for i in qrange:
-			var valid = queries[i]._process(object)
+			var valid = queries[i]._process(_json, uuid, object)
 			if valid:
 				result[i].append(object)
 	
