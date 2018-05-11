@@ -81,7 +81,8 @@ func save():
 	var args = _build_pbuddy_args()
 	res = _pbuddy.run(args, _path)
 	if res.output.size() > 0 and res.output[0].length() > 0:
-		_log.info('TODO: check how to find out if pbuddy failed')
+		_log.debug(res.output[0])
+		_log.verbose('TODO: check how to find out if pbuddy failed')
 	
 	return OK
 
@@ -94,6 +95,10 @@ func save():
 func _build_pbuddy_args():
 	var args = []
 	for key in _backing:
+		# add first in case key doesn't exist, set will still work
+		# also, only supports string
+		args.append('-c')
+		args.append('Add %s string %s' % [key, _backing[key]])
 		args.append('-c')
 		args.append('Set %s %s' % [key, _backing[key]])
 	return args
