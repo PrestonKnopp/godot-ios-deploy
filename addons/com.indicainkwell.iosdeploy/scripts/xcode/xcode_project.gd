@@ -179,8 +179,8 @@ func update_pbx():
 	resource_build_phase_q.type = 'PBXResourcesBuildPhase'
 	
 	var res = pbx.find_objects([root_pbxgroup_q, resource_build_phase_q])
-	res[0]['children'].append(PBXPROJ_UUIDS.FILE_REF)
-	res[1]['files'].append(PBXPROJ_UUIDS.BUILD_FILE)
+	res[0][0]['children'].append(PBXPROJ_UUIDS.FILE_REF)
+	res[1][0]['files'].append(PBXPROJ_UUIDS.BUILD_FILE)
 	
 	pbx.save_plist(get_pbx_path())
 
