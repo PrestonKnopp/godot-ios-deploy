@@ -160,6 +160,8 @@ func update_pbx():
 	if pbx.open(get_pbx_path()) != OK:
 		_log.info('Unable to open pbxproj for updating at ' + get_pbx_path())
 		return
+
+	# add godot project file reference
 	
 	pbx.add_object(PBXPROJ_UUIDS.FILE_REF, 'PBXFileReference', {
 		lastKnownFileType = 'folder',
@@ -171,6 +173,8 @@ func update_pbx():
 		fileRef = PBXPROJ_UUIDS.FILE_REF,
 	})
 	
+	# pbx queries
+	
 	var root_pbxgroup_q = PBX.Query.new()
 	root_pbxgroup_q.type = 'PBXGroup'
 	root_pbxgroup_q.excludekeypath = 'name'
@@ -179,8 +183,16 @@ func update_pbx():
 	resource_build_phase_q.type = 'PBXResourcesBuildPhase'
 	
 	var res = pbx.find_objects([root_pbxgroup_q, resource_build_phase_q])
-	res[0][0]['children'].append(PBXPROJ_UUIDS.FILE_REF)
-	res[1][0]['files'].append(PBXPROJ_UUIDS.BUILD_FILE)
+
+	# add godot project folder to xcode project
+	var pbxgroup_children = res[0][0]['children']
+	if not pbxgroup_children.has(PBXPROJ_UUIDS.FILE_REF):
+		pbxgroup_children.append(PBXPROJ_UUIDS.FILE_REF)
+	
+	# add godot project folder to xcode copy resource build phase
+	var buildphase_files = res[1][0]['files']
+	if not buildphase_files.has(PBXPROJ_UUIDS.BUILD_FILE):
+		buildphase_files.append(PBXPROJ_UUIDS.BUILD_FILE)
 	
 	pbx.save_plist(get_pbx_path())
 
