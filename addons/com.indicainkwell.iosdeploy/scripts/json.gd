@@ -47,15 +47,22 @@ func get_value(path, default=null):
 	return current
 
 
-func set_value(path, value):
+func set_value(path, value, create_path=false):
+	"""
+	Set value at path, optionally creating path if it does not exist.
+	"""
 	var np = NodePath(path)
 	assert(np.get_name_count() > 0)
+	var last_name_idx = np.get_name_count() - 1
 	var name = np.get_name(0)
 	var current = _backing
-	for i in range(np.get_name_count() - 1):
+	for i in range(last_name_idx):
 		name = np.get_name(i)
-		if current.has(name):
-			current = current[name]
-		else:
-			return ERR_DOES_NOT_EXIST
-	current[name] = value
+		if not current.has(name):
+			if not create_path:
+				return ERR_DOES_NOT_EXIST
+			current[name] = {}
+		current = current[name]
+	var last_name = np.get_name(last_name_idx)
+	current[last_name] = value
+	return OK
