@@ -189,6 +189,7 @@ func save_json(path):
 
 
 func save_plist(path):
+	path = stc.globalize_path(path)
 	var tmp_json_path = '/tmp/%s.pbxproj.json' % stc.PLUGIN_DOMAIN
 	var err = save_json(tmp_json_path)
 	if err != OK:
