@@ -43,7 +43,7 @@ func get_finder(): return finder
 
 
 # TODO: handle not having templates installed
-func make_project(bundle_id, display_name):
+func make_project(bundle_id=null, display_name=null):
 	var template = iOSExportTemplate.new()
 	if not template.copy_exists():
 		template.copy_install()

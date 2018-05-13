@@ -4,7 +4,7 @@
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Light.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Bold.ttf" type="DynamicFontData" id=4]
-
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/_v2/device_tree_list.gd" type="Script" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 
@@ -41,42 +41,7 @@ content_margin/right = -1.0
 content_margin/top = -1.0
 content_margin/bottom = -1.0
 
-[sub_resource type="GDScript" id=6]
-
-script/source = "tool
-extends Tree
-
-
-var _root = create_item()
-
-
-func _ready():
-	set_hide_root(true)
-
-
-func _create_device_item():
-	var t = create_item(_root)
-	t.set_cell_mode(0, t.CELL_MODE_CHECK)
-	t.set_editable(0, true)
-	return t
-
-
-func populate(devices):
-	for device in devices:
-		_create_device_item().set_text(0, device)
-
-
-func get_active():
-	var res = []
-	var child = _root.get_children()
-	while child != null:
-		if child.is_checked(0):
-			res.append(child.get_text(0))
-		child = child.get_next()
-	return res
-"
-
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=6]
 
 font/size = 30
 font/use_mipmaps = false
@@ -364,7 +329,7 @@ align = 0
 selected = -1
 items = [  ]
 
-[node name="automanage_profile" type="CheckButton" parent="content_container/VBoxContainer/identifier_group/identity_group"]
+[node name="automanage_provision" type="CheckButton" parent="content_container/VBoxContainer/identifier_group/identity_group"]
 
 focus/ignore_mouse = false
 focus/stop_mouse = true
@@ -384,7 +349,7 @@ text = "Automanage Profile"
 flat = false
 align = 0
 
-[node name="profile_id" type="OptionButton" parent="content_container/VBoxContainer/identifier_group/identity_group"]
+[node name="provision_id" type="OptionButton" parent="content_container/VBoxContainer/identifier_group/identity_group"]
 
 focus/ignore_mouse = false
 focus/stop_mouse = true
@@ -455,7 +420,7 @@ margin/bottom = 157.0
 custom_styles/bg_focus = SubResource( 5 )
 custom_fonts/font = SubResource( 4 )
 custom_constants/vseparation = 8
-script/script = SubResource( 6 )
+script/script = ExtResource( 5 )
 
 [node name="close_button" type="Button" parent="."]
 
@@ -469,7 +434,7 @@ margin/left = 40.0
 margin/top = 0.0
 margin/right = 0.0
 margin/bottom = 42.0
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 6 )
 custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )
@@ -478,8 +443,6 @@ enabled_focus_mode = 2
 shortcut = null
 text = "x"
 flat = true
-
-[connection signal="modal_close" from="." to="." method="_on_deploy_settings_menu_modal_close"]
 
 [connection signal="visibility_changed" from="." to="." method="_on_deploy_settings_menu_visibility_changed"]
 

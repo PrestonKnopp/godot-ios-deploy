@@ -1,4 +1,5 @@
 # controller.gd
+tool
 extends Reference
 
 
@@ -48,6 +49,7 @@ var _settings_menu = SettingsMenuScene.instance()
 func _init():
 	get_view().connect('pressed', self, '_one_click_button_pressed')
 	get_menu().connect('request_fill', self, '_on_request_fill')
+	get_menu().connect('request_populate', self, '_on_request_populate')
 	get_menu().connect('finished_editing', self, '_on_finished_editing')
 
 
@@ -112,54 +114,50 @@ func filter_provisions(provisions):
 # -- SettingsMenu
 
 
+func _on_request_populate(menu):
+	menu.populate_devices(_xcode.finder.find_devices())
+	menu.populate_provisions(filter_provisions(_xcode.finder.find_provisions()))
+	menu.populate_teams(_xcode.finder.find_teams())
+
+
 func _on_request_fill(menu):
-	var bundle = {
-		name = '',
-		disp = '',
-		id = ''
-	}
 	if _xcode_project != null:
-		bundle.name = _xcode_project.name
-		bundle.disp = _xcode_project.name
-		bundle.id = _xcode_project.bundle_id
-	menu.fill_bundle_group(bundle.name, bundle.disp, bundle.id)
-
-	var id = {
-		team = '',
-		automanaged = false,
-		profile = ''
-	}
-	if _xcode_project != null:
-		id.team = _xcode_project.team.name
-		id.automanaged = _xcode_project.automanaged
-		id.profile_id = _xcode_project.provision.name
-	menu.fill_identity_group(id.team, id.automanaged, id.profile)
-
-	var found_names = []
-
-	var devices = _xcode.finder.find_devices()
-	for device in devices:
-		found_names.append(device.name)
-	menu.fill_devices_group(found_names)
-	found_names.clear()
-
-	for provision in filter_provisions(_xcode.finder.find_provisions()):
-		found_names.append(provision.name)
-	menu.populate_profiles(found_names)
-	found_names.clear()
-
-	for team in _xcode.finder.find_teams():
-		found_names.append(team.name)
-	menu.populate_teams(found_names)
-
+		menu.fill_devices_group(_xcode_project.devices)
+		menu.fill_bundle_group(
+			_xcode_project.name,
+			_xcode_project.disp,
+			_xcode_project.bundle_id
+		)
+		menu.fill_identity_group(
+			_xcode_project.team,
+			_xcode_project.automanaged,
+			_xcode_project.provision
+		)
 
 
 func _on_finished_editing(menu):
-	pass
+	var bundle = menu.get_bundle_group()
+	if _xcode_project == null: _xcode_project = _xcode.make_project()
+	_xcode_project.bundle_id = bundle.id
+	_xcode_project.name = bundle.display
+
+	var identity = menu.get_identity_group()
+	_xcode_project.team = identity.team
+	_xcode_project.provision = identity.provision
+	_xcode_project.automanaged = identity.automanaged
+
+	var selected_devices = menu.get_active_devices()
+	_xcode_project.set_devices(selected_devices)
+
+	_xcode_project.update()
+
+
 
 
 # -- OneClickButton
 
 
 func _one_click_button_pressed():
-	pass
+	print('Showing menu')
+	get_menu().show()
+	return
