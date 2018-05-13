@@ -75,7 +75,7 @@ func _ios_deploy_find_devices():
 
 	for line in output:
 		var captures = _regex.search(line)
-		if captures.empty():
+		if captures.size() == 0:
 			# Whole pattern didn't match
 			continue
 
