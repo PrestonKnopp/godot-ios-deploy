@@ -125,7 +125,6 @@ func _on_request_fill(menu):
 		menu.fill_devices_group(_xcode_project.devices)
 		menu.fill_bundle_group(
 			_xcode_project.name,
-			_xcode_project.disp,
 			_xcode_project.bundle_id
 		)
 		menu.fill_identity_group(

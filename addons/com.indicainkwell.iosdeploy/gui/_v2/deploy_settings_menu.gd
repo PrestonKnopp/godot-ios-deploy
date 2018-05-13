@@ -13,7 +13,6 @@ signal finished_editing(this)
 
 
 onready var _ctnt = get_node('content_container/VBoxContainer')
-onready var _bdlname = _ctnt.get_node('identifier_group/bundle_group/bundle_name')
 onready var _bdldisp = _ctnt.get_node('identifier_group/bundle_group/bundle_display_name')
 onready var _bdlid = _ctnt.get_node('identifier_group/bundle_group/bundle_id')
 onready var _toptbutt = _ctnt.get_node('identifier_group/identity_group/team_name')
@@ -33,7 +32,6 @@ func _ready():
 
 func get_bundle_group():
 	return {
-		name = _bdlname.get_text(),
 		display = _bdldisp.get_text(),
 		id = _bdlid.get_text(),
 	}
@@ -79,8 +77,7 @@ func populate_devices(devices):
 # ------------------------------------------------------------------------------
 
 
-func fill_bundle_group(name, display_name, id):
-	_bdlname.set_text(name)
+func fill_bundle_group(display_name, id):
 	_bdldisp.set_text(display_name)
 	_bdlid.set_text(id)
 

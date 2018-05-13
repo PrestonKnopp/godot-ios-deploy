@@ -188,7 +188,7 @@ size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 92.0
 margin/right = 824.0
-margin/bottom = 210.0
+margin/bottom = 200.0
 custom_constants/separation = 30
 alignment = 0
 
@@ -201,7 +201,7 @@ size_flags/vertical = 3
 margin/left = 0.0
 margin/top = 0.0
 margin/right = 380.0
-margin/bottom = 118.0
+margin/bottom = 108.0
 alignment = 0
 
 [node name="Label" type="Label" parent="content_container/VBoxContainer/identifier_group/bundle_group"]
@@ -220,7 +220,7 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="bundle_name" type="LineEdit" parent="content_container/VBoxContainer/identifier_group/bundle_group"]
+[node name="bundle_display_name" type="LineEdit" parent="content_container/VBoxContainer/identifier_group/bundle_group"]
 
 focus/ignore_mouse = false
 focus/stop_mouse = true
@@ -230,23 +230,6 @@ margin/left = 0.0
 margin/top = 23.0
 margin/right = 380.0
 margin/bottom = 52.0
-custom_fonts/font = SubResource( 4 )
-placeholder/text = "Bundle Name"
-placeholder/alpha = 0.6
-focus_mode = 2
-caret/caret_blink = false
-caret/caret_blink_speed = 0.65
-
-[node name="bundle_display_name" type="LineEdit" parent="content_container/VBoxContainer/identifier_group/bundle_group"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 56.0
-margin/right = 380.0
-margin/bottom = 85.0
 custom_fonts/font = SubResource( 4 )
 placeholder/text = "Bundle Display Name"
 placeholder/alpha = 0.6
@@ -261,9 +244,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 89.0
+margin/top = 56.0
 margin/right = 380.0
-margin/bottom = 118.0
+margin/bottom = 85.0
 custom_fonts/font = SubResource( 4 )
 placeholder/text = "Bundle Id (i.e. com.you.game)"
 placeholder/alpha = 0.6
@@ -280,7 +263,7 @@ size_flags/vertical = 2
 margin/left = 410.0
 margin/top = 0.0
 margin/right = 413.0
-margin/bottom = 118.0
+margin/bottom = 108.0
 
 [node name="identity_group" type="VBoxContainer" parent="content_container/VBoxContainer/identifier_group"]
 
@@ -291,7 +274,7 @@ size_flags/vertical = 3
 margin/left = 443.0
 margin/top = 0.0
 margin/right = 824.0
-margin/bottom = 118.0
+margin/bottom = 108.0
 alignment = 0
 
 [node name="Label" type="Label" parent="content_container/VBoxContainer/identifier_group/identity_group"]
@@ -375,9 +358,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 225.0
+margin/top = 215.0
 margin/right = 824.0
-margin/bottom = 228.0
+margin/bottom = 218.0
 
 [node name="devices_group" type="VBoxContainer" parent="content_container/VBoxContainer"]
 
@@ -386,7 +369,7 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 3
 margin/left = 0.0
-margin/top = 243.0
+margin/top = 233.0
 margin/right = 824.0
 margin/bottom = 400.0
 alignment = 0
@@ -416,7 +399,7 @@ size_flags/vertical = 3
 margin/left = 0.0
 margin/top = 23.0
 margin/right = 824.0
-margin/bottom = 157.0
+margin/bottom = 167.0
 custom_styles/bg_focus = SubResource( 5 )
 custom_fonts/font = SubResource( 4 )
 custom_constants/vseparation = 8
