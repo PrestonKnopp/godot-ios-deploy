@@ -19,6 +19,9 @@ var PList = stc.get_gdscript('xcode/plist.gd')
 var PBX = stc.get_gdscript('xcode/pbx.gd')
 var Project = stc.get_gdscript('xcode/xcode_project.gd')
 var iOSExportTemplate = stc.get_gdscript('xcode/ios_export_template.gd')
+var Team = stc.get_gdscript('xcode/team.gd')
+var Provision = stc.get_gdscript('xcode/provision.gd')
+var Device = stc.get_gdscript('xcode/device.gd')
 
 
 # ------------------------------------------------------------------------------

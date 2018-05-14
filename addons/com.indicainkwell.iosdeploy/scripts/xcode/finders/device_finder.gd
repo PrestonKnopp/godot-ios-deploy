@@ -3,37 +3,11 @@ extends 'finder.gd'
 
 
 # ------------------------------------------------------------------------------
-#                                     Constants
+#                                     Subtypes
 # ------------------------------------------------------------------------------
 
 
-const stc = preload('../../static.gd')
-
-
-# ------------------------------------------------------------------------------
-#                                   Inner Classes
-# ------------------------------------------------------------------------------
-
-
-class Device:
-	enum Type {
-		Unknown,
-		iPhone,
-		iPad,
-		Simulator,
-		Mac
-	}
-
-	enum Connection {
-		USB,
-		WIFI
-	}
-
-	var id
-	var name
-	var type_info
-	var type = Unknown
-	var connection = USB
+var Device = stc.get_gdscript('xcode/device.gd')
 
 
 # ------------------------------------------------------------------------------

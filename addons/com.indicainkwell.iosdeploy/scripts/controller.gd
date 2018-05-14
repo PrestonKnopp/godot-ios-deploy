@@ -36,6 +36,8 @@ var SettingsMenuScene = stc.get_scene('deploy_settings_menu.tscn')
 var _xcode = Xcode.new()
 var _xcode_project
 
+var _config = ConfigFile.new()
+
 var _one_click_button = OneClickButtonScene.instance()
 var _settings_menu = SettingsMenuScene.instance()
 
@@ -47,11 +49,40 @@ var _settings_menu = SettingsMenuScene.instance()
 
 
 func _init():
+	# get_menu().hide()
 	get_view().connect('pressed', self, '_one_click_button_pressed')
+	get_view().connect('mouse_hovering', self, '_one_click_button_mouse_hovering')
+	get_view().connect('mouse_exit', self, '_one_click_button_mouse_exit')
 	get_menu().connect('request_fill', self, '_on_request_fill')
 	get_menu().connect('request_populate', self, '_on_request_populate')
 	get_menu().connect('finished_editing', self, '_on_finished_editing')
 
+	if _config.load(stc.get_data_path('config.cfg')) != OK:
+		stc.get_logger().info('unable to load config')
+	else:
+		_xcode_project = _xcode.make_project()
+		_xcode_project.bundle_id = _config.get_value('xcode/project', 'bundle_id')
+		_xcode_project.name = _config.get_value('xcode/project', 'name')
+
+		_xcode_project.automanaged = _config.get_value('xcode/project', 'automanaged', false)
+		_xcode_project.debug = _config.get_value('xcode/project', 'debug', true)
+		_xcode_project.custom_info = _config.get_value('xcode/project', 'custom_info', {})
+
+		var team = _xcode.Team.new()
+		team.from_dict(_config.get_value('xcode/project', 'team'))
+		_xcode_project.team = team
+
+		var provision = _xcode.Provision.new()
+		provision.from_dict(_config.get_value('xcode/project', 'provision'))
+		_xcode_project.provision = provision
+
+		var devices = _config.get_value('xcode/project', 'devices', [])
+		for i in range(devices.size()):
+			var device = _xcode.Device.new()
+			device.from_dict(devices[i])
+			devices[i] = device
+		_xcode_project.set_devices(devices)
+	
 
 # ------------------------------------------------------------------------------
 #                                      Methods
@@ -122,7 +153,8 @@ func _on_request_populate(menu):
 
 func _on_request_fill(menu):
 	if _xcode_project != null:
-		menu.fill_devices_group(_xcode_project.devices)
+		print('filling')
+		menu.fill_devices_group(_xcode_project.get_devices())
 		menu.fill_bundle_group(
 			_xcode_project.name,
 			_xcode_project.bundle_id
@@ -135,20 +167,33 @@ func _on_request_fill(menu):
 
 
 func _on_finished_editing(menu):
+	if _xcode_project == null:
+		_xcode_project = _xcode.make_project()
+	
 	var bundle = menu.get_bundle_group()
-	if _xcode_project == null: _xcode_project = _xcode.make_project()
 	_xcode_project.bundle_id = bundle.id
 	_xcode_project.name = bundle.display
+	_config.set_value('xcode/project', 'bundle_id', bundle.id)
+	_config.set_value('xcode/project', 'name', bundle.display)
 
 	var identity = menu.get_identity_group()
 	_xcode_project.team = identity.team
 	_xcode_project.provision = identity.provision
 	_xcode_project.automanaged = identity.automanaged
+	_config.set_value('xcode/project', 'team', identity.team.to_dict())
+	_config.set_value('xcode/project', 'provision', identity.provision.to_dict())
+	_config.set_value('xcode/project', 'automanaged', identity.automanaged)
 
-	var selected_devices = menu.get_active_devices()
-	_xcode_project.set_devices(selected_devices)
+	_xcode_project.set_devices(menu.get_active_devices())
+
+	var savable_devices_fmt = []
+	for device in _xcode_project.get_devices():
+		savable_devices_fmt.append(device.to_dict())
+	_config.set_value('xcode/project', 'devices', savable_devices_fmt)
 
 	_xcode_project.update()
+	if _config.save(stc.get_data_path('config.cfg')) != OK:
+		stc.get_logger().info('unable to save config')
 
 
 
@@ -157,6 +202,16 @@ func _on_finished_editing(menu):
 
 
 func _one_click_button_pressed():
-	print('Showing menu')
 	get_menu().show()
-	return
+	if _xcode_project == null:
+		pass
+	else:
+		_xcode_project.build()
+
+
+func _one_click_button_mouse_hovering():
+	print('OneClickButton: Mouse Hovering')
+
+
+func _one_click_button_mouse_exit():
+	print('OneClickButton: Mouse Exited')

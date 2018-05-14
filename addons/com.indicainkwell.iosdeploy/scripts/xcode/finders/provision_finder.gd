@@ -3,19 +3,11 @@ extends 'finder.gd'
 
 
 # ------------------------------------------------------------------------------
-#                                   Inner Classes
+#                                     Subtypes
 # ------------------------------------------------------------------------------
 
 
-class Provision:
-	var id
-	var name
-	var app_id_name
-	#var entitlements
-	var platforms
-	var team_ids
-	var creation_date
-	var expiration_date
+var Provision = stc.get_gdscript('xcode/provision.gd')
 
 
 # ------------------------------------------------------------------------------

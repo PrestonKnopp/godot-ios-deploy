@@ -3,17 +3,11 @@ extends 'finder.gd'
 
 
 # ------------------------------------------------------------------------------
-#                                   Inner Classes
+#                                     Subtypes
 # ------------------------------------------------------------------------------
 
 
-class Team:
-	var id
-	var name
-	var account
-	var type
-	var is_free_account
-	# func get_provisions():
+var Team = stc.get_gdscript('xcode/team.gd')
 
 
 # ------------------------------------------------------------------------------
