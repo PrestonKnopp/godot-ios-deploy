@@ -86,13 +86,13 @@ func fill_identity_group(team, automanaged, provision):
 	_automngchk.set_pressed(automanaged)
 	if team != null:
 		for i in range(_toptbutt.get_item_count()):
-			var meta = _toptbutt.get_item_metadata()
+			var meta = _toptbutt.get_item_metadata(i)
 			if meta.name == team.name and meta.id == team.id:
 				_toptbutt.select(i)
 				break
 	if provision != null:
 		for i in range(_poptbutt.get_item_count()):
-			var meta = _poptbutt.get_item_metadata()
+			var meta = _poptbutt.get_item_metadata(i)
 			if meta.name == provision.name and meta.id == provision.id:
 				_poptbutt.select(i)
 				break
