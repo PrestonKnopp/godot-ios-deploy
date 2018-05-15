@@ -64,7 +64,8 @@ func find():
 
 		var provision = Provision.new()
 		provision.id = json.get_value('UUID', '')
-		provision.name = json.get_value('Name', 'No Name')
+		provision.name = json.get_value('Name', '[--No Name--]')
+		provision.app_id = json.get_value('Entitlements/application-identifier', '')
 		provision.app_id_name = json.get_value('AppIDName', '')
 		provision.platforms = json.get_value('Platform', [])
 		provision.team_ids = json.get_value('TeamIdentifier', [])
