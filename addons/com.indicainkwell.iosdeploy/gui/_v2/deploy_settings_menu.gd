@@ -9,6 +9,10 @@ extends Panel
 
 signal request_fill(this)
 signal request_populate(this)
+
+signal edited_team(this, to)
+signal edited_provision(this, to)
+signal edited_bundle_id(this, to)
 signal finished_editing(this)
 
 
@@ -22,7 +26,9 @@ onready var _devlist = _ctnt.get_node('devices_group/devices_list')
 
 
 func _ready():
-	pass
+	_toptbutt.connect('item_selected', self, '_on_toptbutt_item_selected')
+	_poptbutt.connect('item_selected', self, '_on_poptbutt_item_selected')
+	_bdlid.connect('text_changed', self, '_on_bdlid_text_changed')
 
 
 # ------------------------------------------------------------------------------
@@ -78,8 +84,8 @@ func populate_devices(devices):
 
 
 func fill_bundle_group(display_name, id):
-	_bdldisp.set_text(display_name)
-	_bdlid.set_text(id)
+	_bdldisp.set_text(display_name if display_name != null else '')
+	_bdlid.set_text(id if id != null else '')
 
 
 func fill_identity_group(team, automanaged, provision):
@@ -102,10 +108,38 @@ func fill_devices_group(devices=[]):
 	_devlist.set_active(devices)
 
 
+# ------------------------------------------------------------------------------
+#                               [In]validating Input
+# ------------------------------------------------------------------------------
+
+
+func invalidate_provision():
+	print('Invalidating Provision')
+
+
+func invalidate_team():
+	print('Invalidating Team')
+
+
+func invalidate_bundle_id():
+	print('Invalidating Bundleid')
+
 
 # ------------------------------------------------------------------------------
 #                                     Callbacks
 # ------------------------------------------------------------------------------
+
+
+func _on_toptbutt_item_selected(id):
+	emit_signal('edited_team', self, _toptbutt.get_item_metadata(id))
+
+
+func _on_poptbutt_item_selected(id):
+	emit_signal('edited_provision', self, _poptbutt.get_item_metadata(id))
+
+
+func _on_bdlid_text_changed(new_text):
+	emit_signal('edited_bundle_id', self, new_text)
 
 
 func _on_deploy_settings_menu_visibility_changed():

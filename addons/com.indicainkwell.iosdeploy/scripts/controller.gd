@@ -53,14 +53,18 @@ func _init():
 	get_view().connect('pressed', self, '_one_click_button_pressed')
 	get_view().connect('mouse_hovering', self, '_one_click_button_mouse_hovering')
 	get_view().connect('mouse_exit', self, '_one_click_button_mouse_exit')
+
 	get_menu().connect('request_fill', self, '_on_request_fill')
 	get_menu().connect('request_populate', self, '_on_request_populate')
+	get_menu().connect('edited_team', self, '_on_edited_team')
+	get_menu().connect('edited_provision', self, '_on_edited_provision')
+	get_menu().connect('edited_bundle_id', self, '_on_edited_bundle_id')
 	get_menu().connect('finished_editing', self, '_on_finished_editing')
 
+	_xcode_project = _xcode.make_project()
 	if _config.load(stc.get_data_path('config.cfg')) != OK:
 		stc.get_logger().info('unable to load config')
 	else:
-		_xcode_project = _xcode.make_project()
 		_xcode_project.bundle_id = _config.get_value('xcode/project', 'bundle_id')
 		_xcode_project.name = _config.get_value('xcode/project', 'name')
 
@@ -82,7 +86,7 @@ func _init():
 			device.from_dict(devices[i])
 			devices[i] = device
 		_xcode_project.set_devices(devices)
-	
+
 
 # ------------------------------------------------------------------------------
 #                                      Methods
@@ -102,6 +106,16 @@ func get_menu():
 	return _settings_menu
 
 
+func valid_bundleid(bundle_id, provision):
+	var first_dot_idx = provision.app_id.find('.')
+	if first_dot_idx == -1:
+		stc.get_logger().warn('Invalid app_id in provision: %s' % provision.to_dict())
+		return false
+
+	var prov_bundleid = provision.app_id.right(first_dot_idx + 1)
+	return bundle_id.match(prov_bundleid)
+
+
 func filter_provisions(provisions):
 	# Filter out
 	# - expired
@@ -116,7 +130,7 @@ func filter_provisions(provisions):
 			duplicates[provision.name] = []
 		duplicates[provision.name].append(provision)
 		valid_provisions.append(provision)
-	
+
 	# for each duplicate:
 	# - check creation_date
 	# - keep latest
@@ -133,7 +147,7 @@ func filter_provisions(provisions):
 				latest_t = next_t
 			else:
 				valid_provisions.erase(next)
-	
+
 	return valid_provisions
 
 
@@ -152,24 +166,71 @@ func _on_request_populate(menu):
 
 
 func _on_request_fill(menu):
-	if _xcode_project != null:
-		print('filling')
-		menu.fill_devices_group(_xcode_project.get_devices())
-		menu.fill_bundle_group(
-			_xcode_project.name,
-			_xcode_project.bundle_id
-		)
-		menu.fill_identity_group(
-			_xcode_project.team,
-			_xcode_project.automanaged,
-			_xcode_project.provision
-		)
+	print('filling')
+	menu.fill_devices_group(_xcode_project.get_devices())
+	menu.fill_bundle_group(
+		_xcode_project.name,
+		_xcode_project.bundle_id
+	)
+	menu.fill_identity_group(
+		_xcode_project.team,
+		_xcode_project.automanaged,
+		_xcode_project.provision
+	)
+
+
+func _on_edited_team(menu, new_team):
+	assert(new_team extends _xcode.Team)
+	if _xcode_project.team != null and\
+	   _xcode_project.team.id == new_team.id and\
+	   _xcode_project.team.name == new_team.name:
+		   return
+
+	# make sure to set new team
+	_xcode_project.team = new_team
+
+	if _xcode_project.provision == null:
+		return
+
+	# Notify menu if provision is invalid due to new team
+	if not _xcode_project.provision.team_ids.has(new_team.id):
+		# provision is invalid as it does not support team
+		menu.invalidate_provision()
+
+
+func _on_edited_provision(menu, new_provision):
+	assert(new_provision extends _xcode.Provision)
+
+	if _xcode_project.provision != null and _xcode_project.provision.id == new_provision.id:
+		return
+
+	# make sure to set new provision
+	_xcode_project.provision = new_provision
+
+	# Notify menu if teams and bundleid are invalid due to new provision
+
+	if _xcode_project.team != null and not new_provision.team_ids.has(_xcode_project.team.id):
+		# team is invalid as it is not supported by provision
+		menu.invalidate_team()
+
+	# Check bundleid
+
+	if _xcode_project.bundle_id == null or _xcode_project.bundle_id.empty():
+		return
+
+	if not valid_bundleid(_xcode_project.bundle_id, new_provision):
+		menu.invalidate_bundle_id()
+
+
+func _on_edited_bundle_id(menu, new_bundle_id):
+	_xcode_project.bundle_id = new_bundle_id
+	if _xcode_project.provision == null:
+		return
+	if not valid_bundleid(new_bundle_id, _xcode_project.provision):
+		menu.invalidate_bundle_id()
 
 
 func _on_finished_editing(menu):
-	if _xcode_project == null:
-		_xcode_project = _xcode.make_project()
-	
 	var bundle = menu.get_bundle_group()
 	_xcode_project.bundle_id = bundle.id
 	_xcode_project.name = bundle.display
