@@ -35,17 +35,17 @@ class Command:
 	var _thread
 
 	func running():
-		return _thread and _thread.is_active()
+		return _thread != null and _thread.is_active()
 
 	func wait():
 		if running():
 			_thread.wait_to_finish()
 
-	func run_async(args, func_obj, func_name):
-		if not _thread:
+	func run_async(args, func_obj, func_name, binds=[]):
+		if _thread == null:
 			_thread = Thread.new()
 		wait()
-		connect('finished', func_obj, func_name, CONNECT_ONESHOT)
+		connect('finished', func_obj, func_name, binds, CONNECT_ONESHOT)
 		_thread.start(self, '_run_thread', {cmd=name, args=args})
 
 	func _run_thread(data):
