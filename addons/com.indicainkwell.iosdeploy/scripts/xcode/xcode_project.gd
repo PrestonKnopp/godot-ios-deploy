@@ -7,7 +7,7 @@ extends Reference
 # ------------------------------------------------------------------------------
 
 
-signal deployed(this, device, result)
+signal deployed(this, result, device_id)
 
 
 # ------------------------------------------------------------------------------
@@ -291,5 +291,5 @@ func deploy():
 		_iosdeploy.launch_on(device.id)
 
 
-func _on_deployed(iosdeploy, result):
-	emit_signal('deployed', self, null, [], result)
+func _on_deployed(iosdeploy, result, device_id):
+	emit_signal('deployed', self, result, device_id)

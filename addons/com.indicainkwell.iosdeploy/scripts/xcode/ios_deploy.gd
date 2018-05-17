@@ -10,7 +10,7 @@ extends Reference
 # ------------------------------------------------------------------------------
 
 
-signal deployed(this, result)
+signal deployed(this, result, device_id)
 
 
 # ------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ func _launch_on(device_id, install, async):
 	assert(device_id != null)
 	var args = _build_launch_args(install)
 	if async:
-		_bash.run_async(_bashinit + [_build_deploy_cmd(args)], self, '_deploy_finished')
+		_bash.run_async(_bashinit + [_build_deploy_cmd(args)], self, '_deploy_finished', [device_id])
 	else:
 		var res = _bash.run(_bashinit,  _build_deploy_cmd(args))
 		return res.output[0].split('\n', false)
@@ -104,9 +104,9 @@ func uninstall():
 # ------------------------------------------------------------------------------
 
 
-func _deploy_finished(command, result):
+func _deploy_finished(command, result, device_id):
 	# TODO: parse result output and detect deploy failure
-	emit_signal('deployed', self, result)
+	emit_signal('deployed', self, result, device_id)
 
 
 # ------------------------------------------------------------------------------
