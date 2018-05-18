@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=1]
+[gd_scene load_steps=16 format=1]
 
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/_v2/deploy_settings_menu.gd" type="Script" id=1]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=2]
@@ -12,6 +12,13 @@ font/size = 30
 font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=7]
+
+font/size = 12
+font/use_mipmaps = false
+font/use_filter = true
+font/font = ExtResource( 3 )
 
 [sub_resource type="DynamicFont" id=2]
 
@@ -47,6 +54,27 @@ font/size = 30
 font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=8]
+
+font/size = 16
+font/use_mipmaps = false
+font/use_filter = true
+font/font = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=9]
+
+font/size = 16
+font/use_mipmaps = false
+font/use_filter = true
+font/font = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=10]
+
+font/size = 16
+font/use_mipmaps = false
+font/use_filter = true
+font/font = ExtResource( 2 )
 
 [node name="deploy_settings_menu" type="Panel"]
 
@@ -94,7 +122,6 @@ alignment = 0
 
 [node name="title_group" type="VBoxContainer" parent="content_container/VBoxContainer"]
 
-editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 3
@@ -107,7 +134,6 @@ alignment = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="content_container/VBoxContainer/title_group"]
 
-editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
@@ -150,6 +176,36 @@ text = "SETUP"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
+
+[node name="spacer" type="Control" parent="content_container/VBoxContainer/title_group/HBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 228.0
+margin/top = 0.0
+margin/right = 785.0
+margin/bottom = 36.0
+
+[node name="help_button" type="Button" parent="content_container/VBoxContainer/title_group/HBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 789.0
+margin/top = 0.0
+margin/right = 824.0
+margin/bottom = 36.0
+custom_fonts/font = SubResource( 7 )
+custom_colors/font_color = Color( 0.376471, 0.368627, 0.419608, 0.992157 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "help"
+flat = true
+align = 2
 
 [node name="information" type="Label" parent="content_container/VBoxContainer/title_group"]
 
@@ -427,7 +483,77 @@ shortcut = null
 text = "x"
 flat = true
 
+[node name="AcceptDialog" type="AcceptDialog" parent="."]
+
+editor/display_folded = true
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 530.0
+margin/bottom = 397.0
+popup/exclusive = false
+window/title = "Alert!"
+dialog/hide_on_ok = true
+
+[node name="Panel" type="Panel" parent="AcceptDialog"]
+
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 0.0
+margin/bottom = 35.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="AcceptDialog"]
+
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 0.0
+margin/bottom = 35.0
+custom_fonts/mono_font = SubResource( 8 )
+custom_fonts/bold_font = SubResource( 9 )
+custom_fonts/normal_font = SubResource( 10 )
+bbcode/enabled = true
+bbcode/bbcode = "TODO: Write better help
+
+[b]Provisioning Profiles[/b]
+
+Provisioning profiles are used to validate your application and are necessary to deploy to an iOS device. They can be located in the directory [code]~/Library/MobileDevice/Provisioning Profiles[/code].
+A profile contains the team and the bundle id that will be associated with your app. Since it is so specific you should choose a provisioning profile first.
+
+[b]Picking a Provisioning Profile[/b]
+
+If you have barely or not touched xcode you may need to perform a couple extra steps:
+
+- You will need an [url=developer.apple.com/]apple developer account[/url]. You can make a free account.
+- Make sure xcode is installed.
+- After xcode is installed open it and register your developer account with xcode by going to [code]Xcode Preferences -> User Profiles -> +[/code].
+
+Otherwise, click the provisioning profiles drop down to select an appropriate profile.
+
+[b]Bundle ID and Me[/b]
+
+The bundle id is associated with your provisioning profile. Your profile can be contain a WildCard identifier. Meaning your bundle id has to match the profile's prefix but can have anything in the WildCard(*) spot."
+visible_characters = -1
+percent_visible = 1.0
+
 [connection signal="visibility_changed" from="." to="." method="_on_deploy_settings_menu_visibility_changed"]
+
+[connection signal="pressed" from="content_container/VBoxContainer/title_group/HBoxContainer/help_button" to="AcceptDialog" method="popup_centered"]
 
 [connection signal="pressed" from="close_button" to="." method="hide"]
 
