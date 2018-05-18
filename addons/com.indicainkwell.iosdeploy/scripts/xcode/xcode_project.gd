@@ -264,6 +264,7 @@ func _build_xcodebuild_args():
 	if stc.get_version().is3():
 		args.append('ENABLE_BITCODE=false')
 	
+	args.append('PRODUCT_NAME='+name)
 	args.append('PRODUCT_BUNDLE_IDENTIFIER='+bundle_id)
 	args.append('DEVELOPMENT_TEAM='+team.id)
 	
@@ -288,7 +289,7 @@ func deploy():
 	_iosdeploy.bundle = get_app_path()
 	_runningdeploys = get_devices().size()
 	for device in get_devices():
-		_iosdeploy.launch_on(device.id)
+		_iosdeploy.install_and_launch_on(device.id)
 
 
 func _on_deployed(iosdeploy, result, device_id):
