@@ -62,6 +62,7 @@ func _init():
 	get_menu().connect('finished_editing', self, '_on_finished_editing')
 
 	_xcode_project = _xcode.make_project()
+	_xcode_project.connect('deployed', self, '_on_device_deployed')
 	if _config.load(stc.get_data_path('config.cfg')) != OK:
 		stc.get_logger().info('unable to load config')
 	else:
@@ -86,6 +87,7 @@ func _init():
 			device.from_dict(devices[i])
 			devices[i] = device
 		_xcode_project.set_devices(devices)
+	stc.get_logger().debug('Xcode Project App Path: ', _xcode_project.get_app_path())
 
 
 # ------------------------------------------------------------------------------
@@ -257,8 +259,6 @@ func _on_finished_editing(menu):
 		stc.get_logger().info('unable to save config')
 
 
-
-
 # -- OneClickButton
 
 
@@ -268,6 +268,7 @@ func _one_click_button_pressed():
 		pass
 	else:
 		_xcode_project.build()
+		_xcode_project.deploy()
 
 
 func _one_click_button_mouse_hovering():
@@ -276,3 +277,10 @@ func _one_click_button_mouse_hovering():
 
 func _one_click_button_mouse_exit():
 	print('OneClickButton: Mouse Exited')
+
+
+# -- XcodeProject
+
+
+func _on_device_deployed(xcode_project, result, device_id):
+	print('DEVICE DEPLOYED: ', xcode_project, result.output, device_id)
