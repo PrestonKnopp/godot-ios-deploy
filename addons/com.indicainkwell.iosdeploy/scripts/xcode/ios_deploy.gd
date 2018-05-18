@@ -86,11 +86,12 @@ func _launch_on(device_id, install, async):
 	"""
 	assert(bundle != null)
 	assert(device_id != null)
-	var args = _build_launch_args(install)
+	var args = _build_deploy_cmd(_build_launch_args(device_id, install))
+	_log.debug('Built Deploy Command: %s'%args)
 	if async:
-		_bash.run_async(_bashinit + [_build_deploy_cmd(args)], self, '_deploy_finished', [device_id])
+		_bash.run_async(_bashinit + [args], self, '_deploy_finished', [device_id])
 	else:
-		var res = _bash.run(_bashinit,  _build_deploy_cmd(args))
+		var res = _bash.run(_bashinit,  args)
 		return res.output[0].split('\n', false)
 	return []
 
@@ -122,7 +123,7 @@ func _build_launch_args(device_id, install=true):
 	var args = [
 		'--justlaunch',
 		'--id', device_id,
-		'--bundle', bundle
+		'--bundle', "'"+bundle+"'" # quote in case bundle has spaces
 	]
 	if not install:
 		args.append('--noinstall')
