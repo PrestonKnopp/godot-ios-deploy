@@ -42,52 +42,23 @@ var _one_click_button = OneClickButtonScene.instance()
 var _settings_menu = SettingsMenuScene.instance()
 
 
-
 # ------------------------------------------------------------------------------
 #                                     Overrides
 # ------------------------------------------------------------------------------
 
 
 func _init():
-	# get_menu().hide()
 	get_view().connect('pressed', self, '_one_click_button_pressed')
 	get_view().connect('mouse_hovering', self, '_one_click_button_mouse_hovering')
 	get_view().connect('mouse_exit', self, '_one_click_button_mouse_exit')
 
+	# get_menu().hide()
 	get_menu().connect('request_fill', self, '_on_request_fill')
 	get_menu().connect('request_populate', self, '_on_request_populate')
 	get_menu().connect('edited_team', self, '_on_edited_team')
 	get_menu().connect('edited_provision', self, '_on_edited_provision')
 	get_menu().connect('edited_bundle_id', self, '_on_edited_bundle_id')
 	get_menu().connect('finished_editing', self, '_on_finished_editing')
-
-	_xcode_project = _xcode.make_project()
-	_xcode_project.connect('deployed', self, '_on_device_deployed')
-	if _config.load(stc.get_data_path('config.cfg')) != OK:
-		stc.get_logger().info('unable to load config')
-	else:
-		_xcode_project.bundle_id = _config.get_value('xcode/project', 'bundle_id')
-		_xcode_project.name = _config.get_value('xcode/project', 'name')
-
-		_xcode_project.automanaged = _config.get_value('xcode/project', 'automanaged', false)
-		_xcode_project.debug = _config.get_value('xcode/project', 'debug', true)
-		_xcode_project.custom_info = _config.get_value('xcode/project', 'custom_info', {})
-
-		var team = _xcode.Team.new()
-		team.from_dict(_config.get_value('xcode/project', 'team'))
-		_xcode_project.team = team
-
-		var provision = _xcode.Provision.new()
-		provision.from_dict(_config.get_value('xcode/project', 'provision'))
-		_xcode_project.provision = provision
-
-		var devices = _config.get_value('xcode/project', 'devices', [])
-		for i in range(devices.size()):
-			var device = _xcode.Device.new()
-			device.from_dict(devices[i])
-			devices[i] = device
-		_xcode_project.set_devices(devices)
-	stc.get_logger().debug('Xcode Project App Path: ', _xcode_project.get_app_path())
 
 
 # ------------------------------------------------------------------------------
@@ -116,6 +87,14 @@ func valid_bundleid(bundle_id, provision):
 
 	var prov_bundleid = provision.app_id.right(first_dot_idx + 1)
 	return bundle_id.match(prov_bundleid)
+
+
+func valid_xcodeproject():
+	if _xcode_project == null or\
+	   (_xcode_project.provision == null and\
+	    _xcode_project.team      == null):
+		return false
+	return true
 
 
 func filter_provisions(provisions):
@@ -151,6 +130,36 @@ func filter_provisions(provisions):
 				valid_provisions.erase(next)
 
 	return valid_provisions
+
+
+func _initialize_xcodeproject():
+	_xcode_project = _xcode.make_project()
+	_xcode_project.connect('deployed', self, '_on_device_deployed')
+	if _config.load(stc.get_data_path('config.cfg')) != OK:
+		stc.get_logger().info('unable to load config')
+	else:
+		_xcode_project.bundle_id = _config.get_value('xcode/project', 'bundle_id')
+		_xcode_project.name = _config.get_value('xcode/project', 'name')
+
+		_xcode_project.automanaged = _config.get_value('xcode/project', 'automanaged', false)
+		_xcode_project.debug = _config.get_value('xcode/project', 'debug', true)
+		_xcode_project.custom_info = _config.get_value('xcode/project', 'custom_info', {})
+
+		var team = _xcode.Team.new()
+		team.from_dict(_config.get_value('xcode/project', 'team'))
+		_xcode_project.team = team
+
+		var provision = _xcode.Provision.new()
+		provision.from_dict(_config.get_value('xcode/project', 'provision'))
+		_xcode_project.provision = provision
+
+		var devices = _config.get_value('xcode/project', 'devices', [])
+		for i in range(devices.size()):
+			var device = _xcode.Device.new()
+			device.from_dict(devices[i])
+			devices[i] = device
+		_xcode_project.set_devices(devices)
+	stc.get_logger().debug('Xcode Project App Path: ', _xcode_project.get_app_path())
 
 
 # ------------------------------------------------------------------------------
@@ -264,8 +273,8 @@ func _on_finished_editing(menu):
 
 func _one_click_button_pressed():
 	get_menu().show()
-	if _xcode_project == null:
-		pass
+	if not valid_xcodeproject():
+		get_menu().show()
 	else:
 		_xcode_project.build()
 		_xcode_project.deploy()
