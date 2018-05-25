@@ -4,6 +4,15 @@ extends Reference
 
 
 # ------------------------------------------------------------------------------
+#                                      Signals
+# ------------------------------------------------------------------------------
+
+
+signal began_pipeline(this)
+signal finished_pipeline(this)
+
+
+# ------------------------------------------------------------------------------
 #                                     Constants
 # ------------------------------------------------------------------------------
 
@@ -48,11 +57,16 @@ var _settings_menu = SettingsMenuScene.instance()
 
 
 func _init():
+	_xcode.connect('made_project', self, '_on_xcode_made_project')
+	if _xcode.make_project_async() == ERR_DOES_NOT_EXIST:
+		stc.get_logger().info('Godot iOS Xcode Template Does Not Exist')
+
+	get_view().set_disabled(true)
 	get_view().connect('pressed', self, '_one_click_button_pressed')
 	get_view().connect('mouse_hovering', self, '_one_click_button_mouse_hovering')
 	get_view().connect('mouse_exit', self, '_one_click_button_mouse_exit')
 
-	# get_menu().hide()
+	get_menu().hide()
 	get_menu().connect('request_fill', self, '_on_request_fill')
 	get_menu().connect('request_populate', self, '_on_request_populate')
 	get_menu().connect('edited_team', self, '_on_edited_team')
@@ -89,12 +103,10 @@ func valid_bundleid(bundle_id, provision):
 	return bundle_id.match(prov_bundleid)
 
 
-func valid_xcodeproject():
-	if _xcode_project == null or\
-	   (_xcode_project.provision == null and\
-	    _xcode_project.team      == null):
-		return false
-	return true
+func valid_xcode_project():
+	return _xcode_project != null and\
+	   (_xcode_project.provision != null and\
+	    _xcode_project.team      != null)
 
 
 func filter_provisions(provisions):
@@ -119,6 +131,7 @@ func filter_provisions(provisions):
 	for provisions in duplicates.values():
 		var latest = provisions[0]
 		var latest_t = OS.get_unix_time_from_datetime(latest.creation_date)
+		# skip first provision in loop
 		for i in range(1, provisions.size()):
 			var next = provisions[i]
 			var next_t = OS.get_unix_time_from_datetime(next.creation_date)
@@ -132,34 +145,40 @@ func filter_provisions(provisions):
 	return valid_provisions
 
 
-func _initialize_xcodeproject():
-	_xcode_project = _xcode.make_project()
-	_xcode_project.connect('deployed', self, '_on_device_deployed')
+func execute_deploy_pipeline():
+	# Pipeline: Build Project -> Then Deploy to Devices
+	emit_signal('began_pipeline', self)
+	_xcode_project.build()
+
+
+func _initialize_xcode_project(xcode_project):
+	xcode_project.connect('built', self, '_on_xcode_project_built')
+	xcode_project.connect('deployed', self, '_on_device_deployed')
 	if _config.load(stc.get_data_path('config.cfg')) != OK:
 		stc.get_logger().info('unable to load config')
 	else:
-		_xcode_project.bundle_id = _config.get_value('xcode/project', 'bundle_id')
-		_xcode_project.name = _config.get_value('xcode/project', 'name')
+		xcode_project.bundle_id = _config.get_value('xcode/project', 'bundle_id')
+		xcode_project.name = _config.get_value('xcode/project', 'name')
 
-		_xcode_project.automanaged = _config.get_value('xcode/project', 'automanaged', false)
-		_xcode_project.debug = _config.get_value('xcode/project', 'debug', true)
-		_xcode_project.custom_info = _config.get_value('xcode/project', 'custom_info', {})
+		xcode_project.automanaged = _config.get_value('xcode/project', 'automanaged', false)
+		xcode_project.debug = _config.get_value('xcode/project', 'debug', true)
+		xcode_project.custom_info = _config.get_value('xcode/project', 'custom_info', {})
 
 		var team = _xcode.Team.new()
 		team.from_dict(_config.get_value('xcode/project', 'team'))
-		_xcode_project.team = team
+		xcode_project.team = team
 
 		var provision = _xcode.Provision.new()
 		provision.from_dict(_config.get_value('xcode/project', 'provision'))
-		_xcode_project.provision = provision
+		xcode_project.provision = provision
 
 		var devices = _config.get_value('xcode/project', 'devices', [])
 		for i in range(devices.size()):
 			var device = _xcode.Device.new()
 			device.from_dict(devices[i])
 			devices[i] = device
-		_xcode_project.set_devices(devices)
-	stc.get_logger().debug('Xcode Project App Path: ', _xcode_project.get_app_path())
+		xcode_project.set_devices(devices)
+	stc.get_logger().debug('Xcode Project App Path: ' + xcode_project.get_app_path())
 
 
 # ------------------------------------------------------------------------------
@@ -273,11 +292,10 @@ func _on_finished_editing(menu):
 
 func _one_click_button_pressed():
 	get_menu().show()
-	if not valid_xcodeproject():
+	if not valid_xcode_project():
 		get_menu().show()
 	else:
-		_xcode_project.build()
-		_xcode_project.deploy()
+		execute_deploy_pipeline()
 
 
 func _one_click_button_mouse_hovering():
@@ -288,8 +306,26 @@ func _one_click_button_mouse_exit():
 	print('OneClickButton: Mouse Exited')
 
 
+# -- Xcode
+
+
+func _on_xcode_made_project(xcode, result, project):
+	print('Made Xcode Project')
+	_xcode_project = project
+	_initialize_xcode_project(_xcode_project)
+	get_view().set_disabled(false)
+
+
 # -- XcodeProject
 
 
+func _on_xcode_project_built(xcode_project, result):
+	xcode_project.deploy()
+
+
 func _on_device_deployed(xcode_project, result, device_id):
-	print('DEVICE DEPLOYED: ', xcode_project, result.output, device_id)
+	stc.get_logger().debug('DEVICE DEPLOYED: ', xcode_project, result.output, device_id)
+
+	if not xcode_project.is_deploying():
+		# this is the last device
+		emit_signal('finished_pipeline', self)

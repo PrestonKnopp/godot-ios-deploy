@@ -13,10 +13,7 @@ func _init():
 #	var i = preload('res://addons/com.indicainkwell.iosdeploy/scripts/xcode/ios_deploy.gd').new()
 #	print(i.detect_devices())
 	add_child(c.get_view())
-	add_child(c._settings_menu)
-
-func _ready():
-	c.get_view().show()"
+	add_child(c._settings_menu)"
 
 [node name="testbutt" type="Control"]
 

@@ -3,6 +3,14 @@ extends Reference
 
 
 # ------------------------------------------------------------------------------
+#                                      Signals
+# ------------------------------------------------------------------------------
+
+
+signal made_project(this, result, project)
+
+
+# ------------------------------------------------------------------------------
 #                                     Constants
 # ------------------------------------------------------------------------------
 
@@ -30,6 +38,18 @@ var Device = stc.get_gdscript('xcode/device.gd')
 
 
 # ------------------------------------------------------------------------------
+#                                Setters and Getters
+# ------------------------------------------------------------------------------
+
+
+var template setget ,get_template
+func get_template():
+	if template == null:
+		template = iOSExportTemplate.new()
+	return template
+
+
+# ------------------------------------------------------------------------------
 #                                Setter and Getters
 # ------------------------------------------------------------------------------
 
@@ -43,18 +63,39 @@ func get_finder(): return finder
 # ------------------------------------------------------------------------------
 
 
+func make_project_async(bundle_id=null, display_name=null):
+	"""
+	Async make xcode project.
 
+	@return @see copy_install_async
+	@return OK when attempt is good
+	"""
+	var template = get_template()
+	if template.is_connected('copy_installed', self, '_on_template_copy_installed'):
+		template.disconnect('copy_installed', self, '_on_template_copy_installed')
+	template.connect('copy_installed', self, '_on_template_copy_installed', [bundle_id, display_name], CONNECT_ONESHOT)
 
-# TODO: handle not having templates installed
-func make_project(bundle_id=null, display_name=null):
-	var template = iOSExportTemplate.new()
 	if not template.copy_exists():
-		template.copy_install()
-	
+		return template.copy_install_async()
+
+	_made_project(template, null, bundle_id, display_name)
+	return OK
+
+
+func _made_project(template, result, bundle_id, display_name):
 	var project = Project.new()
 	project.bundle_id = bundle_id
 	project.name = display_name
 	project.open(template.get_destination_path())
 
-	return project
+	emit_signal('made_project', self, result, project)
 
+
+# ------------------------------------------------------------------------------
+#                                     Callbacks
+# ------------------------------------------------------------------------------
+
+
+func _on_template_copy_installed(template, result, bundle_id, display_name):
+	# For now, assume copy succeeded if this callback has been called.
+	_made_project(template, result, bundle_id, display_name)

@@ -3,6 +3,14 @@ extends Reference
 
 
 # ------------------------------------------------------------------------------
+#                                      Signals
+# ------------------------------------------------------------------------------
+
+
+signal copy_installed(this, result)
+
+
+# ------------------------------------------------------------------------------
 #                                     Constants
 # ------------------------------------------------------------------------------
 
@@ -32,12 +40,19 @@ var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.ios-export-
 # ------------------------------------------------------------------------------
 
 
+func exists():
+	"""
+	Checks if Godot's iOS Export xcode template is installed
+	"""
+	return File.new().file_exists(get_zip_path())
+
+
 func get_zip_path():
 	"""
 	Returns the path to the current godot's version ios xcode template zip.
 	"""
 	var home = OS.get_environment('HOME')
-	
+
 	var v = stc.get_version()
 	if v.is2():
 		return home.plus_file('.godot/templates')\
@@ -118,14 +133,25 @@ func copy_remove():
 	return Directory.new().remove(get_destination_path())
 
 
-func copy_install():
+func copy_install_async():
 	"""
-	Install copy of xcode template for ios-deploy.
+	Async install copy of xcode template for ios-deploy.
+
+	@return ERR_DOES_NOT_EXIST
+		When godot xcode template does not exist
+	@return OK
+		When able to attempt copy
 	"""
+	if not exists():
+		_log.error('Godot iOS Xcode Template not installed.')
+		return ERR_DOES_NOT_EXIST
+
 	if stc.get_version().is2():
-		return _copy_ios_export_template_v2()
+		_copy_ios_export_template_v2()
 	else:
-		return _copy_ios_export_template_v3()
+		_copy_ios_export_template_v3()
+
+	return OK
 
 
 # ------------------------------------------------------------------------------
@@ -134,31 +160,48 @@ func copy_install():
 
 
 func _copy_ios_export_template_v2():
-	# V2 unzips from GodotiOSXCode.zip
-	# to godot_ios_xcode
+	# V2 unzips from GodotiOSXCode.zip to godot_ios_xcode
 	#
 	# Steps:
 	# 1. unzip to destination
 	# 2. rename from godot_ios_xcode -> GodotiOSXCode.zip
-	var zip = get_zip_path()
-	var dst = get_destination_path(true, false)
-	var dbase = dst.get_base_dir()
-	var udst = dbase.plus_file('godot_ios_xcode')
-	var res = _unzip.run(zip,'-d', dbase)
-	_log.info('UNZIP LOG: %s' % res.output[0])
-	
-	var err = Directory.new().rename(udst, dst)
-	if err != OK:
-		_log.error('Error<%s> renaming ios export template from %s to s'%[ err, udst, dst ])
-	return err
+	var args = [
+		get_zip_path(),
+		'-d',
+		get_destination_path(true, false).get_base_dir()
+	]
+	_unzip.run_async(args, self, '_on_v2_unzip_finished')
 
 
 func _copy_ios_export_template_v3():
-	# V3 unzips from iphone.zip
-	# to all of it's files
+	# V3 unzips from iphone.zip to all of its files
 	#
 	# Steps:
 	# 1. unzip to destination
-	var res = _unzip.run(get_zip_path(), '-d', get_destination_path(true))
-	_log.info('UNZIP LOG: %s' % res.output[0])
-	return OK
+	var args = [
+		get_zip_path(),
+		'-d',
+		get_destination_path(true)
+	]
+	_unzip.run_async(args, self, '_on_v3_unzip_finished')
+
+
+# ------------------------------------------------------------------------------
+#                                     Callbacks
+# ------------------------------------------------------------------------------
+
+
+func _on_v2_unzip_finished(command, result):
+	_log.info('UNZIP LOG: %s' % result.output[0])
+
+	var dst = get_destination_path(true, false)
+	var unzip_dst = dst.get_base_dir().plus_file('godot_ios_xcode')
+	var err = Directory.new().rename(unzip_dst, dst)
+	if err != OK:
+		_log.error('Error<%s> renaming ios export template from %s to s'%[ err, unzip_dst, dst ])
+	emit_signal('copy_installed', self, result)
+
+
+func _on_v3_unzip_finished(command, result):
+	_log.info('UNZIP LOG: %s' % result.output[0])
+	emit_signal('copy_installed', self, result)

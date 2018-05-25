@@ -7,6 +7,7 @@ extends Reference
 # ------------------------------------------------------------------------------
 
 
+signal built(this, result)
 signal deployed(this, result, device_id)
 
 
@@ -48,6 +49,7 @@ var automanaged = false
 var debug = true
 var custom_info = {}
 
+var _needs_building = true
 var _iosdeploy = iOSDeploy.new()
 var _runningdeploys = 0
 var _devices = []
@@ -79,6 +81,14 @@ func open(xcode_project_path):
 	if not Directory.new().dir_exists(_path):
 		return FAILED
 	return OK
+
+
+func mark_needs_building():
+	_needs_building = true
+
+
+func needs_building():
+	return _needs_building
 
 
 # ------------------------------------------------------------------------------
@@ -195,7 +205,7 @@ func update_pbx():
 		buildphase_files.append(PBXPROJ_UUIDS.BUILD_FILE)
 	
 	pbx.save_plist(get_pbx_path())
-
+	mark_needs_building()
 
 
 func update_info_plist():
@@ -213,6 +223,7 @@ func update_info_plist():
 		plist.set_value(key, custom_info[key])
 	
 	plist.save()
+	mark_needs_building()
 
 
 # ------------------------------------------------------------------------------
@@ -225,17 +236,28 @@ func build():
 	assert(bundle_id != null)
 	assert(_path != null)
 	assert(name != null)
-	var args = _build_xcodebuild_args()
-	var res = _xcodebuild.run('build', args)
-	_log.info(res.output[0])
+
+	_xcodebuild.run_async(_build_xcodebuild_args(), self, '_on_xcodebuild_finished')
+
+	# Always needs building.
+	# The game project needs to be copied and signed to app bundle by xcode.
+	# needs building can be fully implemented when codesigner.gd is impl.
+	# _needs_building = false
 
 
 func built():
 	return Directory.new().dir_exists(get_app_path())
 
 
+func _on_xcodebuild_finished(command, result):
+	# TODO: parse result.output for xcodebuild errors here
+	# for now assume it works
+	_log.info('XCODEBUILD RESULT:\n%s' % result.output[0])
+	emit_signal('built', self, result)
+
+
 func _build_xcodebuild_args():
-	var args = []
+	var args = ['build']
 	
 	args.append('-configuration')
 	if debug:
@@ -292,5 +314,6 @@ func deploy():
 		_iosdeploy.install_and_launch_on(device.id)
 
 
-func _on_deployed(iosdeploy, result, device_id):
+func _on_deployed(command, result, device_id):
+	_runningdeploys -= 1
 	emit_signal('deployed', self, result, device_id)
