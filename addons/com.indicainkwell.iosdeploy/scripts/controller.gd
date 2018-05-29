@@ -57,10 +57,6 @@ var _settings_menu = SettingsMenuScene.instance()
 
 
 func _init():
-	_xcode.connect('made_project', self, '_on_xcode_made_project')
-	if _xcode.make_project_async() == ERR_DOES_NOT_EXIST:
-		stc.get_logger().info('Godot iOS Xcode Template Does Not Exist')
-
 	get_view().set_disabled(true)
 	get_view().connect('pressed', self, '_one_click_button_pressed')
 	get_view().connect('mouse_hovering', self, '_one_click_button_mouse_hovering')
@@ -74,6 +70,12 @@ func _init():
 	get_menu().connect('edited_bundle_id', self, '_on_edited_bundle_id')
 	get_menu().connect('finished_editing', self, '_on_finished_editing')
 
+	# made_project calls set_disabled(false), so this must come after
+	# get_view().set_disabled(true) for when project exists and is made
+	# immediately
+	_xcode.connect('made_project', self, '_on_xcode_made_project')
+	if _xcode.make_project_async() == ERR_DOES_NOT_EXIST:
+		stc.get_logger().info('Godot iOS Xcode Template Does Not Exist')
 
 # ------------------------------------------------------------------------------
 #                                      Methods
