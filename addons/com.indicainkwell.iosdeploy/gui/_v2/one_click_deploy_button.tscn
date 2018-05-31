@@ -31,8 +31,8 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 28.0
-margin/right = 197.0
-margin/bottom = 114.0
+margin/right = 200.0
+margin/bottom = 118.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="hover_panel"]
 
@@ -48,7 +48,7 @@ margin/right = 5.0
 margin/bottom = 40.0
 alignment = 0
 
-[node name="CheckBox" type="CheckBox" parent="hover_panel/HBoxContainer"]
+[node name="project_valid" type="CheckBox" parent="hover_panel/HBoxContainer"]
 
 focus/ignore_mouse = true
 focus/stop_mouse = false
@@ -110,7 +110,7 @@ range/min = 0.0
 range/max = 100.0
 range/step = 1.0
 range/page = 0.0
-range/value = 1.0
+range/value = 0.0
 range/exp_edit = false
 range/rounded = false
 percent/visible = true
@@ -118,13 +118,14 @@ percent/visible = true
 [node name="HBoxContainer" type="HBoxContainer" parent="hover_panel/build_progress_bar"]
 
 editor/display_folded = true
+anchor/right = 1
 focus/ignore_mouse = true
 focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 1.0
 margin/top = -18.0
-margin/right = 226.0
+margin/right = 1.0
 margin/bottom = 1.0
 alignment = 0
 
@@ -151,7 +152,7 @@ size_flags/horizontal = 3
 size_flags/vertical = 0
 margin/left = 84.0
 margin/top = 2.0
-margin/right = 225.0
+margin/right = 197.0
 margin/bottom = 16.0
 text = "inactive"
 percent_visible = 1.0
@@ -176,10 +177,17 @@ range/min = 0.0
 range/max = 100.0
 range/step = 1.0
 range/page = 0.0
-range/value = 1.0
+range/value = 0.0
 range/exp_edit = false
 range/rounded = false
 percent/visible = false
+
+[node name="build_progress_tweener" type="Tween" parent="."]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
 
 [node name="hover_timer" type="Timer" parent="."]
 
