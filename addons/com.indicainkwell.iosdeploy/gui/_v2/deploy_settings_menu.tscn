@@ -13,16 +13,9 @@ font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=7]
-
-font/size = 12
-font/use_mipmaps = false
-font/use_filter = true
-font/font = ExtResource( 3 )
-
 [sub_resource type="DynamicFont" id=2]
 
-font/size = 16
+font/size = 12
 font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 3 )
@@ -32,23 +25,30 @@ font/font = ExtResource( 3 )
 font/size = 16
 font/use_mipmaps = false
 font/use_filter = true
-font/font = ExtResource( 4 )
+font/font = ExtResource( 3 )
 
 [sub_resource type="DynamicFont" id=4]
 
 font/size = 16
 font/use_mipmaps = false
 font/use_filter = true
+font/font = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=5]
+
+font/size = 16
+font/use_mipmaps = false
+font/use_filter = true
 font/font = ExtResource( 3 )
 
-[sub_resource type="StyleBoxEmpty" id=5]
+[sub_resource type="StyleBoxEmpty" id=6]
 
 content_margin/left = -1.0
 content_margin/right = -1.0
 content_margin/top = -1.0
 content_margin/bottom = -1.0
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=7]
 
 font/size = 30
 font/use_mipmaps = false
@@ -134,6 +134,7 @@ alignment = 0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="content_container/VBoxContainer/title_group"]
 
+editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
@@ -198,7 +199,7 @@ margin/left = 789.0
 margin/top = 0.0
 margin/right = 824.0
 margin/bottom = 36.0
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.376471, 0.368627, 0.419608, 0.992157 )
 toggle_mode = false
 enabled_focus_mode = 2
@@ -217,9 +218,10 @@ margin/left = 0.0
 margin/top = 40.0
 margin/right = 824.0
 margin/bottom = 59.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
-text = "Required setup before deploying to a device."
+text = "Required setup before deploying to a device. Start by setting provisioning profile."
+clip_text = true
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
@@ -248,7 +250,7 @@ margin/bottom = 200.0
 custom_constants/separation = 30
 alignment = 0
 
-[node name="bundle_group" type="VBoxContainer" parent="content_container/VBoxContainer/identifier_group"]
+[node name="identity_group" type="VBoxContainer" parent="content_container/VBoxContainer/identifier_group"]
 
 focus/ignore_mouse = false
 focus/stop_mouse = false
@@ -260,7 +262,7 @@ margin/right = 380.0
 margin/bottom = 108.0
 alignment = 0
 
-[node name="Label" type="Label" parent="content_container/VBoxContainer/identifier_group/bundle_group"]
+[node name="Label" type="Label" parent="content_container/VBoxContainer/identifier_group/identity_group"]
 
 focus/ignore_mouse = true
 focus/stop_mouse = true
@@ -270,7 +272,108 @@ margin/left = 0.0
 margin/top = 0.0
 margin/right = 380.0
 margin/bottom = 19.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 4 )
+text = "Identity"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="automanage_provision" type="CheckButton" parent="content_container/VBoxContainer/identifier_group/identity_group"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 23.0
+margin/right = 380.0
+margin/bottom = 50.0
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_colors/font_color_hover = Color( 0, 0, 0, 1 )
+toggle_mode = true
+enabled_focus_mode = 2
+shortcut = null
+text = "Automanage Profile"
+flat = false
+align = 0
+
+[node name="provision_id" type="OptionButton" parent="content_container/VBoxContainer/identifier_group/identity_group"]
+
+hint/tooltip = "Choose provisioning profile first."
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 54.0
+margin/right = 380.0
+margin/bottom = 79.0
+custom_fonts/font = SubResource( 5 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+flat = false
+clip_text = true
+align = 0
+selected = -1
+items = [  ]
+
+[node name="team_name" type="OptionButton" parent="content_container/VBoxContainer/identifier_group/identity_group"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 83.0
+margin/right = 380.0
+margin/bottom = 108.0
+custom_fonts/font = SubResource( 5 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+flat = false
+clip_text = true
+align = 0
+selected = -1
+items = [  ]
+
+[node name="VSeparator" type="VSeparator" parent="content_container/VBoxContainer/identifier_group"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 410.0
+margin/top = 0.0
+margin/right = 413.0
+margin/bottom = 108.0
+
+[node name="bundle_group" type="VBoxContainer" parent="content_container/VBoxContainer/identifier_group"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 443.0
+margin/top = 0.0
+margin/right = 824.0
+margin/bottom = 108.0
+alignment = 0
+
+[node name="Label" type="Label" parent="content_container/VBoxContainer/identifier_group/bundle_group"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 381.0
+margin/bottom = 19.0
+custom_fonts/font = SubResource( 4 )
 text = "Bundle"
 percent_visible = 1.0
 lines_skipped = 0
@@ -284,10 +387,10 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 23.0
-margin/right = 380.0
+margin/right = 381.0
 margin/bottom = 52.0
-custom_fonts/font = SubResource( 4 )
-placeholder/text = "Bundle Display Name"
+custom_fonts/font = SubResource( 5 )
+placeholder/text = "Bundle Display Name (i.e MyGame)"
 placeholder/alpha = 0.6
 focus_mode = 2
 caret/caret_blink = false
@@ -301,111 +404,14 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 56.0
-margin/right = 380.0
+margin/right = 381.0
 margin/bottom = 85.0
-custom_fonts/font = SubResource( 4 )
-placeholder/text = "Bundle Id (i.e. com.you.game)"
+custom_fonts/font = SubResource( 5 )
+placeholder/text = "Bundle Id (i.e. com.you.MyGame)"
 placeholder/alpha = 0.6
 focus_mode = 2
 caret/caret_blink = false
 caret/caret_blink_speed = 0.65
-
-[node name="VSeparator" type="VSeparator" parent="content_container/VBoxContainer/identifier_group"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 410.0
-margin/top = 0.0
-margin/right = 413.0
-margin/bottom = 108.0
-
-[node name="identity_group" type="VBoxContainer" parent="content_container/VBoxContainer/identifier_group"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 3
-size_flags/vertical = 3
-margin/left = 443.0
-margin/top = 0.0
-margin/right = 824.0
-margin/bottom = 108.0
-alignment = 0
-
-[node name="Label" type="Label" parent="content_container/VBoxContainer/identifier_group/identity_group"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 381.0
-margin/bottom = 19.0
-custom_fonts/font = SubResource( 3 )
-text = "Identity"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="team_name" type="OptionButton" parent="content_container/VBoxContainer/identifier_group/identity_group"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 23.0
-margin/right = 381.0
-margin/bottom = 48.0
-custom_fonts/font = SubResource( 4 )
-toggle_mode = false
-enabled_focus_mode = 2
-shortcut = null
-flat = false
-align = 0
-selected = -1
-items = [  ]
-
-[node name="automanage_provision" type="CheckButton" parent="content_container/VBoxContainer/identifier_group/identity_group"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 52.0
-margin/right = 381.0
-margin/bottom = 79.0
-custom_fonts/font = SubResource( 4 )
-custom_colors/font_color = Color( 0, 0, 0, 1 )
-custom_colors/font_color_hover = Color( 0, 0, 0, 1 )
-toggle_mode = true
-enabled_focus_mode = 2
-shortcut = null
-text = "Automanage Profile"
-flat = false
-align = 0
-
-[node name="provision_id" type="OptionButton" parent="content_container/VBoxContainer/identifier_group/identity_group"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 83.0
-margin/right = 381.0
-margin/bottom = 108.0
-custom_fonts/font = SubResource( 4 )
-toggle_mode = false
-enabled_focus_mode = 2
-shortcut = null
-flat = false
-align = 0
-selected = -1
-items = [  ]
 
 [node name="HSeparator_1" type="HSeparator" parent="content_container/VBoxContainer"]
 
@@ -420,6 +426,7 @@ margin/bottom = 218.0
 
 [node name="devices_group" type="VBoxContainer" parent="content_container/VBoxContainer"]
 
+editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
@@ -440,7 +447,7 @@ margin/left = 0.0
 margin/top = 0.0
 margin/right = 824.0
 margin/bottom = 19.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 4 )
 text = "Deploy to Devices"
 percent_visible = 1.0
 lines_skipped = 0
@@ -456,8 +463,8 @@ margin/left = 0.0
 margin/top = 23.0
 margin/right = 824.0
 margin/bottom = 167.0
-custom_styles/bg_focus = SubResource( 5 )
-custom_fonts/font = SubResource( 4 )
+custom_styles/bg_focus = SubResource( 6 )
+custom_fonts/font = SubResource( 5 )
 custom_constants/vseparation = 8
 script/script = ExtResource( 5 )
 
@@ -473,7 +480,7 @@ margin/left = 40.0
 margin/top = 0.0
 margin/right = 0.0
 margin/bottom = 42.0
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 7 )
 custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 custom_colors/font_color_pressed = Color( 1, 1, 1, 1 )

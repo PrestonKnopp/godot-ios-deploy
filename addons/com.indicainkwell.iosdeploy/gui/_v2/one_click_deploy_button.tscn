@@ -11,13 +11,195 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 17.0
-margin/bottom = 19.0
+margin/right = 30.0
+margin/bottom = 28.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
 icon = ExtResource( 1 )
 flat = false
 script/script = ExtResource( 2 )
+
+[node name="hover_panel" type="Panel" parent="."]
+
+editor/display_folded = true
+visibility/visible = false
+rect/min_size = Vector2( 200, 90 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 28.0
+margin/right = 197.0
+margin/bottom = 114.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="hover_panel"]
+
+editor/display_folded = true
+anchor/right = 1
+focus/ignore_mouse = true
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 6.0
+margin/top = 7.0
+margin/right = 5.0
+margin/bottom = 40.0
+alignment = 0
+
+[node name="CheckBox" type="CheckBox" parent="hover_panel/HBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 106.0
+margin/bottom = 33.0
+toggle_mode = true
+enabled_focus_mode = 2
+shortcut = null
+text = "Project Valid"
+flat = false
+align = 0
+
+[node name="spacer" type="Control" parent="hover_panel/HBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = false
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 110.0
+margin/top = 0.0
+margin/right = 122.0
+margin/bottom = 33.0
+
+[node name="settings_button" type="Button" parent="hover_panel/HBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 126.0
+margin/top = 0.0
+margin/right = 189.0
+margin/bottom = 33.0
+toggle_mode = false
+enabled_focus_mode = 0
+shortcut = null
+text = "Settings"
+flat = true
+
+[node name="build_progress_bar" type="ProgressBar" parent="hover_panel"]
+
+editor/display_folded = true
+anchor/top = 1
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = true
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 25.0
+margin/right = 1.0
+margin/bottom = 1.0
+range/min = 0.0
+range/max = 100.0
+range/step = 1.0
+range/page = 0.0
+range/value = 1.0
+range/exp_edit = false
+range/rounded = false
+percent/visible = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="hover_panel/build_progress_bar"]
+
+editor/display_folded = true
+focus/ignore_mouse = true
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 1.0
+margin/top = -18.0
+margin/right = 226.0
+margin/bottom = 1.0
+alignment = 0
+
+[node name="Label" type="Label" parent="hover_panel/build_progress_bar/HBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 2.0
+margin/right = 80.0
+margin/bottom = 16.0
+text = "Build Status:"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="build_status" type="Label" parent="hover_panel/build_progress_bar/HBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = false
+size_flags/horizontal = 3
+size_flags/vertical = 0
+margin/left = 84.0
+margin/top = 2.0
+margin/right = 225.0
+margin/bottom = 16.0
+text = "inactive"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="build_progress_bar" type="ProgressBar" parent="."]
+
+visibility/visible = false
+anchor/top = 1
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = true
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 14.0
+margin/right = 0.0
+margin/bottom = -2.0
+range/min = 0.0
+range/max = 100.0
+range/step = 1.0
+range/page = 0.0
+range/value = 1.0
+range/exp_edit = false
+range/rounded = false
+percent/visible = false
+
+[node name="hover_timer" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 0.5
+one_shot = true
+autostart = false
+
+[connection signal="mouse_enter" from="." to="." method="_on_mouse_enter"]
+
+[connection signal="mouse_exit" from="." to="." method="_on_mouse_exit"]
+
+[connection signal="input_event" from="hover_panel" to="." method="_on_hover_panel_input_event"]
+
+[connection signal="mouse_enter" from="hover_panel" to="." method="_on_hover_panel_mouse_enter"]
+
+[connection signal="mouse_exit" from="hover_panel" to="." method="_on_hover_panel_mouse_exit"]
+
+[connection signal="pressed" from="hover_panel/HBoxContainer/settings_button" to="." method="_on_settings_button_pressed"]
+
+[connection signal="timeout" from="hover_timer" to="." method="_on_hover_timer_timeout"]
 
 

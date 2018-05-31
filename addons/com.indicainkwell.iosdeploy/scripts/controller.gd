@@ -59,8 +59,8 @@ var _settings_menu = SettingsMenuScene.instance()
 func _init():
 	get_view().set_disabled(true)
 	get_view().connect('pressed', self, '_one_click_button_pressed')
-	get_view().connect('mouse_hovering', self, '_one_click_button_mouse_hovering')
-	get_view().connect('mouse_exit', self, '_one_click_button_mouse_exit')
+	get_view().connect('presenting_hover_menu', self, '_one_click_button_presenting_hover_menu')
+	get_view().connect('settings_button_pressed', self, '_one_click_button_settings_button_pressed')
 
 	get_menu().hide()
 	get_menu().connect('request_fill', self, '_on_request_fill')
@@ -300,12 +300,13 @@ func _one_click_button_pressed():
 		execute_deploy_pipeline()
 
 
-func _one_click_button_mouse_hovering():
-	print('OneClickButton: Mouse Hovering')
+func _one_click_button_presenting_hover_menu(oneclickbutton, menu):
+	print('OneClickButton: Presenting Hover Menu')
 
 
-func _one_click_button_mouse_exit():
-	print('OneClickButton: Mouse Exited')
+func _one_click_button_settings_button_pressed(oneclickbutton):
+	print('OneClickButton: Settings Button Pressed')
+	get_menu().show()
 
 
 # -- Xcode
