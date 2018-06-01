@@ -22,7 +22,6 @@ script/script = ExtResource( 2 )
 
 [node name="hover_panel" type="Panel" parent="."]
 
-editor/display_folded = true
 visibility/visible = false
 rect/min_size = Vector2( 200, 90 )
 focus/ignore_mouse = false
@@ -36,7 +35,6 @@ margin/bottom = 118.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="hover_panel"]
 
-editor/display_folded = true
 anchor/right = 1
 focus/ignore_mouse = true
 focus/stop_mouse = false
@@ -94,7 +92,6 @@ flat = true
 
 [node name="build_progress_bar" type="ProgressBar" parent="hover_panel"]
 
-editor/display_folded = true
 anchor/top = 1
 anchor/right = 1
 anchor/bottom = 1
@@ -117,7 +114,6 @@ percent/visible = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="hover_panel/build_progress_bar"]
 
-editor/display_folded = true
 anchor/right = 1
 focus/ignore_mouse = true
 focus/stop_mouse = false

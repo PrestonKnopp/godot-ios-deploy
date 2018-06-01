@@ -150,6 +150,7 @@ func filter_provisions(provisions):
 func execute_deploy_pipeline():
 	# Pipeline: Build Project -> Then Deploy to Devices
 	emit_signal('began_pipeline', self)
+	_one_click_button.update_build_progress(0.3, 'Building Xcode Project')
 	_xcode_project.build()
 
 
@@ -293,15 +294,15 @@ func _on_finished_editing(menu):
 
 
 func _one_click_button_pressed():
-	get_menu().show()
 	if not valid_xcode_project():
 		get_menu().show()
 	else:
 		execute_deploy_pipeline()
 
 
-func _one_click_button_presenting_hover_menu(oneclickbutton, menu):
+func _one_click_button_presenting_hover_menu(oneclickbutton):
 	print('OneClickButton: Presenting Hover Menu')
+	oneclickbutton.set_project_valid(valid_xcode_project())
 
 
 func _one_click_button_settings_button_pressed(oneclickbutton):
@@ -323,12 +324,28 @@ func _on_xcode_made_project(xcode, result, project):
 
 
 func _on_xcode_project_built(xcode_project, result):
-	xcode_project.deploy()
+	if xcode_project.get_devices().size() > 0:
+		_one_click_button.update_build_progress(0.5, 'Deploying %s/%s'%[1, xcode_project.get_devices().size()])
+		xcode_project.deploy()
+	else:
+		emit_signal('finished_pipeline', self)
+		_one_click_button.update_build_progress(1.0, 'Done', true)
 
 
 func _on_device_deployed(xcode_project, result, device_id):
-	stc.get_logger().debug('DEVICE DEPLOYED: ', xcode_project, result.output, device_id)
+#	stc.get_logger().debug('DEVICE DEPLOYED: ', xcode_project, result.output, device_id)
+
+	var devsiz = xcode_project.get_devices().size()
+	var devnum = devsiz - xcode_project._runningdeploys
+	_one_click_button.update_build_progress(
+		0.5 + float(devnum) / float(devsiz) * 0.5,
+		'Deploying %s/%s' % [devnum, devsiz]
+	)
+
+	print('RUNNING DEPLOY ', xcode_project._runningdeploys)
 
 	if not xcode_project.is_deploying():
 		# this is the last device
+		print('LAST DEPLOY')
 		emit_signal('finished_pipeline', self)
+		_one_click_button.update_build_progress(1.0, 'Done', true)

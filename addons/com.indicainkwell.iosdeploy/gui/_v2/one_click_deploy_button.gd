@@ -2,19 +2,33 @@
 extends Button
 
 
-signal presenting_hover_menu(this, menu)
+signal presenting_hover_menu(this)
 signal settings_button_pressed(this)
 
 
-func build_progress_update(status, percent, finished=false):
-	get_node('hover_panel/build_progress_bar/HBoxContainer/build_status').set_text(status)
-	get_node('build_progress_tweener').stop_all()
-	for obj in [get_node('hover_panel/build_progress_bar'), get_node('build_progress_bar')]:
-		get_node('build_progress_tweener').interpolate_method(obj, 'set_value', obj.get_value(), percent * 100.0, 0.3, 0, 0)
-	get_node('build_progress_tweener').start()
+func update_build_progress(percent, status=null, finished=false):
+	var tween = get_node('build_progress_tweener')
+	var bar = get_node('build_progress_bar')
+	bar.share(get_node('hover_panel/build_progress_bar'))
 
+	if status != null:
+		set_build_status(status)
+
+	tween.stop_all()
 	if finished:
-		get_node('build_progress_bar').hide()
+		bar.set_value(0.0)
+		bar.hide()
+	else:
+		tween.interpolate_method(bar, 'set_value', bar.get_value(), percent * 100.0, 0.5, 0, 0)
+		tween.start()
+
+
+func set_build_status(status):
+	get_node('hover_panel/build_progress_bar/HBoxContainer/build_status').set_text(status)
+
+
+func set_project_valid(valid):
+	get_node('hover_panel/HBoxContainer/project_valid').set_pressed(valid)
 
 
 func _on_mouse_enter():
@@ -51,7 +65,7 @@ func _on_hover_panel_mouse_exit():
 
 func _on_hover_timer_timeout():
 	if get_node('hover_panel').is_hidden():
-		emit_signal('presenting_hover_menu', self, get_node('hover_panel'))
+		emit_signal('presenting_hover_menu', self)
 		get_node('hover_panel').show()
 		get_node('build_progress_bar').hide()
 	else:
