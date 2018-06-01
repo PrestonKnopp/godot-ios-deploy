@@ -298,6 +298,10 @@ func _build_xcodebuild_args():
 # ------------------------------------------------------------------------------
 
 
+func get_running_deploys_count():
+	return _runningdeploys
+
+
 func is_deploying():
 	return _runningdeploys > 0
 

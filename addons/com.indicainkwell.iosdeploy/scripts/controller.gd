@@ -335,14 +335,15 @@ func _on_xcode_project_built(xcode_project, result):
 func _on_device_deployed(xcode_project, result, device_id):
 #	stc.get_logger().debug('DEVICE DEPLOYED: ', xcode_project, result.output, device_id)
 
+	var runningdeploys = xcode_project.get_running_deploys_count()
 	var devsiz = xcode_project.get_devices().size()
-	var devnum = devsiz - xcode_project._runningdeploys
+	var devnum = devsiz - runningdeploys
 	_one_click_button.update_build_progress(
 		0.5 + float(devnum) / float(devsiz) * 0.5,
 		'Deploying %s/%s' % [devnum, devsiz]
 	)
 
-	print('RUNNING DEPLOY ', xcode_project._runningdeploys)
+	print('RUNNING DEPLOY ', runningdeploys)
 
 	if not xcode_project.is_deploying():
 		# this is the last device
