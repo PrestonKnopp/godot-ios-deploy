@@ -40,6 +40,7 @@ class Command:
 	# thread.get_id() <- id is prepared when thread is fully spun up
 	# happens to be to late for use case
 	var _current_thread_id = 0
+	var _thread_mutex = Mutex.new()
 
 	func running(thread_id):
 		"""
@@ -102,6 +103,8 @@ class Command:
 			# manage the lifetime of multiple threads
 			data.thread.wait_to_finish()
 
+		
+		_thread_mutex.lock()
 		# Refactor objects that use Command.run_async to connect to the
 		# finished signal. Run async should the be passed some unique
 		# identifier to be passed to listeners. The listener can then
@@ -110,6 +113,7 @@ class Command:
 		cb.obj.callv(cb.name, [self, res] + cb.binds)
 
 		_thread_map.erase(data.thread_id)
+		_thread_mutex.unlock()
 
 
 func execute(cmd, args=[]):
