@@ -115,14 +115,29 @@ func fill_devices_group(devices=[]):
 
 func invalidate_provision():
 	print('Invalidating Provision')
+	_poptbutt.add_style_override('normal', preload('invalid_sbx.tres'))
 
 
 func invalidate_team():
 	print('Invalidating Team')
+	_toptbutt.add_style_override('normal', preload('invalid_sbx.tres'))
 
 
 func invalidate_bundle_id():
 	print('Invalidating Bundleid')
+	_bdlid.add_style_override('normal', preload('invalid_sbx.tres'))
+
+
+func reset_validity():
+	# get_stylebox can fetch default theme values by their type name
+	# that's what the 'type' param means.
+	
+	var get_type_func = 'get_type' if Node.new().has_method('get_type')\
+	                               else 'get_class'
+	for control in [_bdlid, _poptbutt, _toptbutt]:
+		var sbx = get_stylebox('normal', control.call(get_type_func))
+		control.add_style_override('normal', sbx)
+
 
 
 # ------------------------------------------------------------------------------
@@ -131,14 +146,17 @@ func invalidate_bundle_id():
 
 
 func _on_toptbutt_item_selected(id):
+	reset_validity()
 	emit_signal('edited_team', self, _toptbutt.get_item_metadata(id))
 
 
 func _on_poptbutt_item_selected(id):
+	reset_validity()
 	emit_signal('edited_provision', self, _poptbutt.get_item_metadata(id))
 
 
 func _on_bdlid_text_changed(new_text):
+	reset_validity()
 	emit_signal('edited_bundle_id', self, new_text)
 
 
