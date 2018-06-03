@@ -1,4 +1,5 @@
 # one_click_deploy_button.gd
+tool
 extends Button
 
 
@@ -66,7 +67,19 @@ func _on_hover_panel_mouse_exit():
 func _on_hover_timer_timeout():
 	if get_node('hover_panel').is_hidden():
 		emit_signal('presenting_hover_menu', self)
-		get_node('hover_panel').show()
+
+		var hover_panel = get_node('hover_panel')
+		hover_panel.set_as_toplevel(true)
+
+		# have panel popup to the left of button so it isn't clipped
+		# offscreen.
+		var newpos = get_global_pos()
+		newpos.x -= hover_panel.get_size().x - get_size().x
+		newpos.y = hover_panel.get_pos().y
+		hover_panel.set_pos(newpos)
+
+		hover_panel.show()
+
 		get_node('build_progress_bar').hide()
 	else:
 		get_node('hover_panel').hide()

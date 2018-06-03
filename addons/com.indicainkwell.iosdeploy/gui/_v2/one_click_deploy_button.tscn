@@ -14,13 +14,14 @@ margin/top = 0.0
 margin/right = 30.0
 margin/bottom = 28.0
 toggle_mode = false
+click_on_press = true
 enabled_focus_mode = 2
 shortcut = null
 icon = ExtResource( 1 )
 flat = false
 script/script = ExtResource( 2 )
 
-[node name="hover_panel" type="Panel" parent="."]
+[node name="hover_panel" type="PopupPanel" parent="."]
 
 visibility/visible = false
 rect/min_size = Vector2( 200, 90 )
@@ -32,6 +33,7 @@ margin/left = 0.0
 margin/top = 28.0
 margin/right = 200.0
 margin/bottom = 118.0
+popup/exclusive = false
 
 [node name="HBoxContainer" type="HBoxContainer" parent="hover_panel"]
 
