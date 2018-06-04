@@ -2,8 +2,17 @@
 extends SceneTree
 
 
+class _Nil_ extends Object:
+	func __no_way_any_object_has_this_method():
+		return false
 
-const _nil_ = 'ciisnrqxzyxlehitwnrdflcyzrulfp'
+var _nil_ = _Nil_.new()
+
+func __is_Nil__(o):
+	if typeof(o) == TYPE_OBJECT:
+		if o.has_method('__no_way_any_object_has_this_method'):
+			return true
+	return false
 
 var _p_indent = 0
 var _p_sep = ' '
@@ -14,17 +23,16 @@ func p(arg0=_nil_, arg1=_nil_, arg2=_nil_, arg3=_nil_, arg4=_nil_, arg5=_nil_, a
 	var args = [arg0, arg1, arg2, arg3, arg4, arg5, arg6]
 	for i in range(0, args.size()):
 		var arg = args[i]
-		if arg == _nil_: break
+		if __is_Nil__(arg):
+			break
 
 		var sep = _p_sep
 		if i == 0: sep = ''
 		
 		var t = typeof(arg)
-		if t == TYPE_ARRAY:
+		if t == TYPE_STRING:
 			out += sep + arg
-		elif t == TYPE_STRING:
-			out += sep + arg
-		elif t == null:
+		elif t == TYPE_NIL:
 			out += sep + '(null)'
 		else:
 			out += sep + str(arg)
@@ -39,6 +47,10 @@ func p(arg0=_nil_, arg1=_nil_, arg2=_nil_, arg3=_nil_, arg4=_nil_, arg5=_nil_, a
 # ------------------------------------------------------------------------------
 
 
+signal wait_test_signal(name)
+
+
+var _signals_waiting = 0
 var _failed_tests = []
 var _failed_assertions = 0
 
@@ -51,6 +63,10 @@ func ae(a, b, smsg='%s == %s', fmsg='%s != %s'):
 
 func ane(a, b, smsg='%s != %s', fmsg='%s == %s'):
 	a(a != b, smsg %[a,b], fmsg%[a,b])
+
+
+func wait_for(name):
+	_signals_waiting += 1
 
 
 var _prep_method_map = {}
@@ -97,8 +113,16 @@ func run_tests():
 	print('---------------------------------------\n')
 
 
+func _wait_test_signal_callback(name):
+	_signals_waiting -= 1
+
 func _initialize():
+	connect('wait_test_signal', self, '_wait_test_signal_callback')
 	run_tests()
+	while _signals_waiting > 0:
+		print('Waiting Signals: ', _signals_waiting)
+		yield(self, 'wait_test_signal')
+	# _nil_.free()
 	quit()
 
 
@@ -112,8 +136,10 @@ const stc = preload('res://addons/com.indicainkwell.iosdeploy/scripts/static.gd'
 var Regex = stc.get_gdscript('regex.gd')
 var Shell = stc.get_gdscript('shell.gd')
 var iOSExportTemplate = stc.get_gdscript('xcode/ios_export_template.gd')
+var iOSDeploy = stc.get_gdscript('xcode/ios_deploy.gd')
 var Xcode = stc.get_gdscript('xcode.gd')
 var ProvisionFinder = stc.get_gdscript('xcode/finders/provision_finder.gd')
+var PBX = stc.get_gdscript('xcode/pbx.gd')
 
 
 # -- Test Static
@@ -154,7 +180,32 @@ func test_module_logger():
 	l.error('hello world')
 
 
-# -- Regex Test
+# -- Test Shell
+
+
+func test_shell():
+	var _shell = Shell.new()
+	var res = _shell.execute('echo', ['Hello World'])
+	ae(res.output[0], 'Hello World\n')
+
+
+var echo
+func test_shell_async():
+	var _shell = Shell.new()
+	echo = _shell.make_command('echo')
+	echo.run_async(['Hello World'], self, '_test_shell_async_callback')
+	wait_for('_test_shell_async_callback')
+	echo.wait()
+
+
+func _test_shell_async_callback(command, result):
+	p('--- Async Shell Output ---')
+	p('command', command, ' -- result', result.output)
+	ae(result.output[0], 'Hello World\n')
+	emit_signal('wait_test_signal', '_test_shell_async_callback')
+
+
+# -- Test Regex
 
 
 func _prepare_regex():
@@ -191,7 +242,7 @@ func test_regex_no_capture(r):
 		ae(cap, '')
 
 
-# -- Provision Finder Test
+# -- Test Provision Finder
 
 
 func _prepare_provisionfinder():
@@ -229,6 +280,7 @@ func test_provisionfinder_find_provisions(f):
 	p('Identity'); indent()
 	ae(prv.id, 'uuiduuid-uuid-uuid-uuid-uuiduuiduuid')
 	ae(prv.name, 'name')
+	ae(prv.app_id, 'appIDPrefix.com.application.identifier')
 	ae(prv.app_id_name, 'appIDName')
 	dedent()
 
@@ -263,7 +315,59 @@ func test_provisionfinder_find_provisions(f):
 	dedent()
 
 
-# -- iOSExportTemplate Test
+# -- Test PBX
+
+
+func test_pbx():
+	var pbx = PBX.new()
+	ae(pbx.open('res://tests/files/pbxprojs/source/project.pbxproj'), OK)
+	pbx.add_object('the_uuid_my_butt', 'my_type', {
+		property = 'Hello World',
+		another = 'Poop',
+		onemore = 'omg'
+	})
+	var d = pbx.get_dict()
+	for key in d:
+		print(key)
+		if typeof(d[key]) == TYPE_DICTIONARY:
+			for k in d[key]:
+				print('\t', k)
+				print('\t\t', d[key][k])
+		else:
+			print('\t', d[key])
+	pbx.save_plist('res://tests/files/pbxprojs/destination/project.pbxproj')
+
+
+# -- Tes iOSDeploy
+
+
+func test_iosDeploy():
+	var deploy = iOSDeploy.new()
+	deploy.bundle = 'hello.app'
+	var launch_args = deploy._build_launch_args('DEVICE_ID')
+	p('launch_args:', launch_args)
+	var deploy_cmd = deploy._build_deploy_cmd(launch_args)
+	p('deploy_cmd:', deploy_cmd)
+	var joined = deploy._bashinit + [deploy_cmd]
+	p('joined_args:', joined)
+
+
+var deploy
+func test_iosDeploy_install():
+	deploy = iOSDeploy.new()
+	deploy.bundle = 'hello.app'
+	deploy.connect('deployed', self, '_test_iosDeploy_install_callback')
+	deploy.launch_on('DEVICE_ID')
+	wait_for('_test_iosDeploy_install_callback')
+
+
+func _test_iosDeploy_install_callback(iosdeploy, result, device_id):
+	emit_signal('wait_test_signal', '_test_iosDeploy_install_callback')
+	p('DEVICE_ID:', device_id)
+	p('Result:', result)
+
+
+# --  Test iOSExportTemplate
 
 
 func test_iosExportTemplate_destination_path():
@@ -271,7 +375,7 @@ func test_iosExportTemplate_destination_path():
 	p(temp.get_destination_path())
 
 
-# -- Xcode Project Test
+# --  Test Xcode Project
 
 
 func test_xcodeproject_make():
