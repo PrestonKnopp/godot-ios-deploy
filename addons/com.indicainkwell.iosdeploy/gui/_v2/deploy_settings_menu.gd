@@ -16,6 +16,9 @@ signal edited_bundle_id(this, to)
 signal finished_editing(this)
 
 
+var _first_draw = false
+
+
 onready var _ctnt = get_node('content_container/VBoxContainer')
 onready var _bdldisp = _ctnt.get_node('identifier_group/bundle_group/bundle_display_name')
 onready var _bdlid = _ctnt.get_node('identifier_group/bundle_group/bundle_id')
@@ -161,6 +164,12 @@ func _on_bdlid_text_changed(new_text):
 
 
 func _on_deploy_settings_menu_visibility_changed():
+	# hacky: menu_visibility_changed emits twice the first time it becomes
+	# visible. Skip the first extra signal.
+	if not _first_draw:
+		_first_draw = true
+		return
+	
 	if is_hidden():
 		emit_signal('finished_editing', self)
 	else:
