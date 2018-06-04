@@ -28,12 +28,6 @@ onready var _poptbutt = _ctnt.get_node('identifier_group/identity_group/provisio
 onready var _devlist = _ctnt.get_node('devices_group/devices_list')
 
 
-func _ready():
-	_toptbutt.connect('item_selected', self, '_on_toptbutt_item_selected')
-	_poptbutt.connect('item_selected', self, '_on_poptbutt_item_selected')
-	_bdlid.connect('text_changed', self, '_on_bdlid_text_changed')
-
-
 # ------------------------------------------------------------------------------
 #                               Retrieving User Input
 # ------------------------------------------------------------------------------

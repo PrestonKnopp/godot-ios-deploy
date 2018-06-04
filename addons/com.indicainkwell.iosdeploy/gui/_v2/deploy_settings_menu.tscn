@@ -562,6 +562,12 @@ percent_visible = 1.0
 
 [connection signal="pressed" from="content_container/VBoxContainer/title_group/HBoxContainer/help_button" to="AcceptDialog" method="popup_centered"]
 
+[connection signal="item_selected" from="content_container/VBoxContainer/identifier_group/identity_group/provision_id" to="." method="_on_poptbutt_item_selected"]
+
+[connection signal="item_selected" from="content_container/VBoxContainer/identifier_group/identity_group/team_name" to="." method="_on_toptbutt_item_selected"]
+
+[connection signal="text_changed" from="content_container/VBoxContainer/identifier_group/bundle_group/bundle_id" to="." method="_on_bdlid_text_changed"]
+
 [connection signal="pressed" from="close_button" to="." method="hide"]
 
 
