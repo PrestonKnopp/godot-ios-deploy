@@ -67,6 +67,7 @@ func find():
 		provision.name = json.get_value('Name', '[--No Name--]')
 		provision.app_id = json.get_value('Entitlements/application-identifier', '')
 		provision.app_id_name = json.get_value('AppIDName', '')
+		provision.bundle_id = provision.app_id.right(provision.app_id.find('.') + 1)
 		provision.platforms = json.get_value('Platform', [])
 		provision.team_ids = json.get_value('TeamIdentifier', [])
 		provision.creation_date = _date_parse(json.get_value('CreationDate'))

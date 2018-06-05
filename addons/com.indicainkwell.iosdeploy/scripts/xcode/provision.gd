@@ -6,6 +6,7 @@ var id
 var name
 var app_id # entitled bundleid prefixed with teamid
 var app_id_name
+var bundle_id
 #var entitlements
 var platforms
 var team_ids
@@ -19,6 +20,7 @@ func to_dict():
 		name = name,
 		app_id = app_id,
 		app_id_name = app_id_name,
+		bundle_id = bundle_id,
 		platforms = platforms,
 		team_ids = team_ids,
 		creation_date = creation_date,
@@ -32,6 +34,7 @@ func from_dict(d):
 	name = d['name']
 	app_id = d['app_id']
 	app_id_name = d['app_id_name']
+	bundle_id = d['bundle_id']
 	platforms = d['platforms']
 	team_ids = d['team_ids']
 	creation_date = d['creation_date']
