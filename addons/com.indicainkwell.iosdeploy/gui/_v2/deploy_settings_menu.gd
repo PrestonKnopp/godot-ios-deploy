@@ -4,7 +4,7 @@
 # Fill in the groups with the fill_* api. Should be done after calling
 # populate_*. Otherwise, if ui is not already populated, it will have no effect.
 tool
-extends Panel
+extends Popup
 
 
 signal request_fill(this)
@@ -14,9 +14,6 @@ signal edited_team(this, to)
 signal edited_provision(this, to)
 signal edited_bundle_id(this, to)
 signal finished_editing(this)
-
-
-var _first_draw = false
 
 
 onready var _ctnt = get_node('content_container/VBoxContainer')
@@ -128,7 +125,7 @@ func invalidate_bundle_id():
 func reset_validity():
 	# get_stylebox can fetch default theme values by their type name
 	# that's what the 'type' param means.
-	
+
 	var get_type_func = 'get_type' if Node.new().has_method('get_type')\
 	                               else 'get_class'
 	for control in [_bdlid, _poptbutt, _toptbutt]:
@@ -157,15 +154,10 @@ func _on_bdlid_text_changed(new_text):
 	emit_signal('edited_bundle_id', self, new_text)
 
 
-func _on_deploy_settings_menu_visibility_changed():
-	# hacky: menu_visibility_changed emits twice the first time it becomes
-	# visible. Skip the first extra signal.
-	if not _first_draw:
-		_first_draw = true
-		return
-	
-	if is_hidden():
-		emit_signal('finished_editing', self)
-	else:
-		emit_signal('request_populate', self)
-		emit_signal('request_fill', self)
+func _on_about_to_show():
+	emit_signal('request_populate', self)
+	emit_signal('request_fill', self)
+
+
+func _on_popup_hide():
+	emit_signal('finished_editing', self)

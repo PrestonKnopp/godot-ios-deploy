@@ -295,7 +295,7 @@ func _on_finished_editing(menu):
 
 func _one_click_button_pressed():
 	if not valid_xcode_project():
-		get_menu().show()
+		get_menu().popup_centered()
 	else:
 		execute_deploy_pipeline()
 
@@ -307,7 +307,7 @@ func _one_click_button_presenting_hover_menu(oneclickbutton):
 
 func _one_click_button_settings_button_pressed(oneclickbutton):
 	print('OneClickButton: Settings Button Pressed')
-	get_menu().show()
+	get_menu().popup_centered()
 
 
 # -- Xcode
