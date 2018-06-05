@@ -95,14 +95,24 @@ func get_menu():
 	return _settings_menu
 
 
+func valid_team(team, provision):
+	if team == null or provision == null:
+		return false
+	return provision.team_ids.has(team.id)
+
+
 func valid_bundleid(bundle_id, provision):
+	if bundle_id == null or provision == null or provision.bundle_id == null:
+		return false
 	return bundle_id.match(provision.bundle_id)
 
 
 func valid_xcode_project():
 	return _xcode_project != null and\
 	   (_xcode_project.provision != null and\
-	    _xcode_project.team      != null)
+	    _xcode_project.team      != null and\
+	    valid_bundleid(_xcode_project.bundle_id, _xcode_project.provision) and\
+	    valid_team(_xcode_project.team, _xcode_project.provision))
 
 
 func filter_provisions(provisions):
