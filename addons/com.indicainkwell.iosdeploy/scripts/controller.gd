@@ -229,6 +229,8 @@ func _on_edited_team(menu, new_team):
 	if not _xcode_project.provision.team_ids.has(new_team.id):
 		# provision is invalid as it does not support team
 		menu.invalidate_provision()
+	else:
+		menu.validate_provision()
 
 
 func _on_edited_provision(menu, new_provision):
@@ -245,6 +247,8 @@ func _on_edited_provision(menu, new_provision):
 	if _xcode_project.team != null and not new_provision.team_ids.has(_xcode_project.team.id):
 		# team is invalid as it is not supported by provision
 		menu.invalidate_team()
+	else:
+		menu.validate_team()
 
 	# Check bundleid
 
@@ -253,14 +257,19 @@ func _on_edited_provision(menu, new_provision):
 
 	if not valid_bundleid(_xcode_project.bundle_id, new_provision):
 		menu.invalidate_bundle_id()
+	else:
+		menu.validate_bundle_id()
 
 
 func _on_edited_bundle_id(menu, new_bundle_id):
 	_xcode_project.bundle_id = new_bundle_id
 	if _xcode_project.provision == null:
 		return
-	if not valid_bundleid(new_bundle_id, _xcode_project.provision):
+	if valid_bundleid(new_bundle_id, _xcode_project.provision):
+		menu.validate_bundle_id()
+	else:
 		menu.invalidate_bundle_id()
+
 
 
 func _on_finished_editing(menu):

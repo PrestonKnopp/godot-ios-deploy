@@ -110,38 +110,58 @@ func fill_devices_group(devices=[]):
 # ------------------------------------------------------------------------------
 
 
-func _add_style_override(control, name, sbx):
-	if stc.get_version().is2():
-		control.add_style_override(name, sbx)
-	else:
-		control.add_stylebox_override(name, sbx)
+func _invalidate(control):
+	if control.is_connected('draw', self, '_draw_invalid'):
+		return
+	control.connect('draw', self, '_draw_invalid', [control])
+	control.update()
+
+
+func _validate(control):
+	if control.is_connected('draw', self, '_draw_invalid'):
+		control.disconnect('draw', self, '_draw_invalid')
+		control.update()
 
 
 func invalidate_provision():
 	print('Invalidating Provision')
-	_add_style_override(_poptbutt, 'normal', preload('invalid_sbx.tres'))
+	_invalidate(_poptbutt)
 
 
 func invalidate_team():
 	print('Invalidating Team')
-	_add_style_override(_toptbutt, 'normal', preload('invalid_sbx.tres'))
+	_invalidate(_toptbutt)
 
 
 func invalidate_bundle_id():
 	print('Invalidating Bundleid')
-	_add_style_override(_bdlid, 'normal', preload('invalid_sbx.tres'))
+	_invalidate(_bdlid)
+
+
+func validate_provision():
+	print('Validating Provision')
+	_validate(_poptbutt)
+
+
+func validate_team():
+	print('Validating Team')
+	_validate(_toptbutt)
+
+
+func validate_bundle_id():
+	print('Validating Bundleid')
+	_validate(_bdlid)
 
 
 func reset_validity():
-	# get_stylebox can fetch default theme values by their type name
-	# that's what the 'type' param means.
-	
-	var get_type_func = 'get_type' if stc.get_version().is2()\
-	                               else 'get_class'
 	for control in [_bdlid, _poptbutt, _toptbutt]:
-		var sbx = get_stylebox('normal', control.call(get_type_func))
-		_add_style_override(control, 'normal', sbx)
+		control.update()
 
+
+func _draw_invalid(control):
+	var c = ColorN('red')
+	c.a = 0.1
+	control.draw_rect(Rect2(Vector2(), control.get_rect().size), c)
 
 
 # ------------------------------------------------------------------------------
@@ -150,18 +170,18 @@ func reset_validity():
 
 
 func _on_toptbutt_item_selected(id):
-	reset_validity()
 	emit_signal('edited_team', self, _toptbutt.get_item_metadata(id))
+	reset_validity()
 
 
 func _on_poptbutt_item_selected(id):
-	reset_validity()
 	emit_signal('edited_provision', self, _poptbutt.get_item_metadata(id))
+	reset_validity()
 
 
 func _on_bdlid_text_changed(new_text):
-	reset_validity()
 	emit_signal('edited_bundle_id', self, new_text)
+	reset_validity()
 
 
 func _on_about_to_show():
