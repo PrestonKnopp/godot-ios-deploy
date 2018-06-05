@@ -96,13 +96,7 @@ func get_menu():
 
 
 func valid_bundleid(bundle_id, provision):
-	var first_dot_idx = provision.app_id.find('.')
-	if first_dot_idx == -1:
-		stc.get_logger().warn('Invalid app_id in provision: %s' % provision.to_dict())
-		return false
-
-	var prov_bundleid = provision.app_id.right(first_dot_idx + 1)
-	return bundle_id.match(prov_bundleid)
+	return bundle_id.match(provision.bundle_id)
 
 
 func valid_xcode_project():
@@ -226,11 +220,13 @@ func _on_edited_team(menu, new_team):
 		return
 
 	# Notify menu if provision is invalid due to new team
-	if not _xcode_project.provision.team_ids.has(new_team.id):
+
+	if _xcode_project.provision.team_ids.has(new_team.id):
+		menu.validate_provision()
+		menu.validate_team()
+	else:
 		# provision is invalid as it does not support team
 		menu.invalidate_provision()
-	else:
-		menu.validate_provision()
 
 
 func _on_edited_provision(menu, new_provision):
@@ -244,21 +240,29 @@ func _on_edited_provision(menu, new_provision):
 
 	# Notify menu if teams and bundleid are invalid due to new provision
 
-	if _xcode_project.team != null and not new_provision.team_ids.has(_xcode_project.team.id):
-		# team is invalid as it is not supported by provision
-		menu.invalidate_team()
-	else:
-		menu.validate_team()
+	if _xcode_project.team != null:
+		if new_provision.team_ids.has(_xcode_project.team.id):
+			menu.validate_team()
+		else:
+			# team is invalid as it is not supported by provision
+			menu.invalidate_team()
 
 	# Check bundleid
 
 	if _xcode_project.bundle_id == null or _xcode_project.bundle_id.empty():
 		return
 
-	if not valid_bundleid(_xcode_project.bundle_id, new_provision):
-		menu.invalidate_bundle_id()
-	else:
+	if valid_bundleid(_xcode_project.bundle_id, new_provision):
 		menu.validate_bundle_id()
+	else:
+		_xcode_project.bundle_id = new_provision.bundle_id
+		# if bundle_id is a wildcard, invalidate so user 
+		# will edit
+		if _xcode_project.bundle_id.find('*') > -1:
+			menu.invalidate_bundle_id()
+		_on_request_fill(menu)
+	
+	menu.validate_provision()
 
 
 func _on_edited_bundle_id(menu, new_bundle_id):
