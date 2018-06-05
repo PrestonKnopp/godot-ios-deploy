@@ -1,0 +1,442 @@
+[gd_scene load_steps=6 format=1]
+
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/theme.tres" type="Theme" id=1]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/img/Upload Icon.png" type="Texture" id=3]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/deploy_settings_menu.tscn" type="PackedScene" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+
+font/size = 30
+font/use_mipmaps = false
+font/use_filter = true
+font/font = ExtResource( 2 )
+
+[node name="onboarding_flow" type="Control"]
+
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+theme/theme = ExtResource( 1 )
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 0.0
+margin/bottom = 0.0
+
+[node name="ConfirmationDialog" type="Panel" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 20.0
+margin/top = 28.0
+margin/right = 336.0
+margin/bottom = 396.0
+
+[node name="MarginContainer" type="MarginContainer" parent="ConfirmationDialog"]
+
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 0.0
+margin/bottom = 0.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ConfirmationDialog/MarginContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 10.0
+margin/top = 10.0
+margin/right = 306.0
+margin/bottom = 358.0
+alignment = 0
+
+[node name="center_header_container" type="CenterContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 296.0
+margin/bottom = 36.0
+use_top_left = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_header_container"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 8.0
+margin/top = 0.0
+margin/right = 288.0
+margin/bottom = 36.0
+alignment = 0
+
+[node name="Label" type="Label" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_header_container/HBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 139.0
+margin/bottom = 36.0
+custom_fonts/font = SubResource( 1 )
+text = "IOSDEPLOY"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Label_1" type="Label" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_header_container/HBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 143.0
+margin/top = 0.0
+margin/right = 280.0
+margin/bottom = 36.0
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.376471, 0.368627, 0.419608, 1 )
+text = "PROVISION"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="margin_separator" type="MarginContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 40.0
+margin/right = 296.0
+margin/bottom = 43.0
+custom_constants/margin_right = 20
+custom_constants/margin_top = 0
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 0
+
+[node name="HSeparator 2" type="HSeparator" parent="ConfirmationDialog/MarginContainer/VBoxContainer/margin_separator"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 20.0
+margin/top = 0.0
+margin/right = 276.0
+margin/bottom = 3.0
+
+[node name="spacer" type="Control" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+
+rect/min_size = Vector2( 0, 20 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 47.0
+margin/right = 296.0
+margin/bottom = 67.0
+
+[node name="center_automanage_container" type="CenterContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 71.0
+margin/right = 296.0
+margin/bottom = 98.0
+use_top_left = false
+
+[node name="CheckButton" type="CheckButton" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_automanage_container"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 69.0
+margin/top = 0.0
+margin/right = 226.0
+margin/bottom = 27.0
+toggle_mode = true
+enabled_focus_mode = 2
+shortcut = null
+text = "automanage"
+flat = false
+align = 0
+
+[node name="spacer_1" type="Control" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+
+rect/min_size = Vector2( 0, 20 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 102.0
+margin/right = 296.0
+margin/bottom = 122.0
+
+[node name="OptionButton" type="OptionButton" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 126.0
+margin/right = 296.0
+margin/bottom = 151.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Choose provisioning profile"
+flat = false
+align = 0
+selected = -1
+items = [  ]
+
+[node name="spacer_3" type="Control" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+
+rect/min_size = Vector2( 0, 10 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 155.0
+margin/right = 296.0
+margin/bottom = 165.0
+
+[node name="center_or_separator" type="CenterContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 169.0
+margin/right = 296.0
+margin/bottom = 188.0
+use_top_left = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_or_separator"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 34.0
+margin/top = 0.0
+margin/right = 261.0
+margin/bottom = 19.0
+alignment = 0
+
+[node name="HSeparator" type="HSeparator" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_or_separator/HBoxContainer"]
+
+rect/min_size = Vector2( 100, 0 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 100.0
+margin/bottom = 19.0
+
+[node name="Label" type="Label" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_or_separator/HBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 104.0
+margin/top = 0.0
+margin/right = 123.0
+margin/bottom = 19.0
+text = "OR"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="HSeparator_1" type="HSeparator" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_or_separator/HBoxContainer"]
+
+rect/min_size = Vector2( 100, 0 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 127.0
+margin/top = 0.0
+margin/right = 227.0
+margin/bottom = 19.0
+
+[node name="center_drag_and_drop" type="CenterContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 0.0
+margin/top = 192.0
+margin/right = 296.0
+margin/bottom = 319.0
+use_top_left = false
+
+[node name="Panel" type="ColorFrame" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_drag_and_drop"]
+
+rect/min_size = Vector2( 128, 96 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 84.0
+margin/top = 15.0
+margin/right = 212.0
+margin/bottom = 111.0
+color = Color( 0.376471, 0.368627, 0.419608, 1 )
+
+[node name="TextureFrame" type="TextureFrame" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_drag_and_drop/Panel"]
+
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 0.0
+margin/bottom = 0.0
+texture = ExtResource( 3 )
+modulate = Color( 0.234375, 0.220642, 0.220642, 1 )
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_drag_and_drop/Panel/TextureFrame"]
+
+anchor/left = 3
+anchor/top = 1
+anchor/right = 3
+anchor/bottom = 1
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 45.0
+margin/top = 20.0
+margin/right = -47.0
+margin/bottom = 0.0
+text = "Drag and Drop"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="HButtonArray" type="HButtonArray" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 323.0
+margin/right = 296.0
+margin/bottom = 348.0
+flat = true
+button/count = 2
+button/min_button_size = 0.0
+button/align = 1
+button/0/text = "Cancel"
+button/0/tooltip = "Cancel setup of ios-deploy provision"
+button/0/icon = null
+button/1/text = "Next"
+button/1/tooltip = "Go to next step to set up ios-deploy."
+button/1/icon = null
+button/selected = 1
+
+[node name="deploy_settings_menu" parent="." instance=ExtResource( 4 )]
+
+editor/display_folded = true
+visibility/visible = false
+margin/left = 16.0
+margin/top = 20.0
+margin/right = 24.0
+margin/bottom = 20.0
+
+[node name="HButtonArray_1" type="HButtonArray" parent="deploy_settings_menu"]
+
+anchor/top = 1
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 40.0
+margin/right = 0.0
+margin/bottom = 10.0
+flat = true
+button/count = 2
+button/min_button_size = 0.0
+button/align = 1
+button/0/text = "Back"
+button/0/tooltip = "Go back to provision profile selection"
+button/0/icon = null
+button/1/text = "Done"
+button/1/tooltip = "Finish up"
+button/1/icon = null
+button/selected = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+
+visibility/visible = false
+anchor/left = 1
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 350.0
+margin/top = 0.0
+margin/right = 0.0
+margin/bottom = 0.0
+bbcode/enabled = false
+bbcode/bbcode = "# Onboarding
+
+User select, drag and drop, or browse files for provisioning profile -> fill in team and bundle id from profile -> present overview for user to correct anything.
+
+Additionally, check if there are any profiles. If there aren't, user may have not installed Xcode or registered their developer's account with xcode."
+visible_characters = -1
+percent_visible = 1.0
+
+

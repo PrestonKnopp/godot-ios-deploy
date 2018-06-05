@@ -11,4 +11,8 @@ config_version=3
 [application]
 
 config/name="iOSDeploy"
-config/icon="res://addons/com.indicainkwell.iosdeploy/resources/apple-icon@3.png"
+config/icon="res://addons/com.indicainkwell.iosdeploy/resources/apple_icon/apple_icon@3x.png"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "com.indicainkwell.iosdeploy" )

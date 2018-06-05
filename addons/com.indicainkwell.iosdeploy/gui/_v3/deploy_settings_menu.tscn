@@ -1,0 +1,747 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/deploy_settings_menu.gd" type="Script" id=1]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Light.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Bold.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/device_tree_list.gd" type="Script" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+
+size = 30
+use_mipmaps = false
+use_filter = true
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=2]
+
+size = 12
+use_mipmaps = false
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=3]
+
+size = 16
+use_mipmaps = false
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=4]
+
+size = 16
+use_mipmaps = false
+use_filter = true
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=5]
+
+size = 16
+use_mipmaps = false
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="StyleBoxEmpty" id=6]
+
+content_margin_left = -1.0
+content_margin_right = -1.0
+content_margin_top = -1.0
+content_margin_bottom = -1.0
+
+[sub_resource type="DynamicFont" id=7]
+
+size = 16
+use_mipmaps = false
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=8]
+
+size = 16
+use_mipmaps = false
+use_filter = true
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=9]
+
+size = 16
+use_mipmaps = false
+use_filter = true
+font_data = ExtResource( 2 )
+
+[node name="deploy_settings_menu" type="WindowDialog" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 40.0
+margin_top = 40.0
+margin_right = -40.0
+margin_bottom = -40.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+popup_exclusive = false
+window_title = ""
+resizable = false
+script = ExtResource( 1 )
+_sections_unfolded = [ "Margin" ]
+
+[node name="content_container" type="MarginContainer" parent="." index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+custom_constants/margin_right = 50
+custom_constants/margin_top = 50
+custom_constants/margin_left = 50
+custom_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="content_container" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 50.0
+margin_top = 50.0
+margin_right = 894.0
+margin_bottom = 470.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_constants/separation = 15
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="title_group" type="VBoxContainer" parent="content_container/VBoxContainer" index="0"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 844.0
+margin_bottom = 59.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="content_container/VBoxContainer/title_group" index="0"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 844.0
+margin_bottom = 36.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 2
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="title" type="Label" parent="content_container/VBoxContainer/title_group/HBoxContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 139.0
+margin_bottom = 36.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 1 )
+text = "IOSDEPLOY"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="subtitle" type="Label" parent="content_container/VBoxContainer/title_group/HBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 143.0
+margin_right = 224.0
+margin_bottom = 36.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
+text = "SETUP"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="spacer" type="Control" parent="content_container/VBoxContainer/title_group/HBoxContainer" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 228.0
+margin_right = 805.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 2
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="help_button" type="Button" parent="content_container/VBoxContainer/title_group/HBoxContainer" index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 809.0
+margin_right = 844.0
+margin_bottom = 36.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.376471, 0.368627, 0.419608, 0.992157 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "help"
+flat = true
+align = 2
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="information" type="Label" parent="content_container/VBoxContainer/title_group" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 40.0
+margin_right = 844.0
+margin_bottom = 59.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
+text = "Required setup before deploying to a device. Start by setting provisioning profile."
+clip_text = true
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="HSeparator" type="HSeparator" parent="content_container/VBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 74.0
+margin_right = 844.0
+margin_bottom = 78.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="identifier_group" type="HBoxContainer" parent="content_container/VBoxContainer" index="2"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 93.0
+margin_right = 844.0
+margin_bottom = 214.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_constants/separation = 30
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="identity_group" type="VBoxContainer" parent="content_container/VBoxContainer/identifier_group" index="0"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 390.0
+margin_bottom = 121.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 0
+
+[node name="Label" type="Label" parent="content_container/VBoxContainer/identifier_group/identity_group" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 54.0
+margin_bottom = 19.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 1
+custom_fonts/font = SubResource( 4 )
+text = "Identity"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="automanage_provision" type="CheckButton" parent="content_container/VBoxContainer/identifier_group/identity_group" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 23.0
+margin_right = 390.0
+margin_bottom = 63.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = SubResource( 5 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+custom_colors/font_color_hover = Color( 0, 0, 0, 1 )
+toggle_mode = true
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Automanage Profile"
+flat = false
+align = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="provision_id" type="OptionButton" parent="content_container/VBoxContainer/identifier_group/identity_group" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 67.0
+margin_right = 390.0
+margin_bottom = 92.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = SubResource( 5 )
+toggle_mode = false
+action_mode = 0
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = false
+clip_text = true
+align = 0
+items = [  ]
+selected = -1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="team_name" type="OptionButton" parent="content_container/VBoxContainer/identifier_group/identity_group" index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 96.0
+margin_right = 390.0
+margin_bottom = 121.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = SubResource( 5 )
+toggle_mode = false
+action_mode = 0
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = false
+clip_text = true
+align = 0
+items = [  ]
+selected = -1
+
+[node name="VSeparator" type="VSeparator" parent="content_container/VBoxContainer/identifier_group" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 420.0
+margin_right = 424.0
+margin_bottom = 121.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="bundle_group" type="VBoxContainer" parent="content_container/VBoxContainer/identifier_group" index="2"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 454.0
+margin_right = 844.0
+margin_bottom = 121.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 0
+
+[node name="Label" type="Label" parent="content_container/VBoxContainer/identifier_group/bundle_group" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 50.0
+margin_bottom = 19.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 4 )
+text = "Bundle"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="bundle_display_name" type="LineEdit" parent="content_container/VBoxContainer/identifier_group/bundle_group" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 23.0
+margin_right = 390.0
+margin_bottom = 52.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = SubResource( 5 )
+focus_mode = 2
+context_menu_enabled = true
+placeholder_text = "Bundle Display Name (i.e MyGame)"
+placeholder_alpha = 0.6
+caret_blink = true
+caret_blink_speed = 0.65
+caret_position = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="bundle_id" type="LineEdit" parent="content_container/VBoxContainer/identifier_group/bundle_group" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 56.0
+margin_right = 390.0
+margin_bottom = 85.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = SubResource( 5 )
+focus_mode = 2
+context_menu_enabled = true
+placeholder_text = "Bundle Id (i.e. com.you.MyGame)"
+placeholder_alpha = 0.6
+caret_blink = true
+caret_blink_speed = 0.65
+caret_position = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="HSeparator_1" type="HSeparator" parent="content_container/VBoxContainer" index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 229.0
+margin_right = 844.0
+margin_bottom = 233.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="devices_group" type="VBoxContainer" parent="content_container/VBoxContainer" index="4"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 248.0
+margin_right = 844.0
+margin_bottom = 420.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Label" type="Label" parent="content_container/VBoxContainer/devices_group" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 844.0
+margin_bottom = 19.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_fonts/font = SubResource( 4 )
+text = "Deploy to Devices"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="devices_list" type="Tree" parent="content_container/VBoxContainer/devices_group" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 23.0
+margin_right = 844.0
+margin_bottom = 172.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = true
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+custom_styles/bg_focus = SubResource( 6 )
+custom_fonts/font = SubResource( 5 )
+custom_constants/vseparation = 8
+columns = 1
+allow_reselect = false
+allow_rmb_select = false
+hide_folding = false
+hide_root = true
+drop_mode_flags = 0
+select_mode = 0
+script = ExtResource( 5 )
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="AcceptDialog" type="AcceptDialog" parent="." index="2"]
+
+editor/display_folded = true
+visible = false
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 530.0
+margin_bottom = 397.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+popup_exclusive = false
+window_title = "Alert!"
+resizable = false
+dialog_hide_on_ok = true
+
+[node name="Panel" type="Panel" parent="AcceptDialog" index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -36.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="AcceptDialog" index="4"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -36.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = true
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+custom_fonts/mono_font = SubResource( 7 )
+custom_fonts/bold_font = SubResource( 8 )
+custom_fonts/normal_font = SubResource( 9 )
+bbcode_enabled = true
+bbcode_text = "TODO: Write better help
+
+[b]Provisioning Profiles[/b]
+
+Provisioning profiles are used to validate your application and are necessary to deploy to an iOS device. They can be located in the directory [code]~/Library/MobileDevice/Provisioning Profiles[/code].
+A profile contains the team and the bundle id that will be associated with your app. Since it is so specific you should choose a provisioning profile first.
+
+[b]Picking a Provisioning Profile[/b]
+
+If you have barely or not touched xcode you may need to perform a couple extra steps:
+
+- You will need an [url=developer.apple.com/]apple developer account[/url]. You can make a free account.
+- Make sure xcode is installed.
+- After xcode is installed open it and register your developer account with xcode by going to [code]Xcode Preferences -> User Profiles -> +[/code].
+
+Otherwise, click the provisioning profiles drop down to select an appropriate profile.
+
+[b]Bundle ID and Me[/b]
+
+The bundle id is associated with your provisioning profile. Your profile can be contain a WildCard identifier. Meaning your bundle id has to match the profile's prefix but can have anything in the WildCard(*) spot."
+visible_characters = -1
+percent_visible = 1.0
+meta_underlined = true
+tab_size = 4
+text = "TODO: Write better help
+
+Provisioning Profiles
+
+Provisioning profiles are used to validate your application and are necessary to deploy to an iOS device. They can be located in the directory ~/Library/MobileDevice/Provisioning Profiles.
+A profile contains the team and the bundle id that will be associated with your app. Since it is so specific you should choose a provisioning profile first.
+
+Picking a Provisioning Profile
+
+If you have barely or not touched xcode you may need to perform a couple extra steps:
+
+- You will need an apple developer account. You can make a free account.
+- Make sure xcode is installed.
+- After xcode is installed open it and register your developer account with xcode by going to Xcode Preferences -> User Profiles -> +.
+
+Otherwise, click the provisioning profiles drop down to select an appropriate profile.
+
+Bundle ID and Me
+
+The bundle id is associated with your provisioning profile. Your profile can be contain a WildCard identifier. Meaning your bundle id has to match the profile's prefix but can have anything in the WildCard(*) spot."
+scroll_active = true
+scroll_following = false
+selection_enabled = false
+override_selected_font_color = false
+
+[connection signal="about_to_show" from="." to="." method="_on_about_to_show"]
+
+[connection signal="popup_hide" from="." to="." method="_on_popup_hide"]
+
+[connection signal="pressed" from="content_container/VBoxContainer/title_group/HBoxContainer/help_button" to="AcceptDialog" method="popup_centered"]
+
+[connection signal="item_selected" from="content_container/VBoxContainer/identifier_group/identity_group/provision_id" to="." method="_on_poptbutt_item_selected"]
+
+[connection signal="item_selected" from="content_container/VBoxContainer/identifier_group/identity_group/team_name" to="." method="_on_toptbutt_item_selected"]
+
+[connection signal="text_changed" from="content_container/VBoxContainer/identifier_group/bundle_group/bundle_id" to="." method="_on_bdlid_text_changed"]
+
+

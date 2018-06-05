@@ -1,0 +1,263 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/apple_icon/apple_icon.png" type="Texture" id=1]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/one_click_deploy_button.gd" type="Script" id=2]
+
+[node name="one_click_deploy_button" type="Button" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 30.0
+margin_bottom = 28.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+icon = ExtResource( 1 )
+flat = false
+align = 1
+script = ExtResource( 2 )
+
+[node name="hover_panel" type="PopupPanel" parent="." index="0"]
+
+visible = false
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 28.0
+margin_right = 200.0
+margin_bottom = 118.0
+rect_min_size = Vector2( 200, 90 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+popup_exclusive = false
+
+[node name="HBoxContainer" type="HBoxContainer" parent="hover_panel" index="0"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+margin_top = 5.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+alignment = 0
+_sections_unfolded = [ "Margin" ]
+
+[node name="project_valid" type="CheckBox" parent="hover_panel/HBoxContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 108.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+toggle_mode = true
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Project Valid"
+flat = false
+align = 0
+
+[node name="spacer" type="Control" parent="hover_panel/HBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 112.0
+margin_right = 133.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 2
+
+[node name="settings_button" type="Button" parent="hover_panel/HBoxContainer" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 137.0
+margin_right = 200.0
+margin_bottom = 20.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+toggle_mode = false
+enabled_focus_mode = 0
+shortcut = null
+group = null
+text = "Settings"
+flat = true
+align = 1
+
+[node name="build_progress_bar" type="ProgressBar" parent="hover_panel" index="1"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -20.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 0
+min_value = 0.0
+max_value = 100.0
+step = 1.0
+page = 0.0
+value = 0.0
+exp_edit = false
+rounded = false
+percent_visible = true
+_sections_unfolded = [ "Margin" ]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="hover_panel/build_progress_bar" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 0.0
+margin_left = 1.0
+margin_top = -18.0
+margin_right = 1.0
+margin_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+alignment = 0
+
+[node name="Label" type="Label" parent="hover_panel/build_progress_bar/HBoxContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 80.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 0
+text = "Build Status:"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="build_status" type="Label" parent="hover_panel/build_progress_bar/HBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 102.0
+margin_right = 200.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "inactive"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="build_progress_bar" type="ProgressBar" parent="." index="1"]
+
+visible = false
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -15.0
+margin_top = -16.0
+margin_right = 15.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 0
+min_value = 0.0
+max_value = 100.0
+step = 1.0
+page = 0.0
+value = 0.0
+exp_edit = false
+rounded = false
+percent_visible = false
+
+[node name="build_progress_tweener" type="Tween" parent="." index="2"]
+
+repeat = false
+playback_process_mode = 1
+playback_speed = 1.0
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+[node name="hover_timer" type="Timer" parent="." index="3"]
+
+process_mode = 1
+wait_time = 0.5
+one_shot = true
+autostart = false
+
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_enter"]
+
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exit"]
+
+[connection signal="gui_input" from="hover_panel" to="." method="_on_hover_panel_input_event"]
+
+[connection signal="mouse_entered" from="hover_panel" to="." method="_on_hover_panel_mouse_enter"]
+
+[connection signal="mouse_exited" from="hover_panel" to="." method="_on_hover_panel_mouse_exit"]
+
+[connection signal="pressed" from="hover_panel/HBoxContainer/settings_button" to="." method="_on_settings_button_pressed"]
+
+[connection signal="timeout" from="hover_timer" to="." method="_on_hover_timer_timeout"]
+
+

@@ -213,7 +213,7 @@ func _on_request_fill(menu):
 
 
 func _on_edited_team(menu, new_team):
-	assert(new_team extends _xcode.Team)
+	# assert(new_team extends _xcode.Team)
 	if _xcode_project.team != null and\
 	   _xcode_project.team.id == new_team.id and\
 	   _xcode_project.team.name == new_team.name:
@@ -232,7 +232,7 @@ func _on_edited_team(menu, new_team):
 
 
 func _on_edited_provision(menu, new_provision):
-	assert(new_provision extends _xcode.Provision)
+	# assert(new_provision extends _xcode.Provision)
 
 	if _xcode_project.provision != null and _xcode_project.provision.id == new_provision.id:
 		return

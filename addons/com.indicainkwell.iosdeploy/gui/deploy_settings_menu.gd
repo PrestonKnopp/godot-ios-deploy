@@ -16,6 +16,9 @@ signal edited_bundle_id(this, to)
 signal finished_editing(this)
 
 
+const stc = preload('../scripts/static.gd')
+
+
 onready var _ctnt = get_node('content_container/VBoxContainer')
 onready var _bdldisp = _ctnt.get_node('identifier_group/bundle_group/bundle_display_name')
 onready var _bdlid = _ctnt.get_node('identifier_group/bundle_group/bundle_id')
@@ -107,30 +110,37 @@ func fill_devices_group(devices=[]):
 # ------------------------------------------------------------------------------
 
 
+func _add_style_override(control, name, sbx):
+	if stc.get_version().is2():
+		control.add_style_override(name, sbx)
+	else:
+		control.add_stylebox_override(name, sbx)
+
+
 func invalidate_provision():
 	print('Invalidating Provision')
-	_poptbutt.add_style_override('normal', preload('invalid_sbx.tres'))
+	_add_style_override(_poptbutt, 'normal', preload('invalid_sbx.tres'))
 
 
 func invalidate_team():
 	print('Invalidating Team')
-	_toptbutt.add_style_override('normal', preload('invalid_sbx.tres'))
+	_add_style_override(_toptbutt, 'normal', preload('invalid_sbx.tres'))
 
 
 func invalidate_bundle_id():
 	print('Invalidating Bundleid')
-	_bdlid.add_style_override('normal', preload('invalid_sbx.tres'))
+	_add_style_override(_bdlid, 'normal', preload('invalid_sbx.tres'))
 
 
 func reset_validity():
 	# get_stylebox can fetch default theme values by their type name
 	# that's what the 'type' param means.
-
-	var get_type_func = 'get_type' if Node.new().has_method('get_type')\
+	
+	var get_type_func = 'get_type' if stc.get_version().is2()\
 	                               else 'get_class'
 	for control in [_bdlid, _poptbutt, _toptbutt]:
 		var sbx = get_stylebox('normal', control.call(get_type_func))
-		control.add_style_override('normal', sbx)
+		_add_style_override(control, 'normal', sbx)
 
 
 
