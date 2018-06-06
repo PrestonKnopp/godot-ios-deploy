@@ -1,0 +1,208 @@
+# ------------------------------------------------------------------------------
+#                                       Todos
+# ------------------------------------------------------------------------------
+
+
+[ ] #v3 remove global logger from ProjectSettings (Globals)
+[ ] #v3 Godot Project Directory can't be the same as Bundle Name @see notes
+[ ] What to do when:
+	[ ] theres no provisioning profiles
+	[ ] theres no teams
+[ ] write tests
+[ ] figure out how to get program return codes from shell
+	- write shell script that captures code and outputs it as the last line. Shell can then parse and remove that line.
+[ ] find way to globalize logger without adding to project settings (v3)
+[ ] find xcodebuild errors
+	- parse from output and display to user
+	- printed with fmt: "<system> Error: <message>"
+	- printed: ** Build Failed **
+[ ] find ios-deploy errors
+	- defined ios-deploy/src/errors.h
+	- printed with fmt: "Error 0x<code>: <call> <message>"
+[X] Figure out what is breaking v3 from reading pbx and plist @see notes
+[X] async everything
+	- write everything sync, then spin up one thread to do the whole build
+	  process.
+	[X] write everything async, then use signals to control build process
+[X] make config file to store past settings
+[X] impl module logger
+[D] use `security cms -D -i` instead of awk to strip provision file of signature pre json conversion
+	- does not work for non-signed provisioning profiles, I'm not sure if that would be a big problem.
+	- Awk may not work for all signed profiles due to binary format.
+	- Find someway to detect if profile is signed.
+		- security prints "failed to add data to decoder: UNKNOWN (-8183(d)" when not signed.
+
+
+# -- GUI Todos
+
+[ ] design apple button presentation and build flow
+	- get build and deploy for v2 and v3 working first
+[X] make v3 gui
+	[X] replace panel with popup_panel
+	[X] replace invalid_sbx.tres gui invalidation by drawing a simple red box
+	around invalid control
+[X] make signal connections via editor where possible
+[X] settings take to long to open up
+	- deploy_settings_menu visibility change signal is being emitted twice the
+	  first time it is shown
+	- the second consecutive call seems to be from itself. it doesn't have a trace.
+	- this seems to be caused by how the deploy_settings_menu scene is
+	  instantiated. It is set hidden at init and before it is added to the tree.
+	- Solved. This is programmerd into godotengine/canvas_item.cpp.
+		- Set flag to check for first draw.
+[X] one click button
+	[X] popup fully on screen
+	[X] appear over everything
+[X] invalidate ui
+[X] hook up build progress and status to hover menu
+[X] hover menu
+[X] remove BundleName from deploy setting menu
+	- bundlename will be the godot project dir name
+	- only display name is needed
+[X] just use Device, Team, and Provision structs instead of dicts
+
+# -- Xcode Todos
+
+[ ] write codesigner.gd
+[X] #v3 is not deploying. @see notes
+[X] #v3 strip pbxproj file of shell expansion lines
+	- process this in ios_export_template
+	[X] replace $binary with godot_ios
+[X] multiple calls to ios_deploy.launch* async are not async as
+    Command.run_async() waits between calls.
+[X] deploy to devices
+	[X] Fix deploy shell command, it is completely broken. May need to refactor
+	    Shell and Command. Also iOSDeploy.
+	[X] have controller call `install_and_launch_on` if not already installed
+[X] use build setting options over parsing pbx
+[X] update pbx adds multiple times
+[X] pbx does not add files in correct place
+[X] #v2 find out what name xcode uses for the generated <name>.app
+	- it's godot_ios.app
+	- can be set with PRODUCT_NAME
+	- or
+	- this can be found in pbxproj
+		- isa=PBXFileReference
+		- explicitFileType=wrapper.application
+		- path=godot_ios.app
+
+# -- Provision Todos
+
+[X] gui request bundleid validation as user types
+[X] gui validate provisions by selected team and vice versa
+[X] filter out provision profiles by
+	- expiration date
+	- duplicates, keep most recent
+[X] parse provision profile dates
+
+
+
+# ------------------------------------------------------------------------------
+#                                       Notes
+# ------------------------------------------------------------------------------
+
+
+- v3 is tough.
+	- It's building but not deploying due to internal api error.
+		- This appears to be caused by inconsistency with built Info.plist
+			- In this case, CFBundleExecutable was set to godot_ios but binary
+			  was actually ProjectNameBinary
+	- This may be because of how ios_export_template copies template
+		- Try not omitting amap, like adding an entitlements file and stuff
+		- Additionally, fix the plist by removing expansion vars.
+		- Solution was to pretty much rewrite godotengine/ios_export
+	- Make min build requirements for v3 like below for v2
+	- Other Caveats
+		- Godot Project Directory can't be the same as Bundle Name
+			- causes a clash with generated bundle, where it tries to create a
+			  binary with the same name as the copied godot project
+			- solution is to change the name of the created binary. This is
+			  probably a build setting or in the pbxproj.
+				- build setting: EXECUTABLE_NAME
+				- in plist set CFBundleExecutable -> ${EXECUTABLE_NAME}
+
+- You can build once with xcode and if there's no changes to bundleid, display
+  name, or provision copy the godot project into the last build.app and resign
+  it with identity.
+
+- Godot Build Requirements
+	- Info.plist
+		- CFBundleIdentifier
+		- CFBundleDisplayName
+		- godot_path
+	- project.pbxproj
+		- Add godot game project file ref to PBXResourcesBuildPhase object
+		- @see scripts/xcode/xcode_project.gd for more information
+	- xcodebuild environment settings:
+		- DEVELOPMENT_TEAM=teamid
+		- CODE_SIGN_STYLE=Automatic
+			- set as Automatic for automanaged
+			- omit for manual
+		- CODESIGN_IDENTITY
+			- by default is "iPhone Developer"
+			- otherwise gonna have to search keychain
+		- PRODUCT_BUNDLE_IDENTIFIER=bundleid
+		- PROVISIONING_PROFILE_SPECIFIER=profile.name (not appidname)
+
+- ~~pbxproj signed diffs:~~
+	- NOTE! The following is not required.
+	# -- Project Configuration
+		isa = PBXProject;
+		attributes = {
+			LastUpgradeCheck = 0500;
+			ORGANIZATIONNAME = GodotEngine;
+			# Needs to set target attributes, adding it if it doesn't exist
+			TargetAttributes = {
+				D0BCFE3318AEBDA2004A7AAE = {
+					# DevelopmentTeam needs to be set for both manual and auto
+					# signed
+					DevelopmentTeam = TeamId;
+					# ProvisioningStyle only needs to be set for auto
+					ProvisioningStyle = Automatic;
+				};
+			};
+
+
+- apple button event flow
+	- press
+		- validate xcode_project
+			- open setup menu
+		- copy template
+		- build
+		- deploy
+	- hover
+		- status of flow
+		- button to open options
+		- button to cancel
+		  - no way to cancel right now.
+
+
+# ------------------------------------------------------------------------------
+#                                  Codesign Errors
+# ------------------------------------------------------------------------------
+
+
+=== BUILD TARGET godot_ios OF PROJECT godot_ios WITH CONFIGURATION Debug ===
+
+Check dependencies
+Code Signing Error: Provisioning profile "My Development Profile" doesn't support the Push Notifications capability.
+Code Signing Error: Provisioning profile "My Development Profile" doesn't include the aps-environment entitlement.
+Code Signing Error: Code signing is required for product type 'Application' in SDK 'iOS 11.4'
+
+
+# ------------------------------------------------------------------------------
+#                                 iOSDeploy Errors
+# ------------------------------------------------------------------------------
+
+
+> 2018-06-05 00:31:34.471 ios-deploy[10328:205469] [ !! ] Error 0xe8000067: There was an internal API error. AMDeviceSecureInstallApplication(0, device, url, options, install_callback, 0)
+
+Reasons:
+	- idk
+
+
+> 2018-05-12 00:39:59.708 ios-deploy[21471:5356099] [ !! ] Error 0xe8000022: The service is invalid. AMDeviceStartService(device, CFSTR("com.apple.debugserver"), &gdbfd, NULL)
+
+Reasons:
+	- Unsupported device version i.e. (11.2 vs 11.3)
+		- Update Xcode for device support files

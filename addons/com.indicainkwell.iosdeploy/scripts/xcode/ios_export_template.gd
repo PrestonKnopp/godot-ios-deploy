@@ -204,4 +204,96 @@ func _on_v2_unzip_finished(command, result):
 
 func _on_v3_unzip_finished(command, result):
 	_log.info('UNZIP LOG: %s' % result.output[0])
+
+	var d = Directory.new()
+	var f = File.new()
+	var err
+
+	# rename libgodot.debug.a to godot_ios.a
+	var libpath = get_destination_path().plus_file('libgodot.iphone.debug.fat.a')
+	var dstpath = get_destination_path().plus_file('godot_ios.a')
+	err = d.rename(libpath, dstpath)
+	if err != OK:
+		_log.error('failed with code %s to rename %s to s'%[err,libpath,dstpath])
+	_log.info('Renamed %s to %s'%[libpath,dstpath])
+	
+	# rename data.pck to godot_ios.pck
+	var srcpck = get_destination_path().plus_file('data.pck')
+	var dstpck = get_destination_path().plus_file('godot_ios.pck')
+	err = d.rename(srcpck, dstpck)
+	if err != OK:
+		_log.error('failed with code %s to rename %s to s'%[err,srcpck,dstpck])
+	_log.info('Renamed %s to %s'%[srcpck,dstpck])
+
+	# make Image.xcassets/AppIcon.appiconset
+	var xcassets = get_destination_path().plus_file('godot_ios/Images.xcassets/AppIcon.appiconset')
+	err = d.make_dir_recursive(xcassets)
+	if err != OK:
+		_log.error('failed with code %s to makedir %s'%[err,xcassets])
+	_log.info('Made directory %s'%xcassets)
+
+	# clear dummy.cpp
+	f.open(get_destination_path().plus_file('godot_ios/dummy.cpp'), File.WRITE)
+	f.close()
+	_log.info('Cleared dummy.cpp')
+
+	# fill in info.plist
+	var plist = get_destination_path().plus_file('godot_ios/godot_ios-Info.plist')
+	if f.open(plist, File.READ) == OK:
+		var edited_plist = ''
+		while not f.eof_reached():
+			var line = f.get_line()\
+			            .replace('$name', '${PRODUCT_NAME}')\
+			            .replace('$binary', 'godot_ios')\
+			            .replace('$short_version', '1.0')\
+			            .replace('$version', '1.0')\
+			            .replace('$signature', '????')
+			# skip extra plist expansion
+			if line.strip_edges(true, false).begins_with('$'):
+				continue
+			edited_plist += line + '\n'
+		f.close()
+
+		if f.open(plist, File.WRITE) == OK:
+			f.store_string(edited_plist)
+			f.close()
+		else:
+			_log.error('failed with code %s to write edits to %s'%[f.get_error(),plist])
+	else:
+		_log.error('failed with code %s to open %s for editing'%[f.get_error(),plist])
+	_log.info('Edited %s'%plist)
+
+	# strip out expansion variables from pbxproject
+	var pbx = get_destination_path().plus_file('godot_ios.xcodeproj/project.pbxproj')
+	if f.open(pbx, File.READ) == OK:
+
+		var edited_pbx = ''
+		while not f.eof_reached():
+			var line = f.get_line()\
+			            .replace('$binary', 'godot_ios')\
+			            .replace('$linker_flags', '')\
+			            .replace('$godot_archs', '$(ARCHS_STANDARD_INCLUDING_64_BIT)')\
+			            .replace('$code_sign_identity_release', 'iPhone Developer')\
+			            .replace('$code_sign_identity_debug', 'iPhone Developer')
+			            # TODO: ^ should be options set via xcode project build
+			
+			if line.find('CODE_SIGN_ENTITLEMENTS = godot_ios/godot_ios.entitlements;') > -1:
+				# TODO: ... ignore entitlements for now
+				continue
+			if line.find('$') > -1 and\
+			   line.strip_edges(true, false).begins_with('$'):
+				continue
+			edited_pbx += line + '\n'
+		f.close()
+
+		if f.open(pbx, File.WRITE) == OK:
+			f.store_string(edited_pbx)
+			f.close()
+		else:
+			_log.error('failed with code %s to write edits to s'%[f.get_error(), pbx])
+
+	else:
+		_log.error('failed with code %s to open %s for editing'%[f.get_error(),pbx])
+	_log.info('Edited %s'%pbx)
+
 	emit_signal('copy_installed', self, result)

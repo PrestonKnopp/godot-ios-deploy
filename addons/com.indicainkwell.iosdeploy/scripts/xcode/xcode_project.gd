@@ -219,6 +219,9 @@ func update_info_plist():
 	plist.set_value("CFBundleIdentifier", bundle_id)
 	plist.set_value("godot_path", stc.get_project_dir_name())
 	
+	if stc.get_version().is3():
+		plist.set_value("CFBundleExecutable", name)
+	
 	for key in custom_info:
 		plist.set_value(key, custom_info[key])
 	
@@ -284,7 +287,7 @@ func _build_xcodebuild_args():
 		args.append('PROVISIONING_PROFILE_SPECIFIER='+provision.name)
 	
 	if stc.get_version().is3():
-		args.append('ENABLE_BITCODE=false')
+		args.append('ENABLE_BITCODE=NO')
 	
 	args.append('PRODUCT_NAME='+name)
 	args.append('PRODUCT_BUNDLE_IDENTIFIER='+bundle_id)
