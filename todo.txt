@@ -4,7 +4,6 @@
 
 
 [ ] #v3 remove global logger from ProjectSettings (Globals)
-[ ] #v3 Godot Project Directory can't be the same as Bundle Name @see notes
 [ ] What to do when:
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
@@ -19,6 +18,7 @@
 [ ] find ios-deploy errors
 	- defined ios-deploy/src/errors.h
 	- printed with fmt: "Error 0x<code>: <call> <message>"
+[X] #v3 Godot Project Directory can't be the same as Bundle Name @see notes
 [X] Figure out what is breaking v3 from reading pbx and plist @see notes
 [X] async everything
 	- write everything sync, then spin up one thread to do the whole build

@@ -220,7 +220,8 @@ func update_info_plist():
 	plist.set_value("godot_path", stc.get_project_dir_name())
 	
 	if stc.get_version().is3():
-		plist.set_value("CFBundleExecutable", name)
+		# TODO: plist should escape shell stuff
+		plist.set_value('CFBundleExecutable', "\\${EXECUTABLE_NAME}")
 	
 	for key in custom_info:
 		plist.set_value(key, custom_info[key])
@@ -288,6 +289,7 @@ func _build_xcodebuild_args():
 	
 	if stc.get_version().is3():
 		args.append('ENABLE_BITCODE=NO')
+		args.append('EXECUTABLE_NAME=godot_ios_executable_binary')
 	
 	args.append('PRODUCT_NAME='+name)
 	args.append('PRODUCT_BUNDLE_IDENTIFIER='+bundle_id)
