@@ -29,7 +29,6 @@ script = ExtResource( 2 )
 
 [node name="hover_panel" type="PopupPanel" parent="." index="0"]
 
-visible = false
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -45,6 +44,7 @@ mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 2
 popup_exclusive = false
+_sections_unfolded = [ "Rect" ]
 
 [node name="HBoxContainer" type="HBoxContainer" parent="hover_panel" index="0"]
 
@@ -53,7 +53,9 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 0.0
+margin_left = 5.0
 margin_top = 5.0
+margin_right = -5.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -61,7 +63,7 @@ mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 2
 alignment = 0
-_sections_unfolded = [ "Margin" ]
+_sections_unfolded = [ "Margin", "Mouse" ]
 
 [node name="project_valid" type="CheckBox" parent="hover_panel/HBoxContainer" index="0"]
 
@@ -74,7 +76,7 @@ margin_bottom = 24.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
-mouse_filter = 0
+mouse_filter = 1
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 2
@@ -85,6 +87,7 @@ group = null
 text = "Project Valid"
 flat = false
 align = 0
+_sections_unfolded = [ "Mouse" ]
 
 [node name="spacer" type="Control" parent="hover_panel/HBoxContainer" index="1"]
 
@@ -93,13 +96,14 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 112.0
-margin_right = 133.0
+margin_right = 123.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
-mouse_filter = 0
+mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
 size_flags_vertical = 2
+_sections_unfolded = [ "Mouse" ]
 
 [node name="settings_button" type="Button" parent="hover_panel/HBoxContainer" index="2"]
 
@@ -107,15 +111,15 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 137.0
-margin_right = 200.0
-margin_bottom = 20.0
+margin_left = 127.0
+margin_right = 190.0
+margin_bottom = 24.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
-mouse_filter = 0
+mouse_filter = 1
 mouse_default_cursor_shape = 0
-size_flags_horizontal = 2
-size_flags_vertical = 2
+size_flags_horizontal = 1
+size_flags_vertical = 3
 toggle_mode = false
 enabled_focus_mode = 0
 shortcut = null
@@ -123,18 +127,21 @@ group = null
 text = "Settings"
 flat = true
 align = 1
+_sections_unfolded = [ "Mouse", "Size Flags" ]
 
 [node name="build_progress_bar" type="ProgressBar" parent="hover_panel" index="1"]
 
-editor/display_folded = true
 anchor_left = 0.0
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_top = -20.0
+margin_left = 5.0
+margin_top = -21.0
+margin_right = -5.0
+margin_bottom = -5.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
-mouse_filter = 0
+mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 0
@@ -155,16 +162,17 @@ anchor_top = 0.0
 anchor_right = 1.0
 anchor_bottom = 0.0
 margin_left = 1.0
-margin_top = -18.0
+margin_top = -26.0
 margin_right = 1.0
-margin_bottom = 1.0
+margin_bottom = -7.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
-mouse_filter = 1
+mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 2
 alignment = 0
+_sections_unfolded = [ "Mouse" ]
 
 [node name="Label" type="Label" parent="hover_panel/build_progress_bar/HBoxContainer" index="0"]
 
@@ -173,17 +181,19 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 80.0
-margin_bottom = 14.0
+margin_bottom = 19.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
 mouse_default_cursor_shape = 0
-size_flags_horizontal = 2
-size_flags_vertical = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
 text = "Build Status:"
+valign = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
+_sections_unfolded = [ "Mouse", "Size Flags" ]
 
 [node name="build_status" type="Label" parent="hover_panel/build_progress_bar/HBoxContainer" index="1"]
 
@@ -191,19 +201,21 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 102.0
-margin_right = 200.0
-margin_bottom = 14.0
+margin_left = 84.0
+margin_right = 190.0
+margin_bottom = 19.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
-size_flags_vertical = 0
+size_flags_vertical = 3
 text = "inactive"
+valign = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
+_sections_unfolded = [ "Mouse", "Size Flags" ]
 
 [node name="build_progress_bar" type="ProgressBar" parent="." index="1"]
 

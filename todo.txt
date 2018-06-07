@@ -3,6 +3,7 @@
 # ------------------------------------------------------------------------------
 
 
+[ ] remember previously selected devices
 [ ] allow user to set custom plist values
 	- especially orientation
 [ ] change plist to use build vars, maybe use xcconfig
@@ -42,8 +43,18 @@
 
 # -- GUI Todos
 
+[ ] apple button popup
+	[ ] hidden progress bar
+		- draw as flat color over button rather than using a tiny squished
+		  ProgressBar
+	[ ] show devices
 [ ] design apple button presentation and build flow
 	- get build and deploy for v2 and v3 working first
+[X] fix v3 ui rough edges
+	- apple button popup
+		- text does not fit
+		- add padding to content
+		- fix settings button from stopping mouse hover
 [X] make v3 gui
 	[X] replace panel with popup_panel
 	[X] replace invalid_sbx.tres gui invalidation by drawing a simple red box
