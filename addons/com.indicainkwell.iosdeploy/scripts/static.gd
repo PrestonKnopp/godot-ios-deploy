@@ -2,7 +2,7 @@
 extends Object
 
 const PLUGIN_DOMAIN = 'com.indicainkwell.iosdeploy'
-const LOGGER_DOMAIN = PLUGIN_DOMAIN + '.logger'
+const LOGGER_DOMAIN = 'ios-deploy'
 
 const PLUGIN_DATA_PATH = 'user://' + PLUGIN_DOMAIN
 
@@ -45,10 +45,16 @@ static func get_version():
 
 
 static func get_logger():
-	var Logger = get_gdscript('logger.gd')
-	if not Logger.has_logger():
-		Logger.new() # adds logger to globals
-	return Logger.get_logger()
+	var main_loop = get_gdscript('main_loop_getter.gd').new().get_main_loop()
+	var nodes = main_loop.get_nodes_in_group(PLUGIN_DOMAIN)
+	if nodes.size() != 1:
+		print('ERROR GETTINGs LOGGER WITH #%s IN GROUP %s'%[nodes.size(),PLUGIN_DOMAIN])
+		return null
+	if nodes[0].get_name() != LOGGER_DOMAIN:
+		print('ERROR GETTING LOGGER NODE %s IN GROUP %s, GOT %s INSTEAD'%[LOGGER_DOMAIN,PLUGIN_DOMAIN,nodes[0].get_name()])
+		return null
+	return nodes[0]
+
 
 
 static func globalize_path(path):

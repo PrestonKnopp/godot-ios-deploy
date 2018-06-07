@@ -3,7 +3,9 @@
 # ------------------------------------------------------------------------------
 
 
-[ ] #v3 remove global logger from ProjectSettings (Globals)
+[ ] allow user to set custom plist values
+	- especially orientation
+[ ] change plist to use build vars, maybe use xcconfig
 [ ] What to do when:
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
@@ -18,6 +20,11 @@
 [ ] find ios-deploy errors
 	- defined ios-deploy/src/errors.h
 	- printed with fmt: "Error 0x<code>: <call> <message>"
+[X] #v3 remove global logger from ProjectSettings (Globals)
+	- add logger as child of main (EditorPlugin)
+	- add it to group 'com.indicainkwell.ios-deploy'
+	- name logger node 'ios-deploy'
+	- have static get_logger() retrieve logger from MainLoop
 [X] #v3 Godot Project Directory can't be the same as Bundle Name @see notes
 [X] Figure out what is breaking v3 from reading pbx and plist @see notes
 [X] async everything

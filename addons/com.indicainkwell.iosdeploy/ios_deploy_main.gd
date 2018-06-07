@@ -16,6 +16,7 @@ const stc = preload('scripts/static.gd')
 
 
 var Controller = stc.get_gdscript('controller.gd')
+var Logger = stc.get_gdscript('logger.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -24,7 +25,7 @@ var Controller = stc.get_gdscript('controller.gd')
 
 
 var controller
-var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.main')
+var _log
 
 
 # ------------------------------------------------------------------------------
@@ -33,8 +34,11 @@ var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.main')
 
 
 func _enter_tree():
+	_initialize_logger()
+
 	if not meets_software_requirements():
 		return
+
 	_log.verbose('Meets software requirements')
 	controller = Controller.new()
 	add_control_to_container(CONTAINER_TOOLBAR, controller.get_view())
@@ -50,6 +54,18 @@ func _exit_tree():
 # ------------------------------------------------------------------------------
 #                                      Methods
 # ------------------------------------------------------------------------------
+
+
+func _initialize_logger():
+	"""
+	Add logger as a child of plugin and in it's own group to simulate a
+	global that can be accessed via stc.get_logger()
+	"""
+	var logger = Logger.new()
+	add_child(logger)
+	logger.add_to_group(stc.PLUGIN_DOMAIN)
+	logger.set_name(stc.LOGGER_DOMAIN)
+	_log = stc.get_logger().make_module_logger(stc.LOGGER_DOMAIN)
 
 
 func meets_software_requirements():

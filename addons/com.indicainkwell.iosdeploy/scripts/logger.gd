@@ -238,8 +238,8 @@ const FILE_BUFFER_SIZE = 30
 var default_output_level = INFO
 # TODO: Find (or implement in Godot) a more clever way to achieve that
 var default_output_strategies = [STRATEGY_PRINT, STRATEGY_PRINT, STRATEGY_PRINT, STRATEGY_PRINT, STRATEGY_PRINT]
-var default_logfile_path = "user://com.indicainkwell.iosdeploy.log" # % Globals.get("application/name") # Globals not available in v3
-var default_configfile_path = "user://com.indicainkwell.iosdeploy.log.cfg" # % PLUGIN_NAME
+var default_logfile_path = "user://com.indicainkwell.iosdeploy/iosdeploy.log" # % Globals.get("application/name") # Globals not available in v3
+var default_configfile_path = "user://com.indicainkwell.iosdeploy/iosdeploy.log.cfg" # % PLUGIN_NAME
 
 # e.g. "[main.INFO]: The young alpaca started growing a goatie."
 var output_format = "[{MOD}.{LVL}]: {MSG}"
@@ -631,14 +631,11 @@ func _init():
 	# indicainkwell added _initialize to override version specific
 	_initialize()
 
-const stc = preload('static.gd')
-
 func _initialize():
 	# Default logfile
 	add_logfile(default_logfile_path)
 	# Default modules
-	add_module(PLUGIN_NAME) # needs to be instanced first
-	add_module("main")
+	add_module('main') # needs to be instanced first
 	memory_buffer.resize(max_memory_size)
 
 
@@ -646,8 +643,13 @@ func _exit_tree():
 	cleanup()
 
 
+# ------------------------------------------------------------------------------
+#                               IndicaInkwell Extras
+# ------------------------------------------------------------------------------
 
-# indicainkwell extras
+
+const stc = preload('static.gd')
+
 
 func make_module_logger(module):
 	return ModuleLogger.new(self, module)
