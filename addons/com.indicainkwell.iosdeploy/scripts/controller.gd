@@ -266,12 +266,12 @@ func _on_edited_provision(menu, new_provision):
 		menu.validate_bundle_id()
 	else:
 		_xcode_project.bundle_id = new_provision.bundle_id
-		# if bundle_id is a wildcard, invalidate so user 
+		# if bundle_id is a wildcard, invalidate so user
 		# will edit
 		if _xcode_project.bundle_id.find('*') > -1:
 			menu.invalidate_bundle_id()
 		_on_request_fill(menu)
-	
+
 	menu.validate_provision()
 
 

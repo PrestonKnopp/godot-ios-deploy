@@ -58,6 +58,30 @@ func set_project_valid(valid):
 	get_node('hover_panel/HBoxContainer/project_valid').set_pressed(valid)
 
 
+func _draw_build_progress_overlay():
+	var bar = get_node('build_progress_bar')
+
+	var r = get_rect()
+	if stc.get_version().is2():
+		r.size.x *= bar.get_unit_value()
+		r.pos = Vector2()
+	else:
+		r.size.x *= bar.ratio
+		r.position = Vector2()
+
+	var c = ColorN('white')
+	c.a = 0.4
+	draw_rect(r, c)
+
+
+func _draw():
+	_draw_build_progress_overlay()
+
+
+func _on_build_progress_bar_changed():
+	update()
+
+
 func _on_mouse_enter():
 	if check_is_hidden(get_node('hover_panel')):
 		get_node('hover_timer').start()
@@ -102,12 +126,8 @@ func _on_hover_timer_timeout():
 		hover_panel.set_as_toplevel(true)
 		_place_panel(hover_panel)
 		hover_panel.show()
-
-		get_node('build_progress_bar').hide()
 	else:
 		get_node('hover_panel').hide()
-		if get_node('build_progress_bar').get_value() > 0.0:
-			get_node('build_progress_bar').show()
 
 
 func _on_settings_button_pressed():

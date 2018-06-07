@@ -56,6 +56,7 @@ anchor_bottom = 0.0
 margin_left = 5.0
 margin_top = 5.0
 margin_right = -5.0
+margin_bottom = 29.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -269,6 +270,8 @@ autostart = false
 [connection signal="mouse_exited" from="hover_panel" to="." method="_on_hover_panel_mouse_exit"]
 
 [connection signal="pressed" from="hover_panel/HBoxContainer/settings_button" to="." method="_on_settings_button_pressed"]
+
+[connection signal="changed" from="build_progress_bar" to="." method="_on_build_progress_bar_changed"]
 
 [connection signal="timeout" from="hover_timer" to="." method="_on_hover_timer_timeout"]
 

@@ -43,8 +43,8 @@
 
 # -- GUI Todos
 
-[ ] apple button popup
-	[ ] hidden progress bar
+[*] apple button popup
+	[X] hidden progress bar
 		- draw as flat color over button rather than using a tiny squished
 		  ProgressBar
 	[ ] show devices

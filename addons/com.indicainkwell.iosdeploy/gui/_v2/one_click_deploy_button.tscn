@@ -206,6 +206,8 @@ autostart = false
 
 [connection signal="pressed" from="hover_panel/HBoxContainer/settings_button" to="." method="_on_settings_button_pressed"]
 
+[connection signal="changed" from="build_progress_bar" to="." method="_on_build_progress_bar_changed"]
+
 [connection signal="timeout" from="hover_timer" to="." method="_on_hover_timer_timeout"]
 
 
