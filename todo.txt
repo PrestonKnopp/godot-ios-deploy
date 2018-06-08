@@ -3,6 +3,7 @@
 # ------------------------------------------------------------------------------
 
 
+[ ] test automanage setting
 [ ] error parsing and displaying
 	- shell
 		[ ] stderr
