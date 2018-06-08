@@ -1,0 +1,3 @@
+# codesigner.gd
+extends Reference
+

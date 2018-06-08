@@ -3,6 +3,24 @@
 # ------------------------------------------------------------------------------
 
 
+[ ] error parsing and displaying
+	- shell
+		[ ] stderr
+			- pipe to stdout
+		[ ] figure out how to get program return codes from shell
+			- write shell script that captures code and outputs it as the last line. Shell can then parse and remove that line.
+		- test using a file based output, so godot can execute a command and
+		  have non blocking output/error/input
+			- input could be used for ios-deploy when deploying and linking
+			  lldb.
+	[ ] xcodebuild errors
+		- parse from output and display to user
+		- printed with fmt: "<system> Error: <message>"
+		- printed: ** Build Failed **
+	[ ] ios-deploy errors
+		- defined ios-deploy/src/errors.h
+		- printed with fmt: "Error 0x<code>: <call> <message>"
+	[ ] better build status using errors and tips to fix
 [ ] remember previously selected devices
 [ ] allow user to set custom plist values
 	- especially orientation
@@ -11,16 +29,6 @@
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
 [ ] write tests
-[ ] figure out how to get program return codes from shell
-	- write shell script that captures code and outputs it as the last line. Shell can then parse and remove that line.
-[ ] find way to globalize logger without adding to project settings (v3)
-[ ] find xcodebuild errors
-	- parse from output and display to user
-	- printed with fmt: "<system> Error: <message>"
-	- printed: ** Build Failed **
-[ ] find ios-deploy errors
-	- defined ios-deploy/src/errors.h
-	- printed with fmt: "Error 0x<code>: <call> <message>"
 [X] #v3 remove global logger from ProjectSettings (Globals)
 	- add logger as child of main (EditorPlugin)
 	- add it to group 'com.indicainkwell.ios-deploy'
@@ -43,7 +51,7 @@
 
 # -- GUI Todos
 
-[*] apple button popup
+[-] apple button popup
 	[X] hidden progress bar
 		- draw as flat color over button rather than using a tiny squished
 		  ProgressBar
