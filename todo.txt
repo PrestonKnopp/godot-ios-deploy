@@ -24,12 +24,22 @@
 	[ ] better build status using errors and tips to fix
 [ ] remember previously selected devices
 [ ] allow user to set custom plist values
-	- especially orientation
 [ ] change plist to use build vars, maybe use xcconfig
 [ ] What to do when:
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
 [ ] write tests
+[X] get orientation information from project settings
+	- map godot orientations
+		- landscape         -> UIInterfaceOrientationLandscapeLeft
+		- reverse_landscape -> UIInterfaceOrientationLandscapeRight
+		- sensor_landscape  -> landscape & reverse_landscape
+		- portrait          -> UIInterfaceOrientationPortrait
+		- reverse_portrait  -> UIInterfaceOrientationPortraitUpsideDown
+		- sensor_portrait   -> portrait & reverse_portrait
+		- sensor            -> all
+	- v3 display/window,handheld/orientation
+	- v2 display/orientation
 [X] #v3 remove global logger from ProjectSettings (Globals)
 	- add logger as child of main (EditorPlugin)
 	- add it to group 'com.indicainkwell.ios-deploy'

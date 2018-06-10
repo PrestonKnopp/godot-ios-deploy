@@ -26,6 +26,7 @@ const stc = preload('static.gd')
 
 
 var Xcode = stc.get_gdscript('xcode.gd')
+var ProjSettings = stc.get_gdscript('project_settings.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -46,6 +47,7 @@ var _xcode = Xcode.new()
 var _xcode_project
 
 var _config = ConfigFile.new()
+var _settings = ProjSettings.new()
 
 var _one_click_button = OneClickButtonScene.instance()
 var _settings_menu = SettingsMenuScene.instance()
@@ -154,8 +156,33 @@ func filter_provisions(provisions):
 func execute_deploy_pipeline():
 	# Pipeline: Build Project -> Then Deploy to Devices
 	emit_signal('began_pipeline', self)
+	_update_xcode_project_custom_info(_xcode_project, _settings)
 	_one_click_button.update_build_progress(0.3, 'Building Xcode Project')
 	_xcode_project.build()
+
+
+func _update_xcode_project_custom_info(xcode_project, settings):
+	var orientation
+	if stc.get_version().is2():
+		orientation = settings.get_setting('display/orientation')
+	else:
+		orientation = settings.get_setting('display/window/handheld/orientation')
+	
+	var mapped_ios_orientations = []
+	if orientation in ['landscape', 'sensor_landscape', 'sensor']:
+		mapped_ios_orientations.append('UIInterfaceOrientationLandscapeLeft')
+	if orientation in ['reverse_landscape', 'sensor_landscape', 'sensor']:
+		mapped_ios_orientations.append('UIInterfaceOrientationLandscapeRight')
+	if orientation in ['portrait', 'sensor_portrait', 'sensor']:
+		mapped_ios_orientations.append('UIInterfaceOrientationPortrait')
+	if orientation in ['reverse_portrait', 'sensor_portrait', 'sensor']:
+		mapped_ios_orientations.append('UIInterfaceOrientationPortraitUpsideDown')
+	
+	# TODO: there's no way to remove a past custom_info entry. a rogue entry
+	# will be there until the generated template is trashed
+	xcode_project.custom_info['UISupportedInterfaceOrientations'] = mapped_ios_orientations
+	xcode_project.custom_info['UISupportedInterfaceOrientations~ipad'] = mapped_ios_orientations
+	xcode_project.update_info_plist()
 
 
 func _initialize_xcode_project(xcode_project):
@@ -283,7 +310,6 @@ func _on_edited_bundle_id(menu, new_bundle_id):
 		menu.validate_bundle_id()
 	else:
 		menu.invalidate_bundle_id()
-
 
 
 func _on_finished_editing(menu):
