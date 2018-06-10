@@ -95,10 +95,32 @@ func save():
 func _build_pbuddy_args():
 	var args = []
 	for key in _backing:
+		var v = _backing[key]
+		var t = typeof(v)
+		
 		# add first in case key doesn't exist, set will still work
-		# also, only supports string
-		args.append('-c')
-		args.append('Add %s string %s' % [key, _backing[key]])
-		args.append('-c')
-		args.append('Set %s %s' % [key, _backing[key]])
+		#
+		# assume values are flat for now
+
+		if t == TYPE_STRING:
+			args.append('-c')
+			args.append('Add :%s string %s' % [key, v])
+			args.append('-c')
+			args.append('Set :%s %s' % [key, v])
+		elif t == TYPE_ARRAY:
+			args.append('-c')
+			args.append('Delete :%s' % key)
+			args.append('-c')
+			args.append('Add :%s array' % key)
+			for e in v:
+				args.append('-c')
+				args.append('Add :%s: string %s' % [key, e])
+		elif t == TYPE_DICTIONARY:
+			args.append('-c')
+			args.append('Delete :%s' % key)
+			args.append('-c')
+			args.append('Add :%s dict' % key)
+			for k in v:
+				args.append('-c')
+				args.append('Add :%s:%s string %s' % [key, k, v[k]])
 	return args
