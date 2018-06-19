@@ -242,6 +242,18 @@ func test_regex_no_capture(r):
 		ae(cap, '')
 
 
+# -- Test Project Settings
+
+
+func test_projectsettings():
+	var ps = stc.get_gdscript('project_settings.gd').new()
+	print('Orientation:')
+	if stc.get_version().is2():
+		print(ps.get_setting('display/orientation'))
+	else:
+		print(ps.get_setting('display/window/handheld/orientation'))
+
+
 # -- Test Provision Finder
 
 
