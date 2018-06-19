@@ -3,7 +3,6 @@
 # ------------------------------------------------------------------------------
 
 
-[ ] test automanage setting
 [ ] error parsing and displaying
 	- shell
 		[ ] stderr
@@ -29,6 +28,8 @@
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
 [ ] write tests
+[X] test automanage setting
+	- works, just have to allow no provision selected in gui
 [X] get orientation information from project settings
 	- map godot orientations
 		- landscape         -> UIInterfaceOrientationLandscapeLeft

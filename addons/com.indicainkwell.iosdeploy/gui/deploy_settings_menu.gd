@@ -59,16 +59,20 @@ func get_active_devices():
 
 func populate_teams(teams):
 	_toptbutt.clear()
+	_toptbutt.add_item('None')
+	_toptbutt.set_item_metadata(0, null)
 	for i in range(teams.size()):
 		_toptbutt.add_item(teams[i].name)
-		_toptbutt.set_item_metadata(i, teams[i])
+		_toptbutt.set_item_metadata(i + 1, teams[i])
 
 
 func populate_provisions(provisions):
 	_poptbutt.clear()
+	_poptbutt.add_item('None')
+	_poptbutt.set_item_metadata(0, null)
 	for i in range(provisions.size()):
 		_poptbutt.add_item(provisions[i].name)
-		_poptbutt.set_item_metadata(i, provisions[i])
+		_poptbutt.set_item_metadata(i + 1, provisions[i])
 
 
 func populate_devices(devices):
@@ -87,17 +91,13 @@ func fill_bundle_group(display_name, id):
 
 func fill_identity_group(team, automanaged, provision):
 	_automngchk.set_pressed(automanaged)
-	if team != null:
-		for i in range(_toptbutt.get_item_count()):
-			var meta = _toptbutt.get_item_metadata(i)
-			if meta.name == team.name and meta.id == team.id:
-				_toptbutt.select(i)
-				break
-	if provision != null:
-		for i in range(_poptbutt.get_item_count()):
-			var meta = _poptbutt.get_item_metadata(i)
-			if meta.name == provision.name and meta.id == provision.id:
-				_poptbutt.select(i)
+	for arr in [[team, _toptbutt], [provision, _poptbutt]]:
+		if arr[0] == null:
+			continue
+		for i in range(1, arr[1].get_item_count()):
+			var meta = arr[1].get_item_metadata(i)
+			if meta.name == arr[0].name and meta.id == arr[0].id:
+				arr[1].select(i)
 				break
 
 

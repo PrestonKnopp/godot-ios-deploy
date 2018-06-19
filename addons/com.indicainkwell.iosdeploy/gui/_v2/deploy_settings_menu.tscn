@@ -525,6 +525,11 @@ If you have barely or not touched xcode you may need to perform a couple extra s
 
 Otherwise, click the provisioning profiles drop down to select an appropriate profile.
 
+[b]Automanage Provisioning Profile[/b]
+
+Automanage will create a provisioning profile for you.
+You can leave provisioning profile to [i]None[/i] when automanaged is checked. 
+
 [b]Bundle ID and Me[/b]
 
 The bundle id is associated with your provisioning profile. Your profile can be contain a WildCard identifier. Meaning your bundle id has to match the profile's prefix but can have anything in the WildCard(*) spot."

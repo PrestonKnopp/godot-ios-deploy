@@ -110,7 +110,12 @@ func valid_bundleid(bundle_id, provision):
 
 
 func valid_xcode_project():
-	return _xcode_project != null and\
+	# Conditions for automanaged project to be valid
+	if _xcode_project.provision == null and _xcode_project.automanaged and\
+	   _xcode_project.team      != null:
+		   return true
+	# Conditions for non automanaged project to be valid
+	return _xcode_project        != null and\
 	   (_xcode_project.provision != null and\
 	    _xcode_project.team      != null and\
 	    valid_bundleid(_xcode_project.bundle_id, _xcode_project.provision) and\
@@ -191,20 +196,24 @@ func _initialize_xcode_project(xcode_project):
 	if _config.load(stc.get_data_path('config.cfg')) != OK:
 		stc.get_logger().info('unable to load config')
 	else:
-		xcode_project.bundle_id = _config.get_value('xcode/project', 'bundle_id')
-		xcode_project.name = _config.get_value('xcode/project', 'name')
+		xcode_project.bundle_id = _config.get_value('xcode/project', 'bundle_id', null)
+		xcode_project.name = _config.get_value('xcode/project', 'name', null)
 
 		xcode_project.automanaged = _config.get_value('xcode/project', 'automanaged', false)
 		xcode_project.debug = _config.get_value('xcode/project', 'debug', true)
 		xcode_project.custom_info = _config.get_value('xcode/project', 'custom_info', {})
 
-		var team = _xcode.Team.new()
-		team.from_dict(_config.get_value('xcode/project', 'team'))
-		xcode_project.team = team
+		var saved_team_dict = _config.get_value('xcode/project', 'team', null)
+		if saved_team_dict != null:
+			var team = _xcode.Team.new()
+			team.from_dict(saved_team_dict)
+			xcode_project.team = team
 
-		var provision = _xcode.Provision.new()
-		provision.from_dict(_config.get_value('xcode/project', 'provision'))
-		xcode_project.provision = provision
+		var saved_provision_dict = _config.get_value('xcode/project', 'provision', null)
+		if saved_provision_dict != null:
+			var provision = _xcode.Provision.new()
+			provision.from_dict(saved_provision_dict)
+			xcode_project.provision = provision
 
 		var devices = _config.get_value('xcode/project', 'devices', [])
 		for i in range(devices.size()):
@@ -244,6 +253,10 @@ func _on_request_fill(menu):
 
 
 func _on_edited_team(menu, new_team):
+	if new_team == null:
+		_xcode_project.team = null
+		return
+
 	# assert(new_team extends _xcode.Team)
 	if _xcode_project.team != null and\
 	   _xcode_project.team.id == new_team.id and\
@@ -267,8 +280,13 @@ func _on_edited_team(menu, new_team):
 
 
 func _on_edited_provision(menu, new_provision):
-	# assert(new_provision extends _xcode.Provision)
+	if new_provision == null:
+		_xcode_project.provision = null
+		if not _xcode_project.automanaged:
+			menu.invalidate_provision()
+		return
 
+	# assert(new_provision extends _xcode.Provision)
 	if _xcode_project.provision != null and _xcode_project.provision.id == new_provision.id:
 		return
 
@@ -323,8 +341,18 @@ func _on_finished_editing(menu):
 	_xcode_project.team = identity.team
 	_xcode_project.provision = identity.provision
 	_xcode_project.automanaged = identity.automanaged
-	_config.set_value('xcode/project', 'team', identity.team.to_dict())
-	_config.set_value('xcode/project', 'provision', identity.provision.to_dict())
+
+	var team_dict = null
+	var prov_dict = null
+	# TODO: {to,from}_dict() would probably be better as static method on
+	# _xcode.Type
+	if identity.team != null:
+		team_dict = identity.team.to_dict()
+	if identity.provision != null:
+		prov_dict = identity.provision.to_dict()
+
+	_config.set_value('xcode/project', 'team', team_dict)
+	_config.set_value('xcode/project', 'provision', prov_dict)
 	_config.set_value('xcode/project', 'automanaged', identity.automanaged)
 
 	_xcode_project.set_devices(menu.get_active_devices())
