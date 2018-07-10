@@ -1,24 +1,38 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/deploy_settings_menu.gd" type="Script" id=1]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Light.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Bold.ttf" type="DynamicFontData" id=4]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/device_tree_list.gd" type="Script" id=5]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/_v3/devices_group.tscn" type="PackedScene" id=5]
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="DynamicFont" id=4]
 
 size = 30
 use_mipmaps = false
 use_filter = true
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=5]
 
 size = 12
 use_mipmaps = false
 use_filter = true
 font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=6]
+
+size = 16
+use_mipmaps = false
+use_filter = true
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=1]
+
+size = 16
+use_mipmaps = false
+use_filter = true
+font_data = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=3]
 
@@ -26,27 +40,6 @@ size = 16
 use_mipmaps = false
 use_filter = true
 font_data = ExtResource( 3 )
-
-[sub_resource type="DynamicFont" id=4]
-
-size = 16
-use_mipmaps = false
-use_filter = true
-font_data = ExtResource( 4 )
-
-[sub_resource type="DynamicFont" id=5]
-
-size = 16
-use_mipmaps = false
-use_filter = true
-font_data = ExtResource( 3 )
-
-[sub_resource type="StyleBoxEmpty" id=6]
-
-content_margin_left = -1.0
-content_margin_right = -1.0
-content_margin_top = -1.0
-content_margin_bottom = -1.0
 
 [sub_resource type="DynamicFont" id=7]
 
@@ -178,7 +171,7 @@ mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 4 )
 text = "IOSDEPLOY"
 percent_visible = 1.0
 lines_skipped = 0
@@ -200,7 +193,7 @@ mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 0
-custom_fonts/font = SubResource( 1 )
+custom_fonts/font = SubResource( 4 )
 custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
 text = "SETUP"
 percent_visible = 1.0
@@ -239,7 +232,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.376471, 0.368627, 0.419608, 0.992157 )
 toggle_mode = false
 enabled_focus_mode = 2
@@ -265,7 +258,7 @@ mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 6 )
 custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
 text = "Required setup before deploying to a device. Start by setting provisioning profile."
 clip_text = true
@@ -341,7 +334,7 @@ mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 1 )
 text = "Identity"
 percent_visible = 1.0
 lines_skipped = 0
@@ -363,7 +356,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 custom_colors/font_color_hover = Color( 0, 0, 0, 1 )
 toggle_mode = true
@@ -391,7 +384,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 toggle_mode = false
 action_mode = 0
 enabled_focus_mode = 2
@@ -420,7 +413,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 toggle_mode = false
 action_mode = 0
 enabled_focus_mode = 2
@@ -481,7 +474,7 @@ mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 1 )
 text = "Bundle"
 percent_visible = 1.0
 lines_skipped = 0
@@ -503,7 +496,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 1
 size_flags_horizontal = 3
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 focus_mode = 2
 context_menu_enabled = true
 placeholder_text = "Bundle Display Name (i.e MyGame)"
@@ -529,7 +522,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 1
 size_flags_horizontal = 3
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 3 )
 focus_mode = 2
 context_menu_enabled = true
 placeholder_text = "Bundle Id (i.e. com.you.MyGame)"
@@ -556,74 +549,7 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 _sections_unfolded = [ "Size Flags" ]
 
-[node name="devices_group" type="VBoxContainer" parent="content_container/VBoxContainer" index="4"]
-
-editor/display_folded = true
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 248.0
-margin_right = 844.0
-margin_bottom = 420.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 1
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 3
-alignment = 0
-_sections_unfolded = [ "Size Flags" ]
-
-[node name="Label" type="Label" parent="content_container/VBoxContainer/devices_group" index="0"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 844.0
-margin_bottom = 19.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 1
-custom_fonts/font = SubResource( 4 )
-text = "Deploy to Devices"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-_sections_unfolded = [ "Size Flags" ]
-
-[node name="devices_list" type="Tree" parent="content_container/VBoxContainer/devices_group" index="1"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 23.0
-margin_right = 844.0
-margin_bottom = 172.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = true
-focus_mode = 2
-mouse_filter = 0
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-custom_styles/bg_focus = SubResource( 6 )
-custom_fonts/font = SubResource( 5 )
-custom_constants/vseparation = 8
-columns = 1
-allow_reselect = false
-allow_rmb_select = false
-hide_folding = false
-hide_root = true
-drop_mode_flags = 0
-select_mode = 0
-script = ExtResource( 5 )
-_sections_unfolded = [ "Size Flags" ]
+[node name="devices_group" parent="content_container/VBoxContainer" index="4" instance=ExtResource( 5 )]
 
 [node name="AcceptDialog" type="AcceptDialog" parent="." index="2"]
 

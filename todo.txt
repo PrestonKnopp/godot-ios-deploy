@@ -3,8 +3,13 @@
 # ------------------------------------------------------------------------------
 
 
+[ ] use export template for environment or see what's best
+	- if environment has XDG_*, templates will install at XDG_*. Otherwise it's
+	  installed in the Application Support directory.
+[ ] handle when export template not installed
+[ ] properly destroy threads before exiting
 [ ] error parsing and displaying
-	- shell
+	[ ] shell
 		[ ] stderr
 			- pipe to stdout
 		[ ] figure out how to get program return codes from shell
@@ -21,7 +26,6 @@
 		- defined ios-deploy/src/errors.h
 		- printed with fmt: "Error 0x<code>: <call> <message>"
 	[ ] better build status using errors and tips to fix
-[ ] remember previously selected devices
 [ ] allow user to set custom plist values
 [ ] change plist to use build vars, maybe use xcconfig
 [ ] What to do when:
@@ -63,13 +67,13 @@
 
 # -- GUI Todos
 
-[-] apple button popup
+[ ] design apple button presentation and build flow
+	- get build and deploy for v2 and v3 working first
+[X] apple button popup
 	[X] hidden progress bar
 		- draw as flat color over button rather than using a tiny squished
 		  ProgressBar
-	[ ] show devices
-[ ] design apple button presentation and build flow
-	- get build and deploy for v2 and v3 working first
+	[X] show devices
 [X] fix v3 ui rough edges
 	- apple button popup
 		- text does not fit
@@ -236,7 +240,8 @@ Code Signing Error: Code signing is required for product type 'Application' in S
 > 2018-06-05 00:31:34.471 ios-deploy[10328:205469] [ !! ] Error 0xe8000067: There was an internal API error. AMDeviceSecureInstallApplication(0, device, url, options, install_callback, 0)
 
 Reasons:
-	- idk
+	- malformed binary file name that does not match info.plist's
+	  CFBundleExecutable
 
 
 > 2018-05-12 00:39:59.708 ios-deploy[21471:5356099] [ !! ] Error 0xe8000022: The service is invalid. AMDeviceStartService(device, CFSTR("com.apple.debugserver"), &gdbfd, NULL)

@@ -5,9 +5,28 @@ extends Button
 
 signal presenting_hover_menu(this)
 signal settings_button_pressed(this)
+signal devices_list_edited(this)
 
 
 const stc = preload('../scripts/static.gd')
+
+
+
+
+func get_devices_list():
+	return get_node("hover_panel/devices_group/devices_list")
+
+
+func devices_list_populate(devices):
+	get_devices_list().populate(devices)
+
+
+func devices_list_set_active(devices):
+	get_devices_list().set_active(devices)
+
+
+func _on_devices_list_item_edited():
+	emit_signal("devices_list_edited", self)
 
 
 

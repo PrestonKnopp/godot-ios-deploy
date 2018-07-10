@@ -1,10 +1,10 @@
-[gd_scene load_steps=15 format=1]
+[gd_scene load_steps=14 format=1]
 
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/deploy_settings_menu.gd" type="Script" id=1]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Light.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Bold.ttf" type="DynamicFontData" id=4]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/device_tree_list.gd" type="Script" id=5]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/_v2/devices_group.tscn" type="PackedScene" id=5]
 
 [sub_resource type="DynamicFont" id=1]
 
@@ -41,28 +41,21 @@ font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 3 )
 
-[sub_resource type="StyleBoxEmpty" id=6]
-
-content_margin/left = -1.0
-content_margin/right = -1.0
-content_margin/top = -1.0
-content_margin/bottom = -1.0
-
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=6]
 
 font/size = 16
 font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=8]
+[sub_resource type="DynamicFont" id=7]
 
 font/size = 16
 font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=9]
+[sub_resource type="DynamicFont" id=8]
 
 font/size = 16
 font/use_mipmaps = false
@@ -419,49 +412,7 @@ margin/top = 215.0
 margin/right = 824.0
 margin/bottom = 218.0
 
-[node name="devices_group" type="VBoxContainer" parent="content_container/VBoxContainer"]
-
-editor/display_folded = true
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 2
-size_flags/vertical = 3
-margin/left = 0.0
-margin/top = 233.0
-margin/right = 824.0
-margin/bottom = 400.0
-alignment = 0
-
-[node name="Label" type="Label" parent="content_container/VBoxContainer/devices_group"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 824.0
-margin/bottom = 19.0
-custom_fonts/font = SubResource( 4 )
-text = "Deploy to Devices"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="devices_list" type="Tree" parent="content_container/VBoxContainer/devices_group"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 3
-margin/left = 0.0
-margin/top = 23.0
-margin/right = 824.0
-margin/bottom = 167.0
-custom_styles/bg_focus = SubResource( 6 )
-custom_fonts/font = SubResource( 5 )
-custom_constants/vseparation = 8
-script/script = ExtResource( 5 )
+[node name="devices_group" parent="content_container/VBoxContainer" instance=ExtResource( 5 )]
 
 [node name="AcceptDialog" type="AcceptDialog" parent="."]
 
@@ -504,9 +455,9 @@ margin/left = 0.0
 margin/top = 0.0
 margin/right = 0.0
 margin/bottom = 35.0
-custom_fonts/mono_font = SubResource( 7 )
-custom_fonts/bold_font = SubResource( 8 )
-custom_fonts/normal_font = SubResource( 9 )
+custom_fonts/mono_font = SubResource( 6 )
+custom_fonts/bold_font = SubResource( 7 )
+custom_fonts/normal_font = SubResource( 8 )
 bbcode/enabled = true
 bbcode/bbcode = "TODO: Write better help
 

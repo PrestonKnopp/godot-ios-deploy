@@ -63,6 +63,7 @@ func _init():
 	get_view().connect('pressed', self, '_one_click_button_pressed')
 	get_view().connect('presenting_hover_menu', self, '_one_click_button_presenting_hover_menu')
 	get_view().connect('settings_button_pressed', self, '_one_click_button_settings_button_pressed')
+	get_view().connect('devices_list_edited', self, '_one_click_button_devices_list_edited')
 
 	get_menu().hide()
 	get_menu().connect('request_fill', self, '_on_request_fill')
@@ -172,7 +173,7 @@ func _update_xcode_project_custom_info(xcode_project, settings):
 		orientation = settings.get_setting('display/orientation')
 	else:
 		orientation = settings.get_setting('display/window/handheld/orientation')
-	
+
 	var mapped_ios_orientations = []
 	if orientation in ['landscape', 'sensor_landscape', 'sensor']:
 		mapped_ios_orientations.append('UIInterfaceOrientationLandscapeLeft')
@@ -182,7 +183,7 @@ func _update_xcode_project_custom_info(xcode_project, settings):
 		mapped_ios_orientations.append('UIInterfaceOrientationPortrait')
 	if orientation in ['reverse_portrait', 'sensor_portrait', 'sensor']:
 		mapped_ios_orientations.append('UIInterfaceOrientationPortraitUpsideDown')
-	
+
 	# TODO: there's no way to remove a past custom_info entry. a rogue entry
 	# will be there until the generated template is trashed
 	xcode_project.custom_info['UISupportedInterfaceOrientations'] = mapped_ios_orientations
@@ -380,11 +381,18 @@ func _one_click_button_pressed():
 func _one_click_button_presenting_hover_menu(oneclickbutton):
 	print('OneClickButton: Presenting Hover Menu')
 	oneclickbutton.set_project_valid(valid_xcode_project())
+	oneclickbutton.devices_list_populate(_xcode.finder.find_devices())
+	oneclickbutton.devices_list_set_active(_xcode_project.get_devices())
 
 
 func _one_click_button_settings_button_pressed(oneclickbutton):
 	print('OneClickButton: Settings Button Pressed')
 	get_menu().popup_centered()
+
+
+func _one_click_button_devices_list_edited(oneclickbutton):
+	print('OneClickButton: Devices List Edited')
+	_xcode_project.set_devices(oneclickbutton.get_devices_list().get_active())
 
 
 # -- Xcode
