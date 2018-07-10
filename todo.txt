@@ -6,7 +6,6 @@
 [ ] use export template for environment or see what's best
 	- if environment has XDG_*, templates will install at XDG_*. Otherwise it's
 	  installed in the Application Support directory.
-[ ] handle when export template not installed
 [ ] properly destroy threads before exiting
 [ ] error parsing and displaying
 	[ ] shell
@@ -32,6 +31,7 @@
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
 [ ] write tests
+[X] handle when export template not installed
 [X] test automanage setting
 	- works, just have to allow no provision selected in gui
 [X] get orientation information from project settings

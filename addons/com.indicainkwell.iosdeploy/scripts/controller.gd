@@ -60,12 +60,48 @@ var _settings_menu = SettingsMenuScene.instance()
 
 func _init():
 	get_view().set_disabled(true)
+	get_menu().hide()
+	enable_connections()
+
+	# made_project calls set_disabled(false), so this must come after
+	# get_view().set_disabled(true) for when project exists and is made
+	# immediately
+	_xcode.connect('made_project', self, '_on_xcode_made_project')
+	if _xcode.make_project_async() == ERR_DOES_NOT_EXIST:
+		xcode_template_does_not_exist()
+
+# ------------------------------------------------------------------------------
+#                                      Methods
+# ------------------------------------------------------------------------------
+
+
+func xcode_template_does_not_exist():
+	disable_connections()
+	# hook up presenting_hover_menu to check if xcode can make project
+	# which will make it if possible and enable connections
+	get_view().connect('presenting_hover_menu', self, 'check_xcode_make_project')
+
+
+func check_xcode_make_project(oneclickbutton=null):
+	if _xcode.make_project_async() == ERR_DOES_NOT_EXIST:
+		get_view().get_node('hover_timer').stop()
+		get_view().get_node('hover_panel').call_deferred('hide')
+		var alert = AcceptDialog.new()
+		alert.set_text('Install Godot Export Templates to Deploy Project')
+		alert.connect('confirmed', alert, 'queue_free')
+		get_view().add_child(alert)
+		alert.popup_centered()
+	else:
+		get_view().disconnect('presenting_hover_menu', self, 'check_xcode_make_project')
+		enable_connections()
+
+
+func enable_connections():
 	get_view().connect('pressed', self, '_one_click_button_pressed')
 	get_view().connect('presenting_hover_menu', self, '_one_click_button_presenting_hover_menu')
 	get_view().connect('settings_button_pressed', self, '_one_click_button_settings_button_pressed')
 	get_view().connect('devices_list_edited', self, '_one_click_button_devices_list_edited')
 
-	get_menu().hide()
 	get_menu().connect('request_fill', self, '_on_request_fill')
 	get_menu().connect('request_populate', self, '_on_request_populate')
 	get_menu().connect('edited_team', self, '_on_edited_team')
@@ -73,16 +109,19 @@ func _init():
 	get_menu().connect('edited_bundle_id', self, '_on_edited_bundle_id')
 	get_menu().connect('finished_editing', self, '_on_finished_editing')
 
-	# made_project calls set_disabled(false), so this must come after
-	# get_view().set_disabled(true) for when project exists and is made
-	# immediately
-	_xcode.connect('made_project', self, '_on_xcode_made_project')
-	if _xcode.make_project_async() == ERR_DOES_NOT_EXIST:
-		stc.get_logger().info('Godot iOS Xcode Template Does Not Exist')
 
-# ------------------------------------------------------------------------------
-#                                      Methods
-# ------------------------------------------------------------------------------
+func disable_connections():
+	get_view().disconnect('pressed', self, '_one_click_button_pressed')
+	get_view().disconnect('presenting_hover_menu', self, '_one_click_button_presenting_hover_menu')
+	get_view().disconnect('settings_button_pressed', self, '_one_click_button_settings_button_pressed')
+	get_view().disconnect('devices_list_edited', self, '_one_click_button_devices_list_edited')
+
+	get_menu().disconnect('request_fill', self, '_on_request_fill')
+	get_menu().disconnect('request_populate', self, '_on_request_populate')
+	get_menu().disconnect('edited_team', self, '_on_edited_team')
+	get_menu().disconnect('edited_provision', self, '_on_edited_provision')
+	get_menu().disconnect('edited_bundle_id', self, '_on_edited_bundle_id')
+	get_menu().disconnect('finished_editing', self, '_on_finished_editing')
 
 
 func cleanup():
