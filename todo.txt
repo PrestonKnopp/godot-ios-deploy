@@ -3,11 +3,12 @@
 # ------------------------------------------------------------------------------
 
 
+[ ] read export settings for ios and use it to prefill
 [ ] use export template for environment or see what's best
 	- if environment has XDG_*, templates will install at XDG_*. Otherwise it's
 	  installed in the Application Support directory.
 [ ] properly destroy threads before exiting
-[ ] error parsing and displaying
+[*] error parsing and displaying
 	[ ] shell
 		[ ] stderr
 			- pipe to stdout
@@ -68,7 +69,12 @@
 # -- GUI Todos
 
 [ ] design apple button presentation and build flow
-	- get build and deploy for v2 and v3 working first
+	- extract from export options or have user select or drag profile 
+		- if user does not have profile
+			- automanage a profile for user
+			- have them select a team
+		- have user review or edit bundle name and bundle id
+		- display overview
 [X] apple button popup
 	[X] hidden progress bar
 		- draw as flat color over button rather than using a tiny squished
