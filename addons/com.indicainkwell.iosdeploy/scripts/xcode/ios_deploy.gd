@@ -10,7 +10,7 @@ extends Reference
 # ------------------------------------------------------------------------------
 
 
-signal deployed(this, result, device_id)
+signal deployed(this, result, errors, device_id)
 
 
 # ------------------------------------------------------------------------------
@@ -19,6 +19,19 @@ signal deployed(this, result, device_id)
 
 
 const stc = preload('../static.gd')
+
+
+# ------------------------------------------------------------------------------
+#                                     Subtypes
+# ------------------------------------------------------------------------------
+
+
+class Error:
+	var code
+	var message
+
+
+var Regex = stc.get_gdscript('regex.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -43,6 +56,19 @@ var ignore_wifi_devices = false
 var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.ios-deploy')
 var _bash = stc.get_gdscript('shell.gd').new().make_command('/bin/bash')
 var _bashinit = ['-l', '-c']
+var _error_regex = Regex.new()
+
+
+# ------------------------------------------------------------------------------
+#                                     Overrides
+# ------------------------------------------------------------------------------
+
+
+func _init():
+	# 1. Error Code
+	# 2. Error Message
+	#                                           1            2
+	assert(_error_regex.compile('[ !! ] Error 0x(\\d*): \\w* (\\w*)') == OK)
 
 
 # ------------------------------------------------------------------------------
@@ -106,8 +132,16 @@ func uninstall():
 
 
 func _deploy_finished(command, result, device_id):
-	# TODO: parse result output and detect deploy failure
-	emit_signal('deployed', self, result, device_id)
+	var errors = []
+	for line in result.output[0].split('\n', false):
+		if line.begins_with('[ !! ] Error 0x'):
+			# do regex match to cap message and code
+			var captures = _error_regex.search(line)
+			var error = Error.new()
+			error.code = captures[1]
+			error.message = captures[2]
+			errors.append(error)
+	emit_signal('deployed', self, result, errors, device_id)
 
 
 # ------------------------------------------------------------------------------

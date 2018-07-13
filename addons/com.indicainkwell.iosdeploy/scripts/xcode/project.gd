@@ -11,7 +11,7 @@ extends Reference
 
 
 signal built(this, result)
-signal deployed(this, result, device_id)
+signal deployed(this, result, errors, device_id)
 
 
 # ------------------------------------------------------------------------------
@@ -404,6 +404,6 @@ func deploy():
 		_iosdeploy.install_and_launch_on(device.id)
 
 
-func _on_deployed(command, result, device_id):
+func _on_deployed(command, result, errors, device_id):
 	_runningdeploys -= 1
-	emit_signal('deployed', self, result, device_id)
+	emit_signal('deployed', self, result, errors, device_id)

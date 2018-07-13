@@ -420,8 +420,14 @@ func _on_xcode_project_built(xcode_project, result):
 		view.update_build_progress(1.0, 'Done', true)
 
 
-func _on_device_deployed(xcode_project, result, device_id):
+func _on_device_deployed(xcode_project, result, errors, device_id):
 #	stc.get_logger().debug('DEVICE DEPLOYED: ', xcode_project, result.output, device_id)
+
+	if errors.size() > 0:
+		print('>> iOSDeploy errors found while deploying to ', device_id)
+		for error in errors:
+			prints('-', error.code, error.message)
+		print('<<')
 
 	var runningdeploys = xcode_project.get_running_deploys_count()
 	var devsiz = xcode_project.get_devices().size()
