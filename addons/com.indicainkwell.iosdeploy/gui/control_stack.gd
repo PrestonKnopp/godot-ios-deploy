@@ -7,8 +7,8 @@ extends Control
 
 
 signal presenting(this)
-signal screen_exiting(this, screen)
-signal screen_entering(this, screen)
+signal screen_exiting(this, screen, to_screen)
+signal screen_entering(this, from_screen, screen)
 
 
 # ------------------------------------------------------------------------------
@@ -105,11 +105,12 @@ func goto_last():
 
 func goto(idx):
 	assert(has_screen_idx(idx))
+	var next_screen = get_screen(idx)
 	if screen != null and screen.index != idx:
-		emit_signal('screen_exiting', self, screen)
+		emit_signal('screen_exiting', self, screen, next_screen)
 		screen.node.hide()
-	screen = get_screen(idx)
-	emit_signal('screen_entering', self, screen)
+	emit_signal('screen_entering', self, screen, next_screen)
+	screen = next_screen
 	screen.node.show()
 
 
