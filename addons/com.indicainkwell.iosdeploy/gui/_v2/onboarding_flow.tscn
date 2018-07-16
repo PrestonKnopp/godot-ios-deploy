@@ -1,16 +1,76 @@
-[gd_scene load_steps=6 format=1]
+[gd_scene load_steps=10 format=1]
 
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/theme.tres" type="Theme" id=1]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/control_stack.gd" type="Script" id=1]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/img/Upload Icon.png" type="Texture" id=3]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/deploy_settings_menu.tscn" type="PackedScene" id=4]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Light.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/img/Upload Icon.png" type="Texture" id=4]
 
-[sub_resource type="DynamicFont" id=1]
+[sub_resource type="GDScript" id=1]
 
-font/size = 30
+script/source = "extends AcceptDialog
+
+var next_button setget ,get_next_button
+func get_next_button():
+	return get_ok()
+
+
+var back_button setget ,get_back_button
+func get_back_button():
+	if back_button == null:
+		for node in get_children():
+			# I own this, so it's not going to contain
+			# the button I'm searching for
+			if node.get_owner() != null: continue
+			for subnode in node.get_children():
+				if subnode.has_method('get_text') and subnode.get_text() == 'BACK':
+					back_button = subnode
+	return back_button
+
+func _ready():
+	get_ok().set_text('NEXT')
+	add_button('BACK', false, 'BACK')
+	call_deferred('popup_centered')
+
+func _on_confirmed():
+	var stack = get_node('control_stack')
+	stack.push(stack.screen.index + 1)
+
+func _on_custom_action( action ):
+	var stack = get_node('control_stack')
+	stack.pop()
+
+func _on_control_stack_screen_entering( this, from_screen, screen ):
+	get_back_button().set_disabled(screen.index == 0)
+	get_next_button().set_disabled(screen.index + 1 >= this.get_screen_count())
+"
+
+[sub_resource type="DynamicFont" id=2]
+
+font/size = 25
 font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=3]
+
+font/size = 12
+font/use_mipmaps = false
+font/use_filter = true
+font/font = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=4]
+
+font/size = 16
+font/use_mipmaps = false
+font/use_filter = true
+font/font = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=5]
+
+font/size = 16
+font/use_mipmaps = false
+font/use_filter = true
+font/font = ExtResource( 3 )
 
 [node name="onboarding_flow" type="Control"]
 
@@ -20,403 +80,12 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-theme/theme = ExtResource( 1 )
 margin/left = 0.0
 margin/top = 0.0
 margin/right = 0.0
 margin/bottom = 0.0
 
-[node name="ConfirmationDialog" type="Panel" parent="."]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 20.0
-margin/top = 28.0
-margin/right = 336.0
-margin/bottom = 396.0
-
-[node name="MarginContainer" type="MarginContainer" parent="ConfirmationDialog"]
-
-anchor/right = 1
-anchor/bottom = 1
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 3
-size_flags/vertical = 3
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 0.0
-margin/bottom = 0.0
-custom_constants/margin_right = 10
-custom_constants/margin_top = 10
-custom_constants/margin_left = 10
-custom_constants/margin_bottom = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="ConfirmationDialog/MarginContainer"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 3
-size_flags/vertical = 3
-margin/left = 10.0
-margin/top = 10.0
-margin/right = 306.0
-margin/bottom = 358.0
-alignment = 0
-
-[node name="center_header_container" type="CenterContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 296.0
-margin/bottom = 36.0
-use_top_left = false
-
-[node name="HBoxContainer" type="HBoxContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_header_container"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 8.0
-margin/top = 0.0
-margin/right = 288.0
-margin/bottom = 36.0
-alignment = 0
-
-[node name="Label" type="Label" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_header_container/HBoxContainer"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 139.0
-margin/bottom = 36.0
-custom_fonts/font = SubResource( 1 )
-text = "IOSDEPLOY"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="Label_1" type="Label" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_header_container/HBoxContainer"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 143.0
-margin/top = 0.0
-margin/right = 280.0
-margin/bottom = 36.0
-custom_fonts/font = SubResource( 1 )
-custom_colors/font_color = Color( 0.376471, 0.368627, 0.419608, 1 )
-text = "PROVISION"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="margin_separator" type="MarginContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
-editor/display_folded = true
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 40.0
-margin/right = 296.0
-margin/bottom = 43.0
-custom_constants/margin_right = 20
-custom_constants/margin_top = 0
-custom_constants/margin_left = 20
-custom_constants/margin_bottom = 0
-
-[node name="HSeparator 2" type="HSeparator" parent="ConfirmationDialog/MarginContainer/VBoxContainer/margin_separator"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 20.0
-margin/top = 0.0
-margin/right = 276.0
-margin/bottom = 3.0
-
-[node name="spacer" type="Control" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
-rect/min_size = Vector2( 0, 20 )
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 47.0
-margin/right = 296.0
-margin/bottom = 67.0
-
-[node name="center_automanage_container" type="CenterContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
-editor/display_folded = true
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 71.0
-margin/right = 296.0
-margin/bottom = 98.0
-use_top_left = false
-
-[node name="CheckButton" type="CheckButton" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_automanage_container"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 69.0
-margin/top = 0.0
-margin/right = 226.0
-margin/bottom = 27.0
-toggle_mode = true
-enabled_focus_mode = 2
-shortcut = null
-text = "automanage"
-flat = false
-align = 0
-
-[node name="spacer_1" type="Control" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
-rect/min_size = Vector2( 0, 20 )
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 102.0
-margin/right = 296.0
-margin/bottom = 122.0
-
-[node name="OptionButton" type="OptionButton" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 126.0
-margin/right = 296.0
-margin/bottom = 151.0
-toggle_mode = false
-enabled_focus_mode = 2
-shortcut = null
-text = "Choose provisioning profile"
-flat = false
-align = 0
-selected = -1
-items = [  ]
-
-[node name="spacer_3" type="Control" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
-rect/min_size = Vector2( 0, 10 )
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 155.0
-margin/right = 296.0
-margin/bottom = 165.0
-
-[node name="center_or_separator" type="CenterContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
-editor/display_folded = true
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 169.0
-margin/right = 296.0
-margin/bottom = 188.0
-use_top_left = false
-
-[node name="HBoxContainer" type="HBoxContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_or_separator"]
-
-editor/display_folded = true
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 3
-size_flags/vertical = 3
-margin/left = 34.0
-margin/top = 0.0
-margin/right = 261.0
-margin/bottom = 19.0
-alignment = 0
-
-[node name="HSeparator" type="HSeparator" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_or_separator/HBoxContainer"]
-
-rect/min_size = Vector2( 100, 0 )
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 100.0
-margin/bottom = 19.0
-
-[node name="Label" type="Label" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_or_separator/HBoxContainer"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 104.0
-margin/top = 0.0
-margin/right = 123.0
-margin/bottom = 19.0
-text = "OR"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="HSeparator_1" type="HSeparator" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_or_separator/HBoxContainer"]
-
-rect/min_size = Vector2( 100, 0 )
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 127.0
-margin/top = 0.0
-margin/right = 227.0
-margin/bottom = 19.0
-
-[node name="center_drag_and_drop" type="CenterContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 3
-size_flags/vertical = 3
-margin/left = 0.0
-margin/top = 192.0
-margin/right = 296.0
-margin/bottom = 319.0
-use_top_left = false
-
-[node name="Panel" type="ColorFrame" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_drag_and_drop"]
-
-rect/min_size = Vector2( 128, 96 )
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 3
-size_flags/vertical = 3
-margin/left = 84.0
-margin/top = 15.0
-margin/right = 212.0
-margin/bottom = 111.0
-color = Color( 0.376471, 0.368627, 0.419608, 1 )
-
-[node name="TextureFrame" type="TextureFrame" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_drag_and_drop/Panel"]
-
-anchor/right = 1
-anchor/bottom = 1
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 0.0
-margin/bottom = 0.0
-texture = ExtResource( 3 )
-modulate = Color( 0.234375, 0.220642, 0.220642, 1 )
-stretch_mode = 4
-
-[node name="Label" type="Label" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_drag_and_drop/Panel/TextureFrame"]
-
-anchor/left = 3
-anchor/top = 1
-anchor/right = 3
-anchor/bottom = 1
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 3
-size_flags/vertical = 3
-margin/left = 45.0
-margin/top = 20.0
-margin/right = -47.0
-margin/bottom = 0.0
-text = "Drag and Drop"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="HButtonArray" type="HButtonArray" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 323.0
-margin/right = 296.0
-margin/bottom = 348.0
-flat = true
-button/count = 2
-button/min_button_size = 0.0
-button/align = 1
-button/0/text = "Cancel"
-button/0/tooltip = "Cancel setup of ios-deploy provision"
-button/0/icon = null
-button/1/text = "Next"
-button/1/tooltip = "Go to next step to set up ios-deploy."
-button/1/icon = null
-button/selected = 1
-
-[node name="deploy_settings_menu" parent="." instance=ExtResource( 4 )]
-
-editor/display_folded = true
-visibility/visible = false
-margin/left = 16.0
-margin/top = 20.0
-margin/right = 24.0
-margin/bottom = 20.0
-
-[node name="HButtonArray_1" type="HButtonArray" parent="deploy_settings_menu"]
-
-anchor/top = 1
-anchor/right = 1
-anchor/bottom = 1
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 40.0
-margin/right = 0.0
-margin/bottom = 10.0
-flat = true
-button/count = 2
-button/min_button_size = 0.0
-button/align = 1
-button/0/text = "Back"
-button/0/tooltip = "Go back to provision profile selection"
-button/0/icon = null
-button/1/text = "Done"
-button/1/tooltip = "Finish up"
-button/1/icon = null
-button/selected = 1
-
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
+[node name="notes" type="RichTextLabel" parent="."]
 
 visibility/visible = false
 anchor/left = 1
@@ -438,5 +107,611 @@ User select, drag and drop, or browse files for provisioning profile -> fill in 
 Additionally, check if there are any profiles. If there aren't, user may have not installed Xcode or registered their developer's account with xcode."
 visible_characters = -1
 percent_visible = 1.0
+
+[node name="AcceptDialog" type="AcceptDialog" parent="."]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 340.0
+margin/bottom = 434.0
+popup/exclusive = false
+window/title = ""
+dialog/hide_on_ok = false
+script/script = SubResource( 1 )
+
+[node name="control_stack" type="MarginContainer" parent="AcceptDialog"]
+
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 0.0
+margin/bottom = 30.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+script/script = ExtResource( 1 )
+stack_root_path = NodePath(".")
+
+[node name="select_provision" type="VBoxContainer" parent="AcceptDialog/control_stack"]
+
+editor/display_folded = true
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 10.0
+margin/top = 10.0
+margin/right = 330.0
+margin/bottom = 394.0
+alignment = 0
+
+[node name="title_box" type="VBoxContainer" parent="AcceptDialog/control_stack/select_provision"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 320.0
+margin/bottom = 46.0
+custom_constants/separation = 0
+alignment = 0
+
+[node name="title" type="HBoxContainer" parent="AcceptDialog/control_stack/select_provision/title_box"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 320.0
+margin/bottom = 31.0
+alignment = 1
+
+[node name="Label" type="Label" parent="AcceptDialog/control_stack/select_provision/title_box/title"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 45.0
+margin/top = 0.0
+margin/right = 159.0
+margin/bottom = 31.0
+custom_fonts/font = SubResource( 2 )
+text = "IOSDEPLOY"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Label_1" type="Label" parent="AcceptDialog/control_stack/select_provision/title_box/title"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 163.0
+margin/top = 0.0
+margin/right = 274.0
+margin/bottom = 31.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
+text = "PROVISION"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="subtitle" type="Label" parent="AcceptDialog/control_stack/select_provision/title_box"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 31.0
+margin/right = 320.0
+margin/bottom = 46.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
+text = "SELECT PROVISIONING PROFILE"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="HSeparator" type="HSeparator" parent="AcceptDialog/control_stack/select_provision"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 50.0
+margin/right = 320.0
+margin/bottom = 53.0
+
+[node name="automanage_checkbutt" type="CheckButton" parent="AcceptDialog/control_stack/select_provision"]
+
+hint/tooltip = "Don't have a provision profile? Automanage."
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 57.0
+margin/right = 320.0
+margin/bottom = 84.0
+custom_fonts/font = SubResource( 4 )
+toggle_mode = true
+enabled_focus_mode = 2
+shortcut = null
+text = "Automanage Profile"
+flat = false
+align = 0
+
+[node name="profile_optbutt" type="OptionButton" parent="AcceptDialog/control_stack/select_provision"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 88.0
+margin/right = 320.0
+margin/bottom = 113.0
+custom_fonts/font = SubResource( 4 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+flat = false
+align = 0
+selected = -1
+items = [  ]
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AcceptDialog/control_stack/select_provision"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 117.0
+margin/right = 320.0
+margin/bottom = 136.0
+custom_constants/separation = 10
+alignment = 1
+
+[node name="spacer" type="Control" parent="AcceptDialog/control_stack/select_provision/HBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 64.0
+margin/bottom = 19.0
+
+[node name="HSeparator" type="HSeparator" parent="AcceptDialog/control_stack/select_provision/HBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 74.0
+margin/top = 0.0
+margin/right = 138.0
+margin/bottom = 19.0
+
+[node name="Label" type="Label" parent="AcceptDialog/control_stack/select_provision/HBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 148.0
+margin/top = 0.0
+margin/right = 169.0
+margin/bottom = 19.0
+custom_fonts/font = SubResource( 4 )
+text = "OR"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="HSeparator_1" type="HSeparator" parent="AcceptDialog/control_stack/select_provision/HBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 179.0
+margin/top = 0.0
+margin/right = 243.0
+margin/bottom = 19.0
+
+[node name="spacer_1" type="Control" parent="AcceptDialog/control_stack/select_provision/HBoxContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 253.0
+margin/top = 0.0
+margin/right = 320.0
+margin/bottom = 19.0
+
+[node name="drag_n_drop_profile" type="Panel" parent="AcceptDialog/control_stack/select_provision"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 3
+margin/left = 0.0
+margin/top = 140.0
+margin/right = 320.0
+margin/bottom = 384.0
+
+[node name="CenterContainer" type="CenterContainer" parent="AcceptDialog/control_stack/select_provision/drag_n_drop_profile"]
+
+editor/display_folded = true
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 0.0
+margin/bottom = 0.0
+use_top_left = false
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AcceptDialog/control_stack/select_provision/drag_n_drop_profile/CenterContainer"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 86.0
+margin/top = 73.0
+margin/right = 233.0
+margin/bottom = 171.0
+custom_constants/separation = 20
+alignment = 0
+
+[node name="TextureFrame" type="TextureFrame" parent="AcceptDialog/control_stack/select_provision/drag_n_drop_profile/CenterContainer/VBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 1
+size_flags/vertical = 2
+margin/left = 49.0
+margin/top = 0.0
+margin/right = 98.0
+margin/bottom = 37.0
+texture = ExtResource( 4 )
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="AcceptDialog/control_stack/select_provision/drag_n_drop_profile/CenterContainer/VBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 57.0
+margin/right = 147.0
+margin/bottom = 98.0
+custom_fonts/font = SubResource( 5 )
+text = "Drag & Drop
+provision profile here"
+align = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Button" type="Button" parent="AcceptDialog/control_stack/select_provision/drag_n_drop_profile"]
+
+anchor/top = 1
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 21.0
+margin/right = 0.0
+margin/bottom = 1.0
+custom_fonts/font = SubResource( 5 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "BROWSE"
+flat = false
+
+[node name="select_team" type="VBoxContainer" parent="AcceptDialog/control_stack"]
+
+editor/display_folded = true
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 10.0
+margin/top = 10.0
+margin/right = 330.0
+margin/bottom = 394.0
+alignment = 0
+
+[node name="title_box" type="VBoxContainer" parent="AcceptDialog/control_stack/select_team"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 320.0
+margin/bottom = 46.0
+custom_constants/separation = 0
+alignment = 0
+
+[node name="title" type="HBoxContainer" parent="AcceptDialog/control_stack/select_team/title_box"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 320.0
+margin/bottom = 31.0
+alignment = 1
+
+[node name="Label" type="Label" parent="AcceptDialog/control_stack/select_team/title_box/title"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 72.0
+margin/top = 0.0
+margin/right = 186.0
+margin/bottom = 31.0
+custom_fonts/font = SubResource( 2 )
+text = "IOSDEPLOY"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Label_1" type="Label" parent="AcceptDialog/control_stack/select_team/title_box/title"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 190.0
+margin/top = 0.0
+margin/right = 248.0
+margin/bottom = 31.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
+text = "TEAM"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="subtitle" type="Label" parent="AcceptDialog/control_stack/select_team/title_box"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 31.0
+margin/right = 320.0
+margin/bottom = 46.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
+text = "SELECT PROVISIONING TEAM"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="HSeparator" type="HSeparator" parent="AcceptDialog/control_stack/select_team"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 50.0
+margin/right = 320.0
+margin/bottom = 53.0
+
+[node name="team_optbutt" type="OptionButton" parent="AcceptDialog/control_stack/select_team"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 1
+margin/left = 0.0
+margin/top = 210.0
+margin/right = 320.0
+margin/bottom = 230.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+flat = false
+align = 0
+selected = -1
+items = [  ]
+
+[node name="select_bundle" type="VBoxContainer" parent="AcceptDialog/control_stack"]
+
+editor/display_folded = true
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 10.0
+margin/top = 10.0
+margin/right = 330.0
+margin/bottom = 394.0
+alignment = 0
+
+[node name="title_box" type="VBoxContainer" parent="AcceptDialog/control_stack/select_bundle"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 320.0
+margin/bottom = 46.0
+custom_constants/separation = 0
+alignment = 0
+
+[node name="title" type="HBoxContainer" parent="AcceptDialog/control_stack/select_bundle/title_box"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 320.0
+margin/bottom = 31.0
+alignment = 1
+
+[node name="Label" type="Label" parent="AcceptDialog/control_stack/select_bundle/title_box/title"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 60.0
+margin/top = 0.0
+margin/right = 174.0
+margin/bottom = 31.0
+custom_fonts/font = SubResource( 2 )
+text = "IOSDEPLOY"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Label_1" type="Label" parent="AcceptDialog/control_stack/select_bundle/title_box/title"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 178.0
+margin/top = 0.0
+margin/right = 259.0
+margin/bottom = 31.0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
+text = "BUNDLE"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="subtitle" type="Label" parent="AcceptDialog/control_stack/select_bundle/title_box"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 31.0
+margin/right = 320.0
+margin/bottom = 46.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
+text = "SET BUNDLE INFORMATION"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="HSeparator" type="HSeparator" parent="AcceptDialog/control_stack/select_bundle"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 50.0
+margin/right = 320.0
+margin/bottom = 53.0
+
+[node name="display_name_lineedit" type="LineEdit" parent="AcceptDialog/control_stack/select_bundle"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 57.0
+margin/right = 320.0
+margin/bottom = 81.0
+text = "Display Name i.e My Awesome Game"
+placeholder/alpha = 0.6
+focus_mode = 2
+caret/caret_blink = false
+caret/caret_blink_speed = 0.65
+
+[node name="bundle_id_lineedit" type="LineEdit" parent="AcceptDialog/control_stack/select_bundle"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 85.0
+margin/right = 320.0
+margin/bottom = 109.0
+text = "Bundle Identifier i.e com.me.myawesomegame"
+placeholder/alpha = 0.6
+focus_mode = 2
+caret/caret_blink = false
+caret/caret_blink_speed = 0.65
+
+[connection signal="about_to_show" from="AcceptDialog" to="AcceptDialog/control_stack" method="_on_about_to_show"]
+
+[connection signal="confirmed" from="AcceptDialog" to="AcceptDialog" method="_on_confirmed"]
+
+[connection signal="custom_action" from="AcceptDialog" to="AcceptDialog" method="_on_custom_action"]
+
+[connection signal="screen_entering" from="AcceptDialog/control_stack" to="AcceptDialog" method="_on_control_stack_screen_entering"]
 
 
