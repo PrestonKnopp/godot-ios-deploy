@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=1]
+[gd_scene load_steps=11 format=1]
 
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/control_stack.gd" type="Script" id=1]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=2]
@@ -8,6 +8,14 @@
 [sub_resource type="GDScript" id=1]
 
 script/source = "extends AcceptDialog
+
+
+export(float) var transition_time = 0.25
+
+
+var size_difference = Vector2()
+var _last_button_pressed = null
+
 
 var next_button setget ,get_next_button
 func get_next_button():
@@ -26,22 +34,48 @@ func get_back_button():
 					back_button = subnode
 	return back_button
 
+
+func resize_for(screen):
+	var tween = get_node('Tween')
+
+	var initial_size = get_size()
+	var final_size = screen.node.get_node('PreferredSize').size + size_difference
+	tween.interpolate_property(self, 'rect/size', initial_size, final_size, transition_time, tween.TRANS_SINE, tween.EASE_OUT)
+
+	var initial_pos = get_pos()
+	var final_pos = (get_parent_control().get_size() / 2 - final_size / 2).floorf()
+	tween.interpolate_property(self, 'rect/pos', initial_pos, final_pos, transition_time, tween.TRANS_SINE, tween.EASE_OUT)
+
+	tween.start()
+
+
 func _ready():
+	size_difference = get_rect().size - get_node('control_stack/select_provision').get_rect().size
 	get_ok().set_text('NEXT')
 	add_button('BACK', false, 'BACK')
 	call_deferred('popup_centered')
 
+
 func _on_confirmed():
+	_last_button_pressed = get_next_button()
 	var stack = get_node('control_stack')
 	stack.push(stack.screen.index + 1)
 
+
 func _on_custom_action( action ):
+	_last_button_pressed = get_back_button()
 	var stack = get_node('control_stack')
 	stack.pop()
+
 
 func _on_control_stack_screen_entering( this, from_screen, screen ):
 	get_back_button().set_disabled(screen.index == 0)
 	get_next_button().set_disabled(screen.index + 1 >= this.get_screen_count())
+	resize_for(screen)
+
+
+func _on_control_stack_draw():
+	VisualServer.canvas_item_set_clip(get_node('control_stack').get_canvas_item(), true)
 "
 
 [sub_resource type="DynamicFont" id=2]
@@ -71,6 +105,13 @@ font/size = 16
 font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 3 )
+
+[sub_resource type="GDScript" id=6]
+
+script/source = "extends Node
+
+export(Vector2) var size = Vector2(100, 100)
+"
 
 [node name="onboarding_flow" type="Control"]
 
@@ -110,18 +151,20 @@ percent_visible = 1.0
 
 [node name="AcceptDialog" type="AcceptDialog" parent="."]
 
+visibility/visible = false
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 340.0
-margin/bottom = 434.0
+margin/right = 500.0
+margin/bottom = 500.0
 popup/exclusive = false
 window/title = ""
 dialog/hide_on_ok = false
 script/script = SubResource( 1 )
+transition_time = 0.25
 
 [node name="control_stack" type="MarginContainer" parent="AcceptDialog"]
 
@@ -145,15 +188,14 @@ stack_root_path = NodePath(".")
 [node name="select_provision" type="VBoxContainer" parent="AcceptDialog/control_stack"]
 
 editor/display_folded = true
-visibility/visible = false
 focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 10.0
 margin/top = 10.0
-margin/right = 330.0
-margin/bottom = 394.0
+margin/right = 490.0
+margin/bottom = 460.0
 alignment = 0
 
 [node name="title_box" type="VBoxContainer" parent="AcceptDialog/control_stack/select_provision"]
@@ -165,7 +207,7 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 46.0
 custom_constants/separation = 0
 alignment = 0
@@ -179,7 +221,7 @@ size_flags/horizontal = 3
 size_flags/vertical = 3
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 31.0
 alignment = 1
 
@@ -189,9 +231,9 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 45.0
+margin/left = 125.0
 margin/top = 0.0
-margin/right = 159.0
+margin/right = 239.0
 margin/bottom = 31.0
 custom_fonts/font = SubResource( 2 )
 text = "IOSDEPLOY"
@@ -205,9 +247,9 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 163.0
+margin/left = 243.0
 margin/top = 0.0
-margin/right = 274.0
+margin/right = 354.0
 margin/bottom = 31.0
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
@@ -224,7 +266,7 @@ size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 0.0
 margin/top = 31.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 46.0
 custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
@@ -243,7 +285,7 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 50.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 53.0
 
 [node name="automanage_checkbutt" type="CheckButton" parent="AcceptDialog/control_stack/select_provision"]
@@ -255,7 +297,7 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 57.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 84.0
 custom_fonts/font = SubResource( 4 )
 toggle_mode = true
@@ -273,7 +315,7 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 88.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 113.0
 custom_fonts/font = SubResource( 4 )
 toggle_mode = false
@@ -286,13 +328,14 @@ items = [  ]
 
 [node name="HBoxContainer" type="HBoxContainer" parent="AcceptDialog/control_stack/select_provision"]
 
+editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 117.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 136.0
 custom_constants/separation = 10
 alignment = 1
@@ -305,7 +348,7 @@ size_flags/horizontal = 3
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 64.0
+margin/right = 104.0
 margin/bottom = 19.0
 
 [node name="HSeparator" type="HSeparator" parent="AcceptDialog/control_stack/select_provision/HBoxContainer"]
@@ -314,9 +357,9 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 3
 size_flags/vertical = 2
-margin/left = 74.0
+margin/left = 114.0
 margin/top = 0.0
-margin/right = 138.0
+margin/right = 218.0
 margin/bottom = 19.0
 
 [node name="Label" type="Label" parent="AcceptDialog/control_stack/select_provision/HBoxContainer"]
@@ -325,9 +368,9 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 148.0
+margin/left = 228.0
 margin/top = 0.0
-margin/right = 169.0
+margin/right = 249.0
 margin/bottom = 19.0
 custom_fonts/font = SubResource( 4 )
 text = "OR"
@@ -341,9 +384,9 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 3
 size_flags/vertical = 2
-margin/left = 179.0
+margin/left = 259.0
 margin/top = 0.0
-margin/right = 243.0
+margin/right = 363.0
 margin/bottom = 19.0
 
 [node name="spacer_1" type="Control" parent="AcceptDialog/control_stack/select_provision/HBoxContainer"]
@@ -352,21 +395,22 @@ focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 3
 size_flags/vertical = 2
-margin/left = 253.0
+margin/left = 373.0
 margin/top = 0.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 19.0
 
 [node name="drag_n_drop_profile" type="Panel" parent="AcceptDialog/control_stack/select_provision"]
 
+editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 3
 margin/left = 0.0
 margin/top = 140.0
-margin/right = 320.0
-margin/bottom = 384.0
+margin/right = 480.0
+margin/bottom = 450.0
 
 [node name="CenterContainer" type="CenterContainer" parent="AcceptDialog/control_stack/select_provision/drag_n_drop_profile"]
 
@@ -390,10 +434,10 @@ focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
-margin/left = 86.0
-margin/top = 73.0
-margin/right = 233.0
-margin/bottom = 171.0
+margin/left = 166.0
+margin/top = 106.0
+margin/right = 313.0
+margin/bottom = 204.0
 custom_constants/separation = 20
 alignment = 0
 
@@ -448,6 +492,11 @@ shortcut = null
 text = "BROWSE"
 flat = false
 
+[node name="PreferredSize" type="Node" parent="AcceptDialog/control_stack/select_provision"]
+
+script/script = SubResource( 6 )
+size = Vector2( 320, 315 )
+
 [node name="select_team" type="VBoxContainer" parent="AcceptDialog/control_stack"]
 
 editor/display_folded = true
@@ -458,8 +507,8 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 10.0
 margin/top = 10.0
-margin/right = 330.0
-margin/bottom = 394.0
+margin/right = 490.0
+margin/bottom = 460.0
 alignment = 0
 
 [node name="title_box" type="VBoxContainer" parent="AcceptDialog/control_stack/select_team"]
@@ -471,7 +520,7 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 46.0
 custom_constants/separation = 0
 alignment = 0
@@ -485,7 +534,7 @@ size_flags/horizontal = 3
 size_flags/vertical = 3
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 31.0
 alignment = 1
 
@@ -495,9 +544,9 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 72.0
+margin/left = 152.0
 margin/top = 0.0
-margin/right = 186.0
+margin/right = 266.0
 margin/bottom = 31.0
 custom_fonts/font = SubResource( 2 )
 text = "IOSDEPLOY"
@@ -511,9 +560,9 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 190.0
+margin/left = 270.0
 margin/top = 0.0
-margin/right = 248.0
+margin/right = 328.0
 margin/bottom = 31.0
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
@@ -530,7 +579,7 @@ size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 0.0
 margin/top = 31.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 46.0
 custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
@@ -549,7 +598,7 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 50.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 53.0
 
 [node name="team_optbutt" type="OptionButton" parent="AcceptDialog/control_stack/select_team"]
@@ -559,9 +608,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 1
 margin/left = 0.0
-margin/top = 210.0
-margin/right = 320.0
-margin/bottom = 230.0
+margin/top = 243.0
+margin/right = 480.0
+margin/bottom = 263.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -569,6 +618,11 @@ flat = false
 align = 0
 selected = -1
 items = [  ]
+
+[node name="PreferredSize" type="Node" parent="AcceptDialog/control_stack/select_team"]
+
+script/script = SubResource( 6 )
+size = Vector2( 320, 150 )
 
 [node name="select_bundle" type="VBoxContainer" parent="AcceptDialog/control_stack"]
 
@@ -580,8 +634,8 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 10.0
 margin/top = 10.0
-margin/right = 330.0
-margin/bottom = 394.0
+margin/right = 490.0
+margin/bottom = 460.0
 alignment = 0
 
 [node name="title_box" type="VBoxContainer" parent="AcceptDialog/control_stack/select_bundle"]
@@ -593,7 +647,7 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 46.0
 custom_constants/separation = 0
 alignment = 0
@@ -607,7 +661,7 @@ size_flags/horizontal = 3
 size_flags/vertical = 3
 margin/left = 0.0
 margin/top = 0.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 31.0
 alignment = 1
 
@@ -617,9 +671,9 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 60.0
+margin/left = 140.0
 margin/top = 0.0
-margin/right = 174.0
+margin/right = 254.0
 margin/bottom = 31.0
 custom_fonts/font = SubResource( 2 )
 text = "IOSDEPLOY"
@@ -633,9 +687,9 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 178.0
+margin/left = 258.0
 margin/top = 0.0
-margin/right = 259.0
+margin/right = 339.0
 margin/bottom = 31.0
 custom_fonts/font = SubResource( 2 )
 custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
@@ -652,7 +706,7 @@ size_flags/horizontal = 2
 size_flags/vertical = 0
 margin/left = 0.0
 margin/top = 31.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 46.0
 custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
@@ -671,46 +725,115 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 50.0
-margin/right = 320.0
+margin/right = 480.0
 margin/bottom = 53.0
 
-[node name="display_name_lineedit" type="LineEdit" parent="AcceptDialog/control_stack/select_bundle"]
+[node name="VBoxContainer" type="VBoxContainer" parent="AcceptDialog/control_stack/select_bundle"]
 
+editor/display_folded = true
 focus/ignore_mouse = false
-focus/stop_mouse = true
+focus/stop_mouse = false
 size_flags/horizontal = 2
-size_flags/vertical = 2
+size_flags/vertical = 3
 margin/left = 0.0
 margin/top = 57.0
-margin/right = 320.0
-margin/bottom = 81.0
-text = "Display Name i.e My Awesome Game"
-placeholder/alpha = 0.6
-focus_mode = 2
-caret/caret_blink = false
-caret/caret_blink_speed = 0.65
+margin/right = 480.0
+margin/bottom = 251.0
+alignment = 0
 
-[node name="bundle_id_lineedit" type="LineEdit" parent="AcceptDialog/control_stack/select_bundle"]
+[node name="Label" type="Label" parent="AcceptDialog/control_stack/select_bundle/VBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 480.0
+margin/bottom = 14.0
+text = "App Display Name"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="display_name_lineedit" type="LineEdit" parent="AcceptDialog/control_stack/select_bundle/VBoxContainer"]
 
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 85.0
-margin/right = 320.0
-margin/bottom = 109.0
-text = "Bundle Identifier i.e com.me.myawesomegame"
+margin/top = 18.0
+margin/right = 480.0
+margin/bottom = 42.0
+text = "My Awesome Game"
 placeholder/alpha = 0.6
 focus_mode = 2
 caret/caret_blink = false
 caret/caret_blink_speed = 0.65
+
+[node name="VBoxContainer_1" type="VBoxContainer" parent="AcceptDialog/control_stack/select_bundle"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 3
+margin/left = 0.0
+margin/top = 255.0
+margin/right = 480.0
+margin/bottom = 450.0
+alignment = 0
+
+[node name="Label_1" type="Label" parent="AcceptDialog/control_stack/select_bundle/VBoxContainer_1"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 480.0
+margin/bottom = 14.0
+text = "App Bundle Identifier"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="bundle_id_lineedit" type="LineEdit" parent="AcceptDialog/control_stack/select_bundle/VBoxContainer_1"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 18.0
+margin/right = 480.0
+margin/bottom = 42.0
+text = "com.me.myawesomegame"
+placeholder/alpha = 0.6
+focus_mode = 2
+caret/caret_blink = false
+caret/caret_blink_speed = 0.65
+
+[node name="PreferredSize" type="Node" parent="AcceptDialog/control_stack/select_bundle"]
+
+script/script = SubResource( 6 )
+size = Vector2( 320, 175 )
+
+[node name="Tween" type="Tween" parent="AcceptDialog"]
+
+playback/process_mode = 1
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
 
 [connection signal="about_to_show" from="AcceptDialog" to="AcceptDialog/control_stack" method="_on_about_to_show"]
 
 [connection signal="confirmed" from="AcceptDialog" to="AcceptDialog" method="_on_confirmed"]
 
 [connection signal="custom_action" from="AcceptDialog" to="AcceptDialog" method="_on_custom_action"]
+
+[connection signal="draw" from="AcceptDialog/control_stack" to="AcceptDialog" method="_on_control_stack_draw"]
 
 [connection signal="screen_entering" from="AcceptDialog/control_stack" to="AcceptDialog" method="_on_control_stack_screen_entering"]
 
