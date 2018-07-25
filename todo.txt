@@ -68,6 +68,9 @@
 
 # -- GUI Todos
 
+[*] make onboarding flow
+	- Create an interface that will connect editing and committing changes to
+	  the onboarding screens and elements.
 [ ] design apple button presentation and build flow
 	- extract from export options or have user select or drag profile 
 		- if user does not have profile
