@@ -10,11 +10,13 @@
 script/source = "extends AcceptDialog
 
 
+signal onboarded(this)
+
+
 export(float) var transition_time = 0.25
 
 
 var size_difference = Vector2()
-var _last_button_pressed = null
 
 
 var next_button setget ,get_next_button
@@ -51,26 +53,30 @@ func resize_for(screen):
 
 func _ready():
 	size_difference = get_rect().size - get_node('control_stack/select_provision').get_rect().size
-	get_ok().set_text('NEXT')
+	get_next_button().set_text('NEXT')
 	add_button('BACK', false, 'BACK')
 	call_deferred('popup_centered')
 
 
 func _on_confirmed():
-	_last_button_pressed = get_next_button()
+	if get_next_button().get_text() == 'DONE':
+		emit_signal('onboarded', self)
+		return
 	var stack = get_node('control_stack')
 	stack.push(stack.screen.index + 1)
 
 
 func _on_custom_action( action ):
-	_last_button_pressed = get_back_button()
 	var stack = get_node('control_stack')
 	stack.pop()
 
 
 func _on_control_stack_screen_entering( this, from_screen, screen ):
 	get_back_button().set_disabled(screen.index == 0)
-	get_next_button().set_disabled(screen.index + 1 >= this.get_screen_count())
+	if screen.index + 1 >= this.get_screen_count():
+		get_next_button().set_text('DONE')
+	else:
+		get_next_button().set_text('NEXT')
 	resize_for(screen)
 
 
@@ -663,7 +669,7 @@ text = "Select Team"
 flat = true
 align = 0
 selected = 0
-items = [ "Select Team", null, false, -1, null ]
+items = [ "Select Team", null, true, -1, null ]
 
 [node name="PreferredSize" type="Node" parent="AcceptDialog/control_stack/select_team"]
 
