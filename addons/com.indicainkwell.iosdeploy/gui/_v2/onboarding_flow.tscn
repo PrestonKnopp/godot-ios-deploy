@@ -5,7 +5,7 @@
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Light.ttf" type="DynamicFontData" id=3]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/img/Upload Icon.png" type="Texture" id=4]
 
-[sub_resource type="GDScript" id=1]
+[sub_resource type="GDScript" id=4]
 
 script/source = "extends AcceptDialog
 
@@ -78,7 +78,7 @@ func _on_control_stack_draw():
 	VisualServer.canvas_item_set_clip(get_node('control_stack').get_canvas_item(), true)
 "
 
-[sub_resource type="DynamicFont" id=2]
+[sub_resource type="DynamicFont" id=5]
 
 font/size = 25
 font/use_mipmaps = false
@@ -92,21 +92,21 @@ font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=4]
+[sub_resource type="DynamicFont" id=6]
 
 font/size = 16
 font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=7]
 
 font/size = 16
 font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 3 )
 
-[sub_resource type="GDScript" id=6]
+[sub_resource type="GDScript" id=8]
 
 script/source = "extends Node
 
@@ -163,7 +163,7 @@ margin/bottom = 500.0
 popup/exclusive = false
 window/title = ""
 dialog/hide_on_ok = false
-script/script = SubResource( 1 )
+script/script = SubResource( 4 )
 transition_time = 0.25
 
 [node name="control_stack" type="MarginContainer" parent="AcceptDialog"]
@@ -188,6 +188,7 @@ stack_root_path = NodePath(".")
 [node name="select_provision" type="VBoxContainer" parent="AcceptDialog/control_stack"]
 
 editor/display_folded = true
+visibility/visible = false
 focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
@@ -235,7 +236,7 @@ margin/left = 125.0
 margin/top = 0.0
 margin/right = 239.0
 margin/bottom = 31.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 5 )
 text = "IOSDEPLOY"
 percent_visible = 1.0
 lines_skipped = 0
@@ -251,7 +252,7 @@ margin/left = 243.0
 margin/top = 0.0
 margin/right = 354.0
 margin/bottom = 31.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
 text = "PROVISION"
 percent_visible = 1.0
@@ -279,6 +280,7 @@ max_lines_visible = -1
 
 [node name="HSeparator" type="HSeparator" parent="AcceptDialog/control_stack/select_provision"]
 
+rect/min_size = Vector2( 0, 20 )
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -286,26 +288,7 @@ size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 50.0
 margin/right = 480.0
-margin/bottom = 53.0
-
-[node name="automanage_checkbutt" type="CheckButton" parent="AcceptDialog/control_stack/select_provision"]
-
-hint/tooltip = "Don't have a provision profile? Automanage."
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 57.0
-margin/right = 480.0
-margin/bottom = 84.0
-custom_fonts/font = SubResource( 4 )
-toggle_mode = true
-enabled_focus_mode = 2
-shortcut = null
-text = "Automanage Profile"
-flat = false
-align = 0
+margin/bottom = 70.0
 
 [node name="profile_optbutt" type="OptionButton" parent="AcceptDialog/control_stack/select_provision"]
 
@@ -314,17 +297,18 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 88.0
+margin/top = 74.0
 margin/right = 480.0
-margin/bottom = 113.0
-custom_fonts/font = SubResource( 4 )
+margin/bottom = 99.0
+custom_fonts/font = SubResource( 6 )
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-flat = false
+text = "Select Provisioning Profile"
+flat = true
 align = 0
-selected = -1
-items = [  ]
+selected = 0
+items = [ "Select Provisioning Profile", null, true, -1, null ]
 
 [node name="HBoxContainer" type="HBoxContainer" parent="AcceptDialog/control_stack/select_provision"]
 
@@ -334,9 +318,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 117.0
+margin/top = 103.0
 margin/right = 480.0
-margin/bottom = 136.0
+margin/bottom = 122.0
 custom_constants/separation = 10
 alignment = 1
 
@@ -372,7 +356,7 @@ margin/left = 228.0
 margin/top = 0.0
 margin/right = 249.0
 margin/bottom = 19.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 6 )
 text = "OR"
 percent_visible = 1.0
 lines_skipped = 0
@@ -408,9 +392,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 3
 margin/left = 0.0
-margin/top = 140.0
+margin/top = 126.0
 margin/right = 480.0
-margin/bottom = 450.0
+margin/bottom = 390.0
 
 [node name="CenterContainer" type="CenterContainer" parent="AcceptDialog/control_stack/select_provision/drag_n_drop_profile"]
 
@@ -435,9 +419,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 166.0
-margin/top = 106.0
+margin/top = 83.0
 margin/right = 313.0
-margin/bottom = 204.0
+margin/bottom = 181.0
 custom_constants/separation = 20
 alignment = 0
 
@@ -464,7 +448,7 @@ margin/left = 0.0
 margin/top = 57.0
 margin/right = 147.0
 margin/bottom = 98.0
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 7 )
 text = "Drag & Drop
 provision profile here"
 align = 1
@@ -485,17 +469,78 @@ margin/left = 0.0
 margin/top = 21.0
 margin/right = 0.0
 margin/bottom = 1.0
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 7 )
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
 text = "BROWSE"
 flat = false
 
+[node name="Spacing" type="Control" parent="AcceptDialog/control_stack/select_provision"]
+
+rect/min_size = Vector2( 0, 10 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 394.0
+margin/right = 480.0
+margin/bottom = 404.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AcceptDialog/control_stack/select_provision"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 408.0
+margin/right = 480.0
+margin/bottom = 450.0
+custom_constants/separation = 0
+alignment = 0
+
+[node name="Label" type="Label" parent="AcceptDialog/control_stack/select_provision/VBoxContainer"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 480.0
+margin/bottom = 15.0
+custom_fonts/font = SubResource( 3 )
+custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
+text = "Don't have a Provisioning Profile?"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="automanage_checkbutt" type="CheckButton" parent="AcceptDialog/control_stack/select_provision/VBoxContainer"]
+
+hint/tooltip = "Don't have a provision profile? Automanage."
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 15.0
+margin/right = 480.0
+margin/bottom = 42.0
+custom_fonts/font = SubResource( 6 )
+toggle_mode = true
+enabled_focus_mode = 2
+shortcut = null
+text = "Automanage Profile"
+flat = false
+align = 0
+
 [node name="PreferredSize" type="Node" parent="AcceptDialog/control_stack/select_provision"]
 
-script/script = SubResource( 6 )
-size = Vector2( 320, 315 )
+script/script = SubResource( 8 )
+size = Vector2( 320, 350 )
 
 [node name="select_team" type="VBoxContainer" parent="AcceptDialog/control_stack"]
 
@@ -548,7 +593,7 @@ margin/left = 152.0
 margin/top = 0.0
 margin/right = 266.0
 margin/bottom = 31.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 5 )
 text = "IOSDEPLOY"
 percent_visible = 1.0
 lines_skipped = 0
@@ -564,7 +609,7 @@ margin/left = 270.0
 margin/top = 0.0
 margin/right = 328.0
 margin/bottom = 31.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
 text = "TEAM"
 percent_visible = 1.0
@@ -614,14 +659,15 @@ margin/bottom = 263.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
-flat = false
+text = "Select Team"
+flat = true
 align = 0
-selected = -1
-items = [  ]
+selected = 0
+items = [ "Select Team", null, false, -1, null ]
 
 [node name="PreferredSize" type="Node" parent="AcceptDialog/control_stack/select_team"]
 
-script/script = SubResource( 6 )
+script/script = SubResource( 8 )
 size = Vector2( 320, 150 )
 
 [node name="select_bundle" type="VBoxContainer" parent="AcceptDialog/control_stack"]
@@ -675,7 +721,7 @@ margin/left = 140.0
 margin/top = 0.0
 margin/right = 254.0
 margin/bottom = 31.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 5 )
 text = "IOSDEPLOY"
 percent_visible = 1.0
 lines_skipped = 0
@@ -691,7 +737,7 @@ margin/left = 258.0
 margin/top = 0.0
 margin/right = 339.0
 margin/bottom = 31.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
 text = "BUNDLE"
 percent_visible = 1.0
@@ -817,7 +863,7 @@ caret/caret_blink_speed = 0.65
 
 [node name="PreferredSize" type="Node" parent="AcceptDialog/control_stack/select_bundle"]
 
-script/script = SubResource( 6 )
+script/script = SubResource( 8 )
 size = Vector2( 320, 175 )
 
 [node name="Tween" type="Tween" parent="AcceptDialog"]
