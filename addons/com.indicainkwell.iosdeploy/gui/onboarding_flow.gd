@@ -10,8 +10,22 @@ extends AcceptDialog
 
 
 signal onboarded(this)
-signal populate(this, section, subsection)
-signal validate(this, section, subsection, input)
+signal populate(this, section)
+signal validate(this, section, input)
+
+
+# ------------------------------------------------------------------------------
+#                                     Constants
+# ------------------------------------------------------------------------------
+
+
+const SECTION = {
+	PROVISION=0,
+	AUTOMANAGE=1,
+	TEAM=2,
+	DISPLAY_NAME=3,
+	BUNDLE_ID=4
+}
 
 
 # ------------------------------------------------------------------------------
@@ -31,9 +45,11 @@ var _size_difference = Vector2()
 
 
 # ------------------------------------------------------------------------------
-#                                  Button SetGets
+#                                      SetGets
 # ------------------------------------------------------------------------------
 
+
+# -- Button
 
 var next_button setget ,get_next_button
 func get_next_button():
@@ -59,9 +75,85 @@ func get_back_button():
 	return back_button
 
 
+# -- Inputs
+
+var provision setget set_provision,get_provision
+var automanaged setget set_automanaged,get_automanaged
+var team setget set_team,get_team
+var display_name setget set_display_name,get_display_name
+var bundle_id setget set_bundle_id,get_bundle_id
+
+func set_provision(v):
+	var optbutt = get_node('control_stack/select_provision/profile_optbutt')
+	for i in optbutt.get_item_count():
+		var meta = optbutt.get_item_metadata(i)
+		if meta == v:
+			optbutt.select(i)
+			return
+	assert(false)
+func set_automanaged(v):
+	get_node('control_stack/select_provision/VBoxContainer/automanage_checkbutt').set_pressed(v)
+func set_team(v):
+	var optbutt = get_node('control_stack/select_team/team_optbutt')
+	for i in optbutt.get_item_count():
+		var meta = optbutt.get_item_metadata(i)
+		if meta == v:
+			optbutt.select(i)
+			return
+	assert(false)
+func set_display_name(v):
+	get_node('control_stack/select_bundle/VBoxContainer/display_name_lineedit').set_text(v)
+func set_bundle_id(v):
+	get_node('control_stack/select_bundle/VBoxContainer_1/bundle_id_lineedit').set_text(v)
+
+func get_provision():
+	return get_node('control_stack/select_provision/profile_optbutt').get_selected_metadata()
+func get_automanaged():
+	return get_node('control_stack/select_provision/VBoxContainer/automanage_checkbutt').is_pressed()
+func get_team():
+	return get_node('control_stack/select_team/team_optbutt').get_selected_metadata()
+func get_display_name():
+	return get_node('control_stack/select_bundle/VBoxContainer/display_name_lineedit').get_text()
+func get_bundle_id():
+	return get_node('control_stack/select_bundle/VBoxContainer_1/bundle_id_lineedit').get_text()
+
+
 # ------------------------------------------------------------------------------
 #                                      Methods
 # ------------------------------------------------------------------------------
+
+
+func populate_option_section(section, values=[]):
+	"""
+	Populate option section with multiple values. The rest of the sections
+	can be populated with their respective setter.
+	"""
+	assert(section in [SECTION.TEAM, SECTION.PROVISION])
+	var optbutt = get_node('control_stack/select_team/team_optbutt')
+	if section == SECTION.TEAM:
+		optbutt = get_node('control_stack/select_team/team_optbutt')
+	elif section == SECTION.PROVISION:
+		optbutt = get_node('control_stack/select_provision/profile_optbutt')
+	optbutt.clear()
+	for i in range(values.size()):
+		var value = values[i]
+		optbutt.add_item(value.name)
+		optbutt.set_item_metadata(i, value)
+
+
+func validate(section, valid):
+	print('onboarding_flow.validate() needs implementing')
+
+
+func get_sections_in(screen):
+	if screen.index == 0:
+		return [SECTION.PROVISION, SECTION.AUTOMANAGE]
+	elif screen.index == 2:
+		return [SECTION.TEAM]
+	elif screen.index == 3:
+		return [SECTION.DISPLAY_NAME, SECTION.BUNDLE_ID]
+	else:
+		return []
 
 
 func resize_for(screen):
@@ -128,8 +220,10 @@ func _on_custom_action( action ):
 func _on_control_stack_screen_entering( this, from_screen, screen ):
 	"""
 	Resizes dialog, enables and disables back button, and sets next button
-	to DONE when it is the last screen.
+	to DONE when it is the last screen. Additionally emits populate.
 	"""
+	for section in get_sections_in(screen):
+		emit_signal('populate', self, section)
 	get_back_button().set_disabled(screen.index == 0)
 	if screen.index + 1 >= this.get_screen_count():
 		get_next_button().set_text('DONE')
