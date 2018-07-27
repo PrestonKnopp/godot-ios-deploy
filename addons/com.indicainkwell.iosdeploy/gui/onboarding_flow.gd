@@ -34,6 +34,8 @@ const SECTION = {
 
 
 export(float) var transition_time = 0.25
+export(Color) var valid_color = Color(0.0, 1.0, 0.0, 0.25)
+export(Color) var invalid_color = Color(1.0, 0.0, 0.0, 0.25)
 
 
 # ------------------------------------------------------------------------------
@@ -83,8 +85,10 @@ var team setget set_team,get_team
 var display_name setget set_display_name,get_display_name
 var bundle_id setget set_bundle_id,get_bundle_id
 
+# -- Inputs Setters
+
 func set_provision(v):
-	var optbutt = get_node('control_stack/select_provision/profile_optbutt')
+	var optbutt = get_section_control(SECTION.PROVISION)
 	for i in optbutt.get_item_count():
 		var meta = optbutt.get_item_metadata(i)
 		if meta == v:
@@ -92,9 +96,9 @@ func set_provision(v):
 			return
 	assert(false)
 func set_automanaged(v):
-	get_node('control_stack/select_provision/VBoxContainer/automanage_checkbutt').set_pressed(v)
+	get_section_control(SECTION.AUTOMANAGE).set_pressed(v)
 func set_team(v):
-	var optbutt = get_node('control_stack/select_team/team_optbutt')
+	var optbutt = get_section_control(SECTION.TEAM)
 	for i in optbutt.get_item_count():
 		var meta = optbutt.get_item_metadata(i)
 		if meta == v:
@@ -102,20 +106,22 @@ func set_team(v):
 			return
 	assert(false)
 func set_display_name(v):
-	get_node('control_stack/select_bundle/VBoxContainer/display_name_lineedit').set_text(v)
+	get_section_control(SECTION.DISPLAY_NAME).set_text(v)
 func set_bundle_id(v):
-	get_node('control_stack/select_bundle/VBoxContainer_1/bundle_id_lineedit').set_text(v)
+	get_section_control(SECTION.BUNDLE_ID).set_text(v)
+
+# -- Inputs Getters
 
 func get_provision():
-	return get_node('control_stack/select_provision/profile_optbutt').get_selected_metadata()
+	return get_section_control(SECTION.PROVISION).get_selected_metadata()
 func get_automanaged():
-	return get_node('control_stack/select_provision/VBoxContainer/automanage_checkbutt').is_pressed()
+	return get_section_control(SECTION.AUTOMANAGE).is_pressed()
 func get_team():
-	return get_node('control_stack/select_team/team_optbutt').get_selected_metadata()
+	return get_section_control(SECTION.TEAM).get_selected_metadata()
 func get_display_name():
-	return get_node('control_stack/select_bundle/VBoxContainer/display_name_lineedit').get_text()
+	return get_section_control(SECTION.DISPLAY_NAME).get_text()
 func get_bundle_id():
-	return get_node('control_stack/select_bundle/VBoxContainer_1/bundle_id_lineedit').get_text()
+	return get_section_control(SECTION.BUNDLE_ID).get_text()
 
 
 # ------------------------------------------------------------------------------
@@ -129,11 +135,7 @@ func populate_option_section(section, values=[]):
 	can be populated with their respective setter.
 	"""
 	assert(section in [SECTION.TEAM, SECTION.PROVISION])
-	var optbutt = get_node('control_stack/select_team/team_optbutt')
-	if section == SECTION.TEAM:
-		optbutt = get_node('control_stack/select_team/team_optbutt')
-	elif section == SECTION.PROVISION:
-		optbutt = get_node('control_stack/select_provision/profile_optbutt')
+	var optbutt = get_section_control(section)
 	optbutt.clear()
 	for i in range(values.size()):
 		var value = values[i]
@@ -142,10 +144,29 @@ func populate_option_section(section, values=[]):
 
 
 func validate(section, valid):
-	print('onboarding_flow.validate() needs implementing')
+	"""
+	Set visually the validity of a section.
+	"""
+	var control = get_section_control(section)
+	var overlay = get_node('overlay_drawer')
+	overlay.over(control, valid_color if valid else invalid_color)
 
 
-func get_sections_in(screen):
+func get_section_control(section):
+	assert(section >= SECTION.PROVISION and section <= SECTION.BUNDLE_ID)
+	if section == SECTION.PROVISION:
+		return get_node('control_stack/select_provision/profile_optbutt')
+	elif section == SECTION.AUTOMANAGE:
+		return get_node('control_stack/select_provision/VBoxContainer/automanage_checkbutt')
+	elif section == SECTION.TEAM:
+		return get_node('control_stack/select_team/team_optbutt')
+	elif section == SECTION.DISPLAY_NAME:
+		return get_node('control_stack/select_bundle/VBoxContainer/display_name_lineedit')
+	elif section == SECTION.BUNDLE_ID:
+		return get_node('control_stack/select_bundle/VBoxContainer_1/bundle_id_lineedit')
+
+
+func get_screen_sections(screen):
 	if screen.index == 0:
 		return [SECTION.PROVISION, SECTION.AUTOMANAGE]
 	elif screen.index == 2:
@@ -198,6 +219,8 @@ func _ready():
 # ------------------------------------------------------------------------------
 
 
+# -- AcceptDialog (self)
+
 func _on_confirmed():
 	"""
 	Pushes next screen and emits onboarded when last screen is confirmed.
@@ -217,12 +240,14 @@ func _on_custom_action( action ):
 	stack.pop()
 
 
+# -- Control Stack
+
 func _on_control_stack_screen_entering( this, from_screen, screen ):
 	"""
 	Resizes dialog, enables and disables back button, and sets next button
 	to DONE when it is the last screen. Additionally emits populate.
 	"""
-	for section in get_sections_in(screen):
+	for section in get_screen_sections(screen):
 		emit_signal('populate', self, section)
 	get_back_button().set_disabled(screen.index == 0)
 	if screen.index + 1 >= this.get_screen_count():
@@ -234,3 +259,29 @@ func _on_control_stack_screen_entering( this, from_screen, screen ):
 
 func _on_control_stack_draw():
 	VisualServer.canvas_item_set_clip(get_node('control_stack').get_canvas_item(), true)
+
+
+# -- Input Validation
+
+func _on_profile_optbutt_item_selected( ID ):
+	var optbutt = get_node('control_stack/select_provision/profile_optbutt')
+	var meta = optbutt.get_selected_metadata()
+	emit_signal('validate', self, SECTION.PROVISION, meta)
+
+
+func _on_automanage_checkbutt_toggled( pressed ):
+	emit_signal('validate', self, SECTION.AUTOMANAGE, pressed)
+
+
+func _on_team_optbutt_item_selected( ID ):
+	var optbutt = get_node('control_stack/select_team/team_optbutt')
+	var meta = optbutt.get_selected_metadata()
+	emit_signal('validate', self, SECTION.TEAM, meta)
+
+
+func _on_display_name_lineedit_text_changed( text ):
+	emit_signal('validate', self, SECTION.DISPLAY_NAME, text)
+
+
+func _on_bundle_id_lineedit_text_changed( text ):
+	emit_signal('validate', self, SECTION.BUNDLE_ID, text)
