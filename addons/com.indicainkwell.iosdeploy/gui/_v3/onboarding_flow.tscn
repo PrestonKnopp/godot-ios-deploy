@@ -1,441 +1,1075 @@
-[gd_scene load_steps=30 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/theme.tres" type="Theme" id=1]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=2]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/img/Upload Icon.png" type="Texture" id=3]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/deploy_settings_menu.tscn" type="PackedScene" id=4]
-
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/onboarding_flow.gd" type="Script" id=1]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/control_stack.gd" type="Script" id=2]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Light.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/img/Upload Icon.png" type="Texture" id=5]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/overlay_drawer.gd" type="Script" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 
-size = 30
+size = 25
 use_mipmaps = false
 use_filter = true
-font_data = ExtResource( 2 )
+font_data = ExtResource( 3 )
 
-[node name="onboarding_flow" type="Control"]
+[sub_resource type="DynamicFont" id=2]
 
-anchor_right = 1
-anchor_bottom = 1
-focus_ignore_mouse = false
-focus_stop_mouse = true
+size = 12
+use_mipmaps = false
+use_filter = true
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=3]
+
+size = 16
+use_mipmaps = false
+use_filter = true
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=4]
+
+size = 16
+use_mipmaps = false
+use_filter = true
+font_data = ExtResource( 4 )
+
+[sub_resource type="GDScript" id=5]
+
+script/source = "extends Node
+
+export(Vector2) var size = Vector2(100, 100)
+"
+
+[node name="onboarding_flow" type="AcceptDialog" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 472.0
+margin_bottom = 271.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 2
-theme = ExtResource( 1 )
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 0.0
-margin_bottom = 0.0
+popup_exclusive = false
+window_title = ""
+resizable = false
+dialog_hide_on_ok = false
+script = ExtResource( 1 )
+_sections_unfolded = [ "Rect" ]
+transition_time = 0.25
+valid_color = Color( 0, 1, 0, 0.25 )
+invalid_color = Color( 1, 0, 0, 0.25 )
 
-[node name="ConfirmationDialog" type="Panel" parent="."]
+[node name="control_stack" type="MarginContainer" parent="." index="3"]
 
-focus_ignore_mouse = false
-focus_stop_mouse = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 8.0
+margin_top = 8.0
+margin_right = -8.0
+margin_bottom = -36.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 2
-margin_left = 20.0
-margin_top = 28.0
-margin_right = 336.0
-margin_bottom = 396.0
-
-[node name="MarginContainer" type="MarginContainer" parent="ConfirmationDialog"]
-
-anchor_right = 1
-anchor_bottom = 1
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 3
-size_flags_vertical = 3
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 0.0
-margin_bottom = 0.0
 custom_constants/margin_right = 10
 custom_constants/margin_top = 10
 custom_constants/margin_left = 10
 custom_constants/margin_bottom = 10
+script = ExtResource( 2 )
+_sections_unfolded = [ "Margin", "Rect" ]
+stack_root_path = NodePath(".")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ConfirmationDialog/MarginContainer"]
+[node name="select_provision" type="VBoxContainer" parent="control_stack" index="0"]
 
-focus_ignore_mouse = false
-focus_stop_mouse = false
-size_flags_horizontal = 3
-size_flags_vertical = 3
+editor/display_folded = true
+visible = false
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
 margin_left = 10.0
 margin_top = 10.0
-margin_right = 306.0
-margin_bottom = 358.0
+margin_right = 446.0
+margin_bottom = 217.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
 alignment = 0
+_sections_unfolded = [ "Rect" ]
 
-[node name="center_header_container" type="CenterContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+[node name="title_box" type="VBoxContainer" parent="control_stack/select_provision" index="0"]
 
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 2
-size_flags_vertical = 2
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 296.0
-margin_bottom = 36.0
-use_top_left = false
-
-[node name="HBoxContainer" type="HBoxContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_header_container"]
-
-focus_ignore_mouse = false
-focus_stop_mouse = false
-size_flags_horizontal = 2
-size_flags_vertical = 2
-margin_left = 8.0
-margin_top = 0.0
-margin_right = 288.0
-margin_bottom = 36.0
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 436.0
+margin_bottom = 46.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_constants/separation = 0
 alignment = 0
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="Label" type="Label" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_header_container/HBoxContainer"]
+[node name="title" type="HBoxContainer" parent="control_stack/select_provision/title_box" index="0"]
 
-focus_ignore_mouse = true
-focus_stop_mouse = true
-size_flags_horizontal = 2
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 436.0
+margin_bottom = 31.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Label" type="Label" parent="control_stack/select_provision/title_box/title" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 103.0
+margin_right = 217.0
+margin_bottom = 31.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
 size_flags_vertical = 0
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 139.0
-margin_bottom = 36.0
 custom_fonts/font = SubResource( 1 )
 text = "IOSDEPLOY"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="Label_1" type="Label" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_header_container/HBoxContainer"]
+[node name="Label_1" type="Label" parent="control_stack/select_provision/title_box/title" index="1"]
 
-focus_ignore_mouse = true
-focus_stop_mouse = true
-size_flags_horizontal = 2
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 221.0
+margin_right = 332.0
+margin_bottom = 31.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
 size_flags_vertical = 0
-margin_left = 143.0
-margin_top = 0.0
-margin_right = 280.0
-margin_bottom = 36.0
 custom_fonts/font = SubResource( 1 )
-custom_colors/font_color = Color( 0.376471, 0.368627, 0.419608, 1 )
+custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
 text = "PROVISION"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="margin_separator" type="MarginContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+[node name="subtitle" type="Label" parent="control_stack/select_provision/title_box" index="1"]
 
-editor/display_folded = true
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 2
-size_flags_vertical = 2
-margin_left = 0.0
-margin_top = 40.0
-margin_right = 296.0
-margin_bottom = 43.0
-custom_constants/margin_right = 20
-custom_constants/margin_top = 0
-custom_constants/margin_left = 20
-custom_constants/margin_bottom = 0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 31.0
+margin_right = 436.0
+margin_bottom = 46.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
+text = "SELECT PROVISIONING PROFILE"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
 
-[node name="HSeparator 2" type="HSeparator" parent="ConfirmationDialog/MarginContainer/VBoxContainer/margin_separator"]
+[node name="HSeparator" type="HSeparator" parent="control_stack/select_provision" index="1"]
 
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 2
-size_flags_vertical = 2
-margin_left = 20.0
-margin_top = 0.0
-margin_right = 276.0
-margin_bottom = 3.0
-
-[node name="spacer" type="Control" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 50.0
+margin_right = 436.0
+margin_bottom = 70.0
 rect_min_size = Vector2( 0, 20 )
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 2
-size_flags_vertical = 2
-margin_left = 0.0
-margin_top = 47.0
-margin_right = 296.0
-margin_bottom = 67.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="center_automanage_container" type="CenterContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+[node name="profile_optbutt" type="OptionButton" parent="control_stack/select_provision" index="2"]
 
-editor/display_folded = true
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 2
-size_flags_vertical = 2
-margin_left = 0.0
-margin_top = 71.0
-margin_right = 296.0
-margin_bottom = 98.0
-use_top_left = false
-
-[node name="CheckButton" type="CheckButton" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_automanage_container"]
-
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 2
-size_flags_vertical = 2
-margin_left = 69.0
-margin_top = 0.0
-margin_right = 226.0
-margin_bottom = 27.0
-toggle_mode = true
-enabled_focus_mode = 2
-shortcut = null
-text = "automanage"
-flat = false
-align = 0
-
-[node name="spacer_1" type="Control" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
-rect_min_size = Vector2( 0, 20 )
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 2
-size_flags_vertical = 2
-margin_left = 0.0
-margin_top = 102.0
-margin_right = 296.0
-margin_bottom = 122.0
-
-[node name="OptionButton" type="OptionButton" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 2
-size_flags_vertical = 2
-margin_left = 0.0
-margin_top = 126.0
-margin_right = 296.0
-margin_bottom = 151.0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 74.0
+margin_right = 436.0
+margin_bottom = 99.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_fonts/font = SubResource( 3 )
 toggle_mode = false
+action_mode = 0
 enabled_focus_mode = 2
 shortcut = null
-text = "Choose provisioning profile"
-flat = false
+group = null
+text = "Select Provisioning Profile"
+flat = true
 align = 0
-selected = -1
-items = [  ]
+items = [ "Select Provisioning Profile", null, true, -1, null ]
+selected = 0
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="spacer_3" type="Control" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
-rect_min_size = Vector2( 0, 10 )
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 2
-size_flags_vertical = 2
-margin_left = 0.0
-margin_top = 155.0
-margin_right = 296.0
-margin_bottom = 165.0
-
-[node name="center_or_separator" type="CenterContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="control_stack/select_provision" index="3"]
 
 editor/display_folded = true
-focus_ignore_mouse = false
-focus_stop_mouse = true
+visible = false
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 103.0
+margin_right = 67.0
+margin_bottom = 122.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 2
-margin_left = 0.0
-margin_top = 169.0
-margin_right = 296.0
-margin_bottom = 188.0
-use_top_left = false
+custom_constants/separation = 10
+alignment = 1
 
-[node name="HBoxContainer" type="HBoxContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_or_separator"]
+[node name="spacer" type="Control" parent="control_stack/select_provision/HBoxContainer" index="0"]
 
-editor/display_folded = true
-focus_ignore_mouse = false
-focus_stop_mouse = false
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
 size_flags_horizontal = 3
-size_flags_vertical = 3
-margin_left = 34.0
-margin_top = 0.0
-margin_right = 261.0
-margin_bottom = 19.0
-alignment = 0
-
-[node name="HSeparator" type="HSeparator" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_or_separator/HBoxContainer"]
-
-rect_min_size = Vector2( 100, 0 )
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 2
 size_flags_vertical = 2
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 100.0
+
+[node name="HSeparator" type="HSeparator" parent="control_stack/select_provision/HBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 10.0
+margin_right = 13.0
+margin_bottom = 4.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 2
+
+[node name="Label" type="Label" parent="control_stack/select_provision/HBoxContainer" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 23.0
+margin_right = 44.0
 margin_bottom = 19.0
-
-[node name="Label" type="Label" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_or_separator/HBoxContainer"]
-
-focus_ignore_mouse = true
-focus_stop_mouse = true
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 0
-margin_left = 104.0
-margin_top = 0.0
-margin_right = 123.0
-margin_bottom = 19.0
+custom_fonts/font = SubResource( 3 )
 text = "OR"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="HSeparator_1" type="HSeparator" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_or_separator/HBoxContainer"]
+[node name="HSeparator_1" type="HSeparator" parent="control_stack/select_provision/HBoxContainer" index="3"]
 
-rect_min_size = Vector2( 100, 0 )
-focus_ignore_mouse = false
-focus_stop_mouse = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 54.0
+margin_right = 57.0
+margin_bottom = 4.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 2
+
+[node name="spacer_1" type="Control" parent="control_stack/select_provision/HBoxContainer" index="4"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 67.0
+margin_right = 67.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 2
+
+[node name="drag_n_drop_profile" type="Panel" parent="control_stack/select_provision" index="4"]
+
+editor/display_folded = true
+visible = false
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 103.0
+margin_bottom = 117.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="control_stack/select_provision/drag_n_drop_profile" index="0"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 2
-margin_left = 127.0
-margin_top = 0.0
-margin_right = 227.0
-margin_bottom = 19.0
-
-[node name="center_drag_and_drop" type="CenterContainer" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
-
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 3
-size_flags_vertical = 3
-margin_left = 0.0
-margin_top = 192.0
-margin_right = 296.0
-margin_bottom = 319.0
 use_top_left = false
 
-[node name="Panel" type="ColorFrame" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_drag_and_drop"]
+[node name="VBoxContainer" type="VBoxContainer" parent="control_stack/select_provision/drag_n_drop_profile/CenterContainer" index="0"]
 
-rect_min_size = Vector2( 128, 96 )
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 3
-size_flags_vertical = 3
-margin_left = 84.0
-margin_top = 15.0
-margin_right = 212.0
-margin_bottom = 111.0
-color = Color( 0.376471, 0.368627, 0.419608, 1 )
-
-[node name="TextureFrame" type="TextureRect" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_drag_and_drop/Panel"]
-
-anchor_right = 1
-anchor_bottom = 1
-focus_ignore_mouse = true
-focus_stop_mouse = true
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 147.0
+margin_bottom = 98.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 2
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 0.0
-margin_bottom = 0.0
-texture = ExtResource( 3 )
-self_modulate = Color( 0.234375, 0.220642, 0.220642, 1 )
-stretch_mode = 4
+custom_constants/separation = 20
+alignment = 0
 
-[node name="Label" type="Label" parent="ConfirmationDialog/MarginContainer/VBoxContainer/center_drag_and_drop/Panel/TextureFrame"]
+[node name="TextureFrame" type="TextureRect" parent="control_stack/select_provision/drag_n_drop_profile/CenterContainer/VBoxContainer" index="0"]
 
-anchor_left = 2
-anchor_top = 1
-anchor_right = 2
-anchor_bottom = 1
-focus_ignore_mouse = true
-focus_stop_mouse = true
-size_flags_horizontal = 3
-size_flags_vertical = 3
-margin_left = 45.0
-margin_top = 20.0
-margin_right = -47.0
-margin_bottom = 0.0
-text = "Drag and Drop"
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 147.0
+margin_bottom = 37.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 2
+texture = ExtResource( 5 )
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="control_stack/select_provision/drag_n_drop_profile/CenterContainer/VBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 57.0
+margin_right = 147.0
+margin_bottom = 98.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 2
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 4 )
+text = "Drag & Drop
+provision profile here"
+align = 1
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="HButtonArray" type="HButtonArray" parent="ConfirmationDialog/MarginContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="control_stack/select_provision/drag_n_drop_profile" index="1"]
 
-focus_ignore_mouse = false
-focus_stop_mouse = true
+anchor_left = 0.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = 21.0
+margin_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 2
-margin_left = 0.0
-margin_top = 323.0
-margin_right = 296.0
-margin_bottom = 348.0
-flat = true
-button/count = 2
-button/min_button_size = 0.0
-button/align = 1
-button/0/text = "Cancel"
-button/0/tooltip = "Cancel setup of ios-deploy provision"
-button/0/icon = null
-button/1/text = "Next"
-button/1/tooltip = "Go to next step to set up ios-deploy."
-button/1/icon = null
-button/selected = 1
+custom_fonts/font = SubResource( 4 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "BROWSE"
+flat = false
+align = 1
 
-[node name="deploy_settings_menu" parent="." instance=ExtResource( 4 )]
+[node name="Spacing" type="Control" parent="control_stack/select_provision" index="5"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 103.0
+margin_right = 436.0
+margin_bottom = 113.0
+rect_min_size = Vector2( 0, 10 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+_sections_unfolded = [ "Rect", "Size Flags" ]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="control_stack/select_provision" index="6"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 117.0
+margin_right = 436.0
+margin_bottom = 172.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_constants/separation = 0
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Label" type="Label" parent="control_stack/select_provision/VBoxContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 436.0
+margin_bottom = 15.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
+text = "Don't have a Provisioning Profile?"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="automanage_checkbutt" type="CheckButton" parent="control_stack/select_provision/VBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 15.0
+margin_right = 436.0
+margin_bottom = 55.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_fonts/font = SubResource( 3 )
+toggle_mode = true
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Automanage Profile"
+flat = false
+align = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="PreferredSize" type="Node" parent="control_stack/select_provision" index="7"]
+
+script = SubResource( 5 )
+size = Vector2( 436, 172 )
+
+[node name="select_team" type="VBoxContainer" parent="control_stack" index="1"]
 
 editor/display_folded = true
 visible = false
-margin_left = 16.0
-margin_top = 20.0
-margin_right = 24.0
-margin_bottom = 20.0
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 446.0
+margin_bottom = 217.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Rect", "Size Flags" ]
 
-[node name="HButtonArray_1" type="HButtonArray" parent="deploy_settings_menu"]
+[node name="title_box" type="VBoxContainer" parent="control_stack/select_team" index="0"]
 
-anchor_top = 1
-anchor_right = 1
-anchor_bottom = 1
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 2
-size_flags_vertical = 2
-margin_left = 0.0
-margin_top = 40.0
-margin_right = 0.0
-margin_bottom = 10.0
-flat = true
-button/count = 2
-button/min_button_size = 0.0
-button/align = 1
-button/0/text = "Back"
-button/0/tooltip = "Go back to provision profile selection"
-button/0/icon = null
-button/1/text = "Done"
-button/1/tooltip = "Finish up"
-button/1/icon = null
-button/selected = 1
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 436.0
+margin_bottom = 46.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_constants/separation = 0
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
+[node name="title" type="HBoxContainer" parent="control_stack/select_team/title_box" index="0"]
 
-visible = false
-anchor_left = 1
-anchor_right = 1
-anchor_bottom = 1
-focus_ignore_mouse = false
-focus_stop_mouse = true
-size_flags_horizontal = 2
-size_flags_vertical = 2
-margin_left = 350.0
-margin_top = 0.0
-margin_right = 0.0
-margin_bottom = 0.0
-bbcode_enabled = false
-bbcode_text = "# Onboarding
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 436.0
+margin_bottom = 31.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+_sections_unfolded = [ "Size Flags" ]
 
-User select, drag and drop, or browse files for provisioning profile -> fill in team and bundle id from profile -> present overview for user to correct anything.
+[node name="Label" type="Label" parent="control_stack/select_team/title_box/title" index="0"]
 
-Additionally, check if there are any profiles. If there aren't, user may have not installed Xcode or registered their developer's account with xcode."
-visible_characters = -1
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 130.0
+margin_right = 244.0
+margin_bottom = 31.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 1 )
+text = "IOSDEPLOY"
 percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Label_1" type="Label" parent="control_stack/select_team/title_box/title" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 248.0
+margin_right = 306.0
+margin_bottom = 31.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
+text = "TEAM"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="subtitle" type="Label" parent="control_stack/select_team/title_box" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 31.0
+margin_right = 436.0
+margin_bottom = 46.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
+text = "SELECT PROVISIONING TEAM"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="HSeparator" type="HSeparator" parent="control_stack/select_team" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 50.0
+margin_right = 436.0
+margin_bottom = 54.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="team_optbutt" type="OptionButton" parent="control_stack/select_team" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 122.0
+margin_right = 436.0
+margin_bottom = 142.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 6
+toggle_mode = false
+action_mode = 0
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Select Team"
+flat = true
+align = 0
+items = [ "Select Team", null, true, -1, null ]
+selected = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="PreferredSize" type="Node" parent="control_stack/select_team" index="3"]
+
+script = SubResource( 5 )
+size = Vector2( 436, 130 )
+
+[node name="select_bundle" type="VBoxContainer" parent="control_stack" index="2"]
+
+editor/display_folded = true
+visible = false
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 446.0
+margin_bottom = 217.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Rect", "Size Flags" ]
+
+[node name="title_box" type="VBoxContainer" parent="control_stack/select_bundle" index="0"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 436.0
+margin_bottom = 46.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_constants/separation = 0
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="title" type="HBoxContainer" parent="control_stack/select_bundle/title_box" index="0"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 436.0
+margin_bottom = 31.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Label" type="Label" parent="control_stack/select_bundle/title_box/title" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 118.0
+margin_right = 232.0
+margin_bottom = 31.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 1 )
+text = "IOSDEPLOY"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Label_1" type="Label" parent="control_stack/select_bundle/title_box/title" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 236.0
+margin_right = 317.0
+margin_bottom = 31.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 1 )
+custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
+text = "BUNDLE"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="subtitle" type="Label" parent="control_stack/select_bundle/title_box" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 31.0
+margin_right = 436.0
+margin_bottom = 46.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 0
+custom_fonts/font = SubResource( 2 )
+custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
+text = "SET BUNDLE INFORMATION"
+align = 1
+valign = 1
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="HSeparator" type="HSeparator" parent="control_stack/select_bundle" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 50.0
+margin_right = 436.0
+margin_bottom = 54.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Spacing" type="Control" parent="control_stack/select_bundle" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 58.0
+margin_right = 436.0
+margin_bottom = 68.0
+rect_min_size = Vector2( 0, 10 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="VBoxContainer" type="VBoxContainer" parent="control_stack/select_bundle" index="3"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 72.0
+margin_right = 436.0
+margin_bottom = 137.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Label" type="Label" parent="control_stack/select_bundle/VBoxContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 436.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+text = "App Display Name"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="display_name_lineedit" type="LineEdit" parent="control_stack/select_bundle/VBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 436.0
+margin_bottom = 42.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 1
+size_flags_vertical = 1
+text = "My Awesome Game"
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="VBoxContainer_1" type="VBoxContainer" parent="control_stack/select_bundle" index="4"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 141.0
+margin_right = 436.0
+margin_bottom = 207.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 3
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="Label_1" type="Label" parent="control_stack/select_bundle/VBoxContainer_1" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 436.0
+margin_bottom = 14.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+text = "App Bundle Identifier"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="bundle_id_lineedit" type="LineEdit" parent="control_stack/select_bundle/VBoxContainer_1" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 18.0
+margin_right = 436.0
+margin_bottom = 42.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 1
+size_flags_vertical = 1
+text = "com.me.myawesomegame"
+focus_mode = 2
+context_menu_enabled = true
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="PreferredSize" type="Node" parent="control_stack/select_bundle" index="5"]
+
+script = SubResource( 5 )
+size = Vector2( 436, 207 )
+
+[node name="Tween" type="Tween" parent="." index="4"]
+
+repeat = false
+playback_process_mode = 1
+playback_speed = 1.0
+playback/active = false
+playback/repeat = false
+playback/speed = 1.0
+
+[node name="overlay_drawer" type="Node" parent="." index="5"]
+
+script = ExtResource( 6 )
+
+[connection signal="about_to_show" from="." to="control_stack" method="_on_about_to_show"]
+
+[connection signal="confirmed" from="." to="." method="_on_confirmed"]
+
+[connection signal="custom_action" from="." to="." method="_on_custom_action"]
+
+[connection signal="draw" from="control_stack" to="." method="_on_control_stack_draw"]
+
+[connection signal="screen_entering" from="control_stack" to="." method="_on_control_stack_screen_entering"]
+
+[connection signal="item_selected" from="control_stack/select_provision/profile_optbutt" to="." method="_on_profile_optbutt_item_selected"]
+
+[connection signal="toggled" from="control_stack/select_provision/VBoxContainer/automanage_checkbutt" to="." method="_on_automanage_checkbutt_toggled"]
+
+[connection signal="item_selected" from="control_stack/select_team/team_optbutt" to="." method="_on_team_optbutt_item_selected"]
+
+[connection signal="text_changed" from="control_stack/select_bundle/VBoxContainer/display_name_lineedit" to="." method="_on_display_name_lineedit_text_changed"]
+
+[connection signal="text_changed" from="control_stack/select_bundle/VBoxContainer_1/bundle_id_lineedit" to="." method="_on_bundle_id_lineedit_text_changed"]
+
+

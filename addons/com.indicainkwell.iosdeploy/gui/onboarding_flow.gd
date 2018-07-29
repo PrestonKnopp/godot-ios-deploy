@@ -19,6 +19,9 @@ signal validate(this, section, input)
 # ------------------------------------------------------------------------------
 
 
+const stc = preload('../scripts/static.gd')
+
+
 const SECTION = {
 	PROVISION=0,
 	AUTOMANAGE=1,
@@ -183,11 +186,28 @@ func resize_for(screen):
 	@screen: Screen
 	  The screen to resize to
 	"""
+	var func_get_pos
+	var prop_rect_size
+	var prop_rect_pos
+	if stc.get_version().is2():
+		func_get_pos = 'get_pos'
+		prop_rect_size = 'rect/size'
+		prop_rect_pos = 'rect/pos'
+	else:
+		func_get_pos = 'get_position'
+		prop_rect_size = 'rect_size'
+		prop_rect_pos = 'rect_position'
+
+
 	var tween = get_node('Tween')
 
+	# Looks like in v3 size does not tween well because when new controls
+	# are made visible it snaps the parent control size to fit the new
+	# controls. Where in v2 the controls will just overlap until a proper
+	# size is set.
 	var initial_size = get_size()
 	var final_size = screen.node.get_node('PreferredSize').size + _size_difference
-	tween.interpolate_property(self, 'rect/size', initial_size, final_size, transition_time, tween.TRANS_SINE, tween.EASE_OUT)
+	tween.interpolate_property(self, prop_rect_size, initial_size, final_size, transition_time, tween.TRANS_SINE, tween.EASE_OUT)
 	
 	var nearest_control_parent_size
 	if get_parent_control() != null:
@@ -195,9 +215,9 @@ func resize_for(screen):
 	else:
 		nearest_control_parent_size = get_viewport().get_visible_rect().size
 	
-	var initial_pos = get_pos()
-	var final_pos = (nearest_control_parent_size / 2 - final_size / 2).floorf()
-	tween.interpolate_property(self, 'rect/pos', initial_pos, final_pos, transition_time, tween.TRANS_SINE, tween.EASE_OUT)
+	var initial_pos = call(func_get_pos)
+	var final_pos = (nearest_control_parent_size / 2 - final_size / 2).floor()
+	tween.interpolate_property(self, prop_rect_pos, initial_pos, final_pos, transition_time, tween.TRANS_SINE, tween.EASE_OUT)
 
 	tween.start()
 
