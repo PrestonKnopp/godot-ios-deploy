@@ -1,4 +1,5 @@
 # overlay_drawer.gd
+tool
 extends Node
 
 

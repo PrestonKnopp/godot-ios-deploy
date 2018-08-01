@@ -3,6 +3,7 @@
 # A stack for presenting controls and remembering their order.
 # A main control in the stack is referred to as a screen.
 # Manages the children of `stack_root_path` as screens.
+tool
 extends Control
 
 

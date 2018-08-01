@@ -36,6 +36,7 @@ var ProjSettings = stc.get_gdscript('project_settings.gd')
 
 var OneClickButtonScene = stc.get_scene('one_click_deploy_button.tscn')
 var SettingsMenuScene = stc.get_scene('deploy_settings_menu.tscn')
+var OnboardingFlowScene = stc.get_scene('onboarding_flow.tscn')
 
 
 # ------------------------------------------------------------------------------
@@ -51,6 +52,9 @@ var _settings = ProjSettings.new()
 
 var _one_click_button = OneClickButtonScene.instance()
 var _settings_menu = SettingsMenuScene.instance()
+var _flow = OnboardingFlowScene.instance()
+
+var _show_flow = true
 
 
 # ------------------------------------------------------------------------------
@@ -102,12 +106,17 @@ func enable_connections():
 	get_view().connect('settings_button_pressed', self, '_one_click_button_settings_button_pressed')
 	get_view().connect('devices_list_edited', self, '_one_click_button_devices_list_edited')
 
-	get_menu().connect('request_fill', self, '_on_request_fill')
-	get_menu().connect('request_populate', self, '_on_request_populate')
-	get_menu().connect('edited_team', self, '_on_edited_team')
-	get_menu().connect('edited_provision', self, '_on_edited_provision')
-	get_menu().connect('edited_bundle_id', self, '_on_edited_bundle_id')
-	get_menu().connect('finished_editing', self, '_on_finished_editing')
+	if _show_flow:
+		get_menu().connect('onboarded', self, '_on_onboarded')
+		get_menu().connect('populate', self, '_on_populate')
+		get_menu().connect('validate', self, '_on_validate')
+	else:
+		get_menu().connect('request_fill', self, '_on_request_fill')
+		get_menu().connect('request_populate', self, '_on_request_populate')
+		get_menu().connect('edited_team', self, '_on_edited_team')
+		get_menu().connect('edited_provision', self, '_on_edited_provision')
+		get_menu().connect('edited_bundle_id', self, '_on_edited_bundle_id')
+		get_menu().connect('finished_editing', self, '_on_finished_editing')
 
 
 func disable_connections():
@@ -116,12 +125,17 @@ func disable_connections():
 	get_view().disconnect('settings_button_pressed', self, '_one_click_button_settings_button_pressed')
 	get_view().disconnect('devices_list_edited', self, '_one_click_button_devices_list_edited')
 
-	get_menu().disconnect('request_fill', self, '_on_request_fill')
-	get_menu().disconnect('request_populate', self, '_on_request_populate')
-	get_menu().disconnect('edited_team', self, '_on_edited_team')
-	get_menu().disconnect('edited_provision', self, '_on_edited_provision')
-	get_menu().disconnect('edited_bundle_id', self, '_on_edited_bundle_id')
-	get_menu().disconnect('finished_editing', self, '_on_finished_editing')
+	if _show_flow:
+		get_menu().disconnect('onboarded', self, '_on_onboarded')
+		get_menu().disconnect('populate', self, '_on_populate')
+		get_menu().disconnect('validate', self, '_on_validate')
+	else:
+		get_menu().disconnect('request_fill', self, '_on_request_fill')
+		get_menu().disconnect('request_populate', self, '_on_request_populate')
+		get_menu().disconnect('edited_team', self, '_on_edited_team')
+		get_menu().disconnect('edited_provision', self, '_on_edited_provision')
+		get_menu().disconnect('edited_bundle_id', self, '_on_edited_bundle_id')
+		get_menu().disconnect('finished_editing', self, '_on_finished_editing')
 
 
 func cleanup():
@@ -134,7 +148,10 @@ func get_view():
 
 
 func get_menu():
-	return _settings_menu
+	if _show_flow:
+		return _flow
+	else:
+		return _settings_menu
 
 
 func valid_team(team, provision):
@@ -267,6 +284,42 @@ func _initialize_xcode_project(xcode_project):
 # ------------------------------------------------------------------------------
 #                                     Callbacks
 # ------------------------------------------------------------------------------
+
+
+# -- OnboardingFlow
+
+
+func _on_populate(flow, section):
+	if section == flow.SECTION.PROVISION:
+		flow.populate_option_section(section, filter_provisions(_xcode.finder.find_provisions()))
+	if section == flow.SECTION.AUTOMANAGE:
+		flow.automanaged = _xcode_project.automanaged
+	if section == flow.SECTION.TEAM:
+		flow.populate_option_section(section, _xcode.finder.find_teams())
+	if section == flow.SECTION.DISPLAY_NAME:
+		flow.display_name = _xcode_project.name
+	if section == flow.SECTION.BUNDLE_ID:
+		flow.bundle_id = _xcode_project.bundle_id
+
+
+func _on_validate(flow, section, input):
+	var valid = true
+	if section == flow.SECTION.PROVISION:
+		pass
+	if section == flow.SECTION.AUTOMANAGE:
+		pass
+	if section == flow.SECTION.TEAM:
+		valid = flow.provision.team_ids.has(input.id)
+	if section == flow.SECTION.DISPLAY_NAME:
+		pass
+	if section == flow.SECTION.BUNDLE_ID:
+		valid = valid_bundleid(flow.provision, input)
+	flow.validate(section, valid)
+
+
+func _on_onboarded(flow):
+	print("Update Config and XcodeProject with Onboarding Result")
+	flow.hide()
 
 
 # -- SettingsMenu

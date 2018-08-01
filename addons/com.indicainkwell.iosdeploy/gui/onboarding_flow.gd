@@ -1,6 +1,7 @@
 # onboarding_flow.gd
 #
 # Handles the transition, validation, and population of onboarding screens.
+tool
 extends AcceptDialog
 
 
