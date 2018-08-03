@@ -232,7 +232,6 @@ func _ready():
 	_size_difference = get_rect().size - get_node('control_stack/select_provision').get_rect().size
 	get_next_button().set_text('NEXT')
 	add_button('BACK', false, 'BACK')
-	call_deferred('popup_centered')
 
 
 # ------------------------------------------------------------------------------
