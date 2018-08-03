@@ -318,7 +318,18 @@ func _on_validate(flow, section, input):
 
 
 func _on_onboarded(flow):
-	print("Update Config and XcodeProject with Onboarding Result")
+	_xcode_project.provision = flow.provision
+	_xcode_project.automanaged = flow.automanaged
+	_xcode_project.team = flow.team
+	_xcode_project.name = flow.display_name
+	_xcode_project.bundle_id = flow.bundle_id
+
+	_config.set_value('xcode/project', 'provision', flow.provision.to_dict())
+	_config.set_value('xcode/project', 'automanaged', flow.automanaged)
+	_config.set_value('xcode/project', 'team', flow.team.to_dict())
+	_config.set_value('xcode/project', 'name', flow.display_name)
+	_config.set_value('xcode/project', 'bundle_id', flow.bundle_id)
+
 	flow.hide()
 
 
