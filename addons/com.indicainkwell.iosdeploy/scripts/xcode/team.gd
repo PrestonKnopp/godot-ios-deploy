@@ -1,5 +1,5 @@
 # team.gd
-extends Reference
+extends 'Data.gd'
 
 
 var id

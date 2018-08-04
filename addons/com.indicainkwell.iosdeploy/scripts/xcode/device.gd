@@ -1,5 +1,5 @@
 # device.gd
-extends Reference
+extends 'Data.gd'
 
 
 enum Type {

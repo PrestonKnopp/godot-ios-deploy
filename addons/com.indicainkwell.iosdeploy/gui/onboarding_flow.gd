@@ -95,7 +95,7 @@ func set_provision(v):
 	var optbutt = get_section_control(SECTION.PROVISION)
 	for i in optbutt.get_item_count():
 		var meta = optbutt.get_item_metadata(i)
-		if meta == v:
+		if meta != null and meta.equals(v):
 			optbutt.select(i)
 			return
 	assert(false)
@@ -105,7 +105,7 @@ func set_team(v):
 	var optbutt = get_section_control(SECTION.TEAM)
 	for i in optbutt.get_item_count():
 		var meta = optbutt.get_item_metadata(i)
-		if meta == v:
+		if meta != null and meta.equals(v):
 			optbutt.select(i)
 			return
 	assert(false)
