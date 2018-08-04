@@ -173,9 +173,9 @@ func get_section_control(section):
 func get_screen_sections(screen):
 	if screen.index == 0:
 		return [SECTION.PROVISION, SECTION.AUTOMANAGE]
-	elif screen.index == 2:
+	elif screen.index == 1:
 		return [SECTION.TEAM]
-	elif screen.index == 3:
+	elif screen.index == 2:
 		return [SECTION.DISPLAY_NAME, SECTION.BUNDLE_ID]
 	else:
 		return []
