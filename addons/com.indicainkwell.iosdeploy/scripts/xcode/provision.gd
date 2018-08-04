@@ -10,6 +10,7 @@ var bundle_id
 #var entitlements
 var platforms
 var team_ids
+var team_name
 var creation_date
 var expiration_date
 
@@ -23,6 +24,7 @@ func to_dict():
 		bundle_id = bundle_id,
 		platforms = platforms,
 		team_ids = team_ids,
+		team_name = team_name,
 		creation_date = creation_date,
 		expiration_date = expiration_date,
 	}
@@ -37,6 +39,7 @@ func from_dict(d):
 	bundle_id = d['bundle_id']
 	platforms = d['platforms']
 	team_ids = d['team_ids']
+	team_name = d['team_name']
 	creation_date = d['creation_date']
 	expiration_date = d['expiration_date']
 
