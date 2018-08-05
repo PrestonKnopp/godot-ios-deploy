@@ -291,15 +291,52 @@ func _initialize_xcode_project(xcode_project):
 
 func _on_populate(flow, section):
 	if section == flow.SECTION.PROVISION:
-		flow.populate_option_section(section, filter_provisions(_xcode.finder.find_provisions()))
+		var provisions = filter_provisions(_xcode.finder.find_provisions())
+		flow.populate_option_section(section, provisions)
+		if _xcode_project.provision != null:
+			flow.provision = _xcode_project.provision
+		elif provisions.size() > 0:
+			flow.provision = provisions.front()
+	
 	if section == flow.SECTION.AUTOMANAGE:
 		flow.automanaged = _xcode_project.automanaged
+	
 	if section == flow.SECTION.TEAM:
-		flow.populate_option_section(section, _xcode.finder.find_teams())
+		var teams = _xcode.finder.find_teams()
+		var team = null
+
+		if _xcode_project.team != null:
+			team = _xcode_project.team
+			if teams.size() == 0:
+				teams.append(team)
+		else:
+			# populate team with flow's provision
+			var team_id = flow.provision.team_ids.front()
+			if team_id != null:
+				var has_team_id = false
+				for t in teams:
+					if t.id == team_id:
+						has_team_id = true
+						team = t
+						break
+				if not has_team_id:
+					team = _xcode.Team.new()
+					team.id = team_id
+					team.name = flow.provision.team_name
+					teams.append(team)
+
+		flow.populate_option_section(section, teams)
+		flow.team = team
+	
 	if section == flow.SECTION.DISPLAY_NAME:
-		flow.display_name = _xcode_project.name
+		if _xcode_project.name != null:
+			flow.display_name = _xcode_project.name
+	
 	if section == flow.SECTION.BUNDLE_ID:
-		flow.bundle_id = _xcode_project.bundle_id
+		if _xcode_project.bundle_id != null:
+			flow.bundle_id = _xcode_project.bundle_id
+		else:
+			flow.bundle_id = flow.provision.bundle_id
 
 
 func _on_validate(flow, section, input):
@@ -313,7 +350,7 @@ func _on_validate(flow, section, input):
 	if section == flow.SECTION.DISPLAY_NAME:
 		pass
 	if section == flow.SECTION.BUNDLE_ID:
-		valid = valid_bundleid(flow.provision, input)
+		valid = valid_bundleid(input, flow.provision)
 	flow.validate(section, valid)
 
 
