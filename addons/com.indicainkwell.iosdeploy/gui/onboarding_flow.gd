@@ -23,7 +23,7 @@ signal validate(this, section, input)
 const stc = preload('../scripts/static.gd')
 
 
-const SECTION = {
+enum SECTION {
 	PROVISION=0,
 	AUTOMANAGE=1,
 	TEAM=2,
@@ -37,7 +37,9 @@ const SECTION = {
 # ------------------------------------------------------------------------------
 
 
+# Time it takes to transition from screen to screen
 export(float) var transition_time = 0.25
+# The colors to draw for section validation
 export(Color) var valid_color = Color(0.0, 1.0, 0.0, 0.25)
 export(Color) var invalid_color = Color(1.0, 0.0, 0.0, 0.25)
 
@@ -47,6 +49,7 @@ export(Color) var invalid_color = Color(1.0, 0.0, 0.0, 0.25)
 # ------------------------------------------------------------------------------
 
 
+# The size diff between the initial size of control_stack and the first screen
 var _size_difference = Vector2()
 
 
@@ -83,49 +86,27 @@ func get_back_button():
 
 # -- Inputs
 
-var provision setget set_provision,get_provision
-var automanaged setget set_automanaged,get_automanaged
-var team setget set_team,get_team
-var display_name setget set_display_name,get_display_name
-var bundle_id setget set_bundle_id,get_bundle_id
+var provision    setget set_provision,    get_provision
+var automanaged  setget set_automanaged,  get_automanaged
+var team         setget set_team,         get_team
+var display_name setget set_display_name, get_display_name
+var bundle_id    setget set_bundle_id,    get_bundle_id
 
 # -- Inputs Setters
 
-func set_provision(v):
-	var optbutt = get_section_control(SECTION.PROVISION)
-	for i in optbutt.get_item_count():
-		var meta = optbutt.get_item_metadata(i)
-		if meta != null and meta.equals(v):
-			optbutt.select(i)
-			return
-	assert(false)
-func set_automanaged(v):
-	get_section_control(SECTION.AUTOMANAGE).set_pressed(v)
-func set_team(v):
-	var optbutt = get_section_control(SECTION.TEAM)
-	for i in optbutt.get_item_count():
-		var meta = optbutt.get_item_metadata(i)
-		if meta != null and meta.equals(v):
-			optbutt.select(i)
-			return
-	assert(false)
-func set_display_name(v):
-	get_section_control(SECTION.DISPLAY_NAME).set_text(v)
-func set_bundle_id(v):
-	get_section_control(SECTION.BUNDLE_ID).set_text(v)
+func set_provision(v):    set_section_value(PROVISION, v)
+func set_automanaged(v):  set_section_value(AUTOMANAGE, v)
+func set_team(v):         set_section_value(TEAM, v)
+func set_display_name(v): set_section_value(DISPLAY_NAME, v)
+func set_bundle_id(v):    set_section_value(BUNDLE_ID, v)
 
 # -- Inputs Getters
 
-func get_provision():
-	return get_section_control(SECTION.PROVISION).get_selected_metadata()
-func get_automanaged():
-	return get_section_control(SECTION.AUTOMANAGE).is_pressed()
-func get_team():
-	return get_section_control(SECTION.TEAM).get_selected_metadata()
-func get_display_name():
-	return get_section_control(SECTION.DISPLAY_NAME).get_text()
-func get_bundle_id():
-	return get_section_control(SECTION.BUNDLE_ID).get_text()
+func get_provision():    return get_section_value(PROVISION)
+func get_automanaged():  return get_section_value(AUTOMANAGE)
+func get_team():         return get_section_value(TEAM)
+func get_display_name(): return get_section_value(DISPLAY_NAME)
+func get_bundle_id():    return get_section_value(BUNDLE_ID)
 
 
 # ------------------------------------------------------------------------------
@@ -138,7 +119,7 @@ func populate_option_section(section, values=[]):
 	Populate option section with multiple values. The rest of the sections
 	can be populated with their respective setter.
 	"""
-	assert(section in [SECTION.TEAM, SECTION.PROVISION])
+	assert(section in [TEAM, PROVISION])
 	var optbutt = get_section_control(section)
 	optbutt.clear()
 	for i in range(values.size()):
@@ -156,27 +137,67 @@ func validate(section, valid):
 	overlay.over(control, valid_color if valid else invalid_color)
 
 
+func get_section_value(section):
+	"""
+	Returns the value held in `section` control.
+	@return Any?
+	"""
+	var section_control = get_section_control(section)
+	if section in [PROVISION, TEAM]:
+		return section_control.get_selected_metadata()
+	elif section == AUTOMANAGE:
+		return section_control.is_pressed()
+	elif section in [DISPLAY_NAME, BUNDLE_ID]:
+		return section_control.get_text()
+
+
+func set_section_value(section, value):
+	"""
+	Set the `section`'s control value.
+	"""
+	var section_control = get_section_control(section)
+	if section in [PROVISION, TEAM]:
+		for i in section_control.get_item_count():
+			var meta = section_control.get_item_metadata(i)
+			if meta != null and meta.equals(value):
+				section_control.select(i)
+				return
+		assert(false) # invalid input given
+	elif section == AUTOMANAGE:
+		section_control.set_pressed(value)
+	elif section in [DISPLAY_NAME, BUNDLE_ID]:
+		section_control.set_text(value)
+
+
 func get_section_control(section):
-	assert(section >= SECTION.PROVISION and section <= SECTION.BUNDLE_ID)
-	if section == SECTION.PROVISION:
+	"""
+	Get the `section`'s control.
+	@return Control
+	"""
+	assert(section >= PROVISION and section <= BUNDLE_ID)
+	if section == PROVISION:
 		return get_node('control_stack/select_provision/profile_optbutt')
-	elif section == SECTION.AUTOMANAGE:
+	elif section == AUTOMANAGE:
 		return get_node('control_stack/select_provision/VBoxContainer/automanage_checkbutt')
-	elif section == SECTION.TEAM:
+	elif section == TEAM:
 		return get_node('control_stack/select_team/team_optbutt')
-	elif section == SECTION.DISPLAY_NAME:
+	elif section == DISPLAY_NAME:
 		return get_node('control_stack/select_bundle/VBoxContainer/display_name_lineedit')
-	elif section == SECTION.BUNDLE_ID:
+	elif section == BUNDLE_ID:
 		return get_node('control_stack/select_bundle/VBoxContainer_1/bundle_id_lineedit')
 
 
 func get_screen_sections(screen):
+	"""
+	Get the sections that appear in screen.
+	@return [
+	"""
 	if screen.index == 0:
-		return [SECTION.PROVISION, SECTION.AUTOMANAGE]
+		return [PROVISION, AUTOMANAGE]
 	elif screen.index == 1:
-		return [SECTION.TEAM]
+		return [TEAM]
 	elif screen.index == 2:
-		return [SECTION.DISPLAY_NAME, SECTION.BUNDLE_ID]
+		return [DISPLAY_NAME, BUNDLE_ID]
 	else:
 		return []
 
@@ -268,8 +289,15 @@ func _on_control_stack_screen_entering( this, from_screen, screen ):
 	Resizes dialog, enables and disables back button, and sets next button
 	to DONE when it is the last screen. Additionally emits populate.
 	"""
-	for section in get_screen_sections(screen):
+
+	# Populate screen sections then validate because sections can depend
+	# on other sections in the previous or same screens.
+	var screen_sections = get_screen_sections(screen)
+	for section in screen_sections:
 		emit_signal('populate', self, section)
+	for section in screen_sections:
+		emit_signal('validate', self, section, get_section_value(section))
+
 	get_back_button().set_disabled(screen.index == 0)
 	if screen.index + 1 >= this.get_screen_count():
 		get_next_button().set_text('DONE')
@@ -287,22 +315,22 @@ func _on_control_stack_draw():
 func _on_profile_optbutt_item_selected( ID ):
 	var optbutt = get_node('control_stack/select_provision/profile_optbutt')
 	var meta = optbutt.get_selected_metadata()
-	emit_signal('validate', self, SECTION.PROVISION, meta)
+	emit_signal('validate', self, PROVISION, meta)
 
 
 func _on_automanage_checkbutt_toggled( pressed ):
-	emit_signal('validate', self, SECTION.AUTOMANAGE, pressed)
+	emit_signal('validate', self, AUTOMANAGE, pressed)
 
 
 func _on_team_optbutt_item_selected( ID ):
 	var optbutt = get_node('control_stack/select_team/team_optbutt')
 	var meta = optbutt.get_selected_metadata()
-	emit_signal('validate', self, SECTION.TEAM, meta)
+	emit_signal('validate', self, TEAM, meta)
 
 
 func _on_display_name_lineedit_text_changed( text ):
-	emit_signal('validate', self, SECTION.DISPLAY_NAME, text)
+	emit_signal('validate', self, DISPLAY_NAME, text)
 
 
 func _on_bundle_id_lineedit_text_changed( text ):
-	emit_signal('validate', self, SECTION.BUNDLE_ID, text)
+	emit_signal('validate', self, BUNDLE_ID, text)
