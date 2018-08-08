@@ -51,6 +51,9 @@ export(Color) var invalid_color = Color(1.0, 0.0, 0.0, 0.25)
 
 # The size diff between the initial size of control_stack and the first screen
 var _size_difference = Vector2()
+# The validity of section. Indexed by the SECTION enum. i.e.
+# _section_validity[0] is PROVISION is validity flag.
+var _section_validity = []
 
 
 # ------------------------------------------------------------------------------
@@ -130,11 +133,19 @@ func populate_option_section(section, values=[]):
 
 func validate(section, valid):
 	"""
-	Set visually the validity of a section.
+	Set section validity.
 	"""
 	var control = get_section_control(section)
 	var overlay = get_node('overlay_drawer')
 	overlay.over(control, valid_color if valid else invalid_color)
+	_section_validity[section] = valid
+
+
+func is_screen_valid():
+	for section in get_screen_sections(get_node('control_stack').screen):
+		if _section_validity[section] == false:
+			return false
+	return true
 
 
 func get_section_value(section):
@@ -245,12 +256,23 @@ func resize_for(screen):
 
 
 # ------------------------------------------------------------------------------
+#                                  Private Methods
+# ------------------------------------------------------------------------------
+
+
+func _request_validation(section, value):
+	emit_signal('validate', self, section, value)
+	get_next_button().set_disabled(not is_screen_valid())
+
+
+# ------------------------------------------------------------------------------
 #                                  Node Callbacks
 # ------------------------------------------------------------------------------
 
 
 func _ready():
 	_size_difference = get_rect().size - get_node('control_stack/select_provision').get_rect().size
+	_section_validity.resize(SECTION.size())
 	get_next_button().set_text('NEXT')
 	add_button('BACK', false, 'BACK')
 
@@ -296,7 +318,7 @@ func _on_control_stack_screen_entering( this, from_screen, screen ):
 	for section in screen_sections:
 		emit_signal('populate', self, section)
 	for section in screen_sections:
-		emit_signal('validate', self, section, get_section_value(section))
+		_request_validation(section, get_section_value(section))
 
 	get_back_button().set_disabled(screen.index == 0)
 	if screen.index + 1 >= this.get_screen_count():
@@ -315,22 +337,22 @@ func _on_control_stack_draw():
 func _on_profile_optbutt_item_selected( ID ):
 	var optbutt = get_node('control_stack/select_provision/profile_optbutt')
 	var meta = optbutt.get_selected_metadata()
-	emit_signal('validate', self, PROVISION, meta)
+	_request_validation(PROVISION, meta)
 
 
 func _on_automanage_checkbutt_toggled( pressed ):
-	emit_signal('validate', self, AUTOMANAGE, pressed)
+	_request_validation(AUTOMANAGE, pressed)
 
 
 func _on_team_optbutt_item_selected( ID ):
 	var optbutt = get_node('control_stack/select_team/team_optbutt')
 	var meta = optbutt.get_selected_metadata()
-	emit_signal('validate', self, TEAM, meta)
+	_request_validation(TEAM, meta)
 
 
 func _on_display_name_lineedit_text_changed( text ):
-	emit_signal('validate', self, DISPLAY_NAME, text)
+	_request_validation(DISPLAY_NAME, text)
 
 
 func _on_bundle_id_lineedit_text_changed( text ):
-	emit_signal('validate', self, BUNDLE_ID, text)
+	_request_validation(BUNDLE_ID, text)

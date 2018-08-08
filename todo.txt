@@ -76,7 +76,7 @@
 	  [ ] Extract parts of Controller into subcontrollers
 	  [X] Validate when entering a new screen
 	  [X] Validate on input
-	  [ ] disable next button depending on valid state
+	  [X] disable next button depending on valid state
 [ ] design apple button presentation and build flow
 	- extract from export options or have user select or drag profile 
 		- if user does not have profile
