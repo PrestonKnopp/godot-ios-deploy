@@ -245,10 +245,11 @@ func _on_confirmed():
 	"""
 	Pushes next screen and emits onboarded when last screen is confirmed.
 	"""
+	var stack = get_node('control_stack')
 	if get_next_button().get_text() == 'DONE':
 		emit_signal('onboarded', self)
+		stack.reset()
 		return
-	var stack = get_node('control_stack')
 	stack.push(stack.screen.index + 1)
 
 
