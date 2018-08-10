@@ -32,6 +32,10 @@ const shell = {
 }
 
 
+static func isa(obj, type):
+	return get_gdscript('isa.gd').test(obj, type)
+
+
 static func get_version():
 	# can't use get_gdscript here because
 	# it's recursive
@@ -40,7 +44,7 @@ static func get_version():
 		path = GDSCRIPTS_2
 	else:
 		path = GDSCRIPTS_3
-
+	
 	return load(path.plus_file('version.gd')).new()
 
 
@@ -54,7 +58,6 @@ static func get_logger():
 		print('ERROR GETTING LOGGER NODE %s IN GROUP %s, GOT %s INSTEAD'%[LOGGER_DOMAIN,PLUGIN_DOMAIN,nodes[0].get_name()])
 		return null
 	return nodes[0]
-
 
 
 static func globalize_path(path):

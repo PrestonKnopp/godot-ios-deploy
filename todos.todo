@@ -5,8 +5,7 @@
 
 [ ] read export settings for ios and use it to prefill
 [ ] use export template for environment or see what's best
-	[ ] if environment has XDG_*, templates will install at XDG_*. Otherwise it's
-	  installed in the Application Support directory.
+	[ ] if environment has XDG_*, templates will install at XDG_*. Otherwise it's installed in the Application Support directory.
 [ ] properly destroy threads before exiting
 [ ] error parsing and displaying
 	[ ] shell
@@ -64,17 +63,18 @@
 	[X] Find someway to detect if profile is signed.
     [X] security prints "failed to add data to decoder: UNKNOWN (-8183(d)" when not signed.
 
-
 # -- GUI Todos
 
 [ ] ! make onboarding flow
 	[ ] Create an interface that will connect editing and committing changes to the onboarding screens and elements.
-		[ ] Create Controller hierarchy as node tree
-		[ ] Create processing methodology for controller node tree
 		[ ] Extract parts of Controller into subcontrollers
+			[ ] xcode_project
+			[X] onboarding controller
 		[X] Validate when entering a new screen
 		[X] Validate on input
 		[X] disable next button depending on valid state
+		[X] Create Controller hierarchy as node tree
+		[X] Create processing methodology for controller node tree
 [ ] design apple button presentation and build flow
 	[ ] extract from export options or have user select or drag profile 
 		[ ] if user does not have profile

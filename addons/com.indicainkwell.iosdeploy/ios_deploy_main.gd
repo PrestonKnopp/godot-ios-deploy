@@ -15,7 +15,7 @@ const stc = preload('scripts/static.gd')
 # ------------------------------------------------------------------------------
 
 
-var Controller = stc.get_gdscript('controller.gd')
+var MainController = stc.get_gdscript('controllers/main_controller.gd')
 var Logger = stc.get_gdscript('logger.gd')
 
 
@@ -24,7 +24,7 @@ var Logger = stc.get_gdscript('logger.gd')
 # ------------------------------------------------------------------------------
 
 
-var controller
+var main_controller
 var _log
 
 
@@ -34,21 +34,15 @@ var _log
 
 
 func _enter_tree():
-	_initialize_logger()
-
+	_init_logger()
+	
 	if not meets_software_requirements():
 		return
-
+	
 	_log.verbose('Meets software requirements')
-	controller = Controller.new()
-	add_control_to_container(CONTAINER_TOOLBAR, controller.get_view())
-	add_menu(controller.get_menu())
-
-
-func _exit_tree():
-	if controller != null:
-		controller.cleanup()
-		controller = null
+	
+	main_controller = MainController.new()
+	add_child(main_controller)
 
 
 # ------------------------------------------------------------------------------
@@ -56,7 +50,7 @@ func _exit_tree():
 # ------------------------------------------------------------------------------
 
 
-func _initialize_logger():
+func _init_logger():
 	"""
 	Add logger as a child of plugin and in it's own group to simulate a
 	global that can be accessed via stc.get_logger()
