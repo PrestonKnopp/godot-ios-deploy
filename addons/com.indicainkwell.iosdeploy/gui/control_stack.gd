@@ -106,12 +106,12 @@ func goto_last():
 
 func goto(idx):
 	assert(has_screen_idx(idx))
-	var next_screen = get_screen(idx)
-	if screen != null and screen.index != idx:
-		emit_signal('screen_exiting', self, screen, next_screen)
-		screen.node.hide()
-	emit_signal('screen_entering', self, screen, next_screen)
-	screen = next_screen
+	var from_screen = screen
+	screen = get_screen(idx)
+	if from_screen != null and from_screen.index != idx:
+		emit_signal('screen_exiting', self, from_screen, screen)
+		from_screen.node.hide()
+	emit_signal('screen_entering', self, from_screen, screen)
 	screen.node.show()
 
 
