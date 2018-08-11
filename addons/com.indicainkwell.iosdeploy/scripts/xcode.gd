@@ -75,11 +75,11 @@ func make_project_async(bundle_id=null, display_name=null):
 		template.disconnect('copy_installed', self, '_on_template_copy_installed')
 	template.connect('copy_installed', self, '_on_template_copy_installed', [bundle_id, display_name], CONNECT_ONESHOT)
 
-	if not template.copy_exists():
-		return template.copy_install_async()
+	if template.copy_exists():
+		_made_project(template, null, bundle_id, display_name)
+	else:
+		template.copy_install_async()
 
-	_made_project(template, null, bundle_id, display_name)
-	return OK
 
 
 func _made_project(template, result, bundle_id, display_name):
@@ -97,5 +97,5 @@ func _made_project(template, result, bundle_id, display_name):
 
 
 func _on_template_copy_installed(template, result, bundle_id, display_name):
-	# For now, assume copy succeeded if this callback has been called.
+	# TODO: For now, assume copy succeeded if this callback has been called.
 	_made_project(template, result, bundle_id, display_name)

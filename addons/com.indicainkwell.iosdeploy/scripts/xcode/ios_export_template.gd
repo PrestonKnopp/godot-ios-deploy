@@ -8,6 +8,7 @@ extends Reference
 
 
 signal copy_installed(this, result)
+signal copy_install_failed(this, error)
 
 
 # ------------------------------------------------------------------------------
@@ -136,22 +137,17 @@ func copy_remove():
 func copy_install_async():
 	"""
 	Async install copy of xcode template for ios-deploy.
-
-	@return ERR_DOES_NOT_EXIST
-		When godot xcode template does not exist
-	@return OK
-		When able to attempt copy
+	@emits copy_install_failed, copy_installed
 	"""
-	if not exists():
-		_log.error('Godot iOS Xcode Template not installed.')
-		return ERR_DOES_NOT_EXIST
-
-	if stc.get_version().is2():
-		_copy_ios_export_template_v2()
+	if exists():
+		if stc.get_version().is2():
+			_copy_ios_export_template_v2()
+		else:
+			_copy_ios_export_template_v3()
 	else:
-		_copy_ios_export_template_v3()
+		_log.error('Godot iOS Xcode Template not installed.')
+		emit_signal('copy_install_failed', self, ERR_DOES_NOT_EXIST)
 
-	return OK
 
 
 # ------------------------------------------------------------------------------

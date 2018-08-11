@@ -73,11 +73,9 @@ func _init_onboarding_flow_controller():
 
 
 func _init_xcode():
+	_xcode.template.connect('copy_install_failed', self, '_on_xcode_template_copy_install_failed')
 	_xcode.connect('made_project', self, '_on_xcode_made_project')
-	# TODO: refactor make_project_async returning err code into
-	#       a signal
-	if _xcode.make_project_async() == ERR_DOES_NOT_EXIST:
-		xcode_template_does_not_exist()
+	_xcode.make_project_async()
 
 
 func _init_xcode_project():
@@ -151,25 +149,22 @@ func execute_deploy_pipeline():
 # -- Xcode
 
 
-func xcode_template_does_not_exist():
-	# hook up presenting_hover_menu to check if xcode can make project
-	# which will make it if possible
-	view.connect('presenting_hover_menu', self, 'check_xcode_make_project')
-
-
 func check_xcode_make_project(oneclickbutton=null):
-	if _xcode.make_project_async() == ERR_DOES_NOT_EXIST:
+	if _xcode.template.exists():
+		stc.get_logger().debug('Xcode template installed after init. Attempting to make project...')
+		view.disconnect('presenting_hover_menu', self, 'check_xcode_make_project')
+		_xcode.make_project_async()
+	else:
 		view.get_node('hover_timer').stop()
 		view.get_node('hover_panel').call_deferred('hide')
 
+		# TODO: just use OS.alert()
 		var alert = AcceptDialog.new()
 		alert.set_text('Install Godot Export Templates to Deploy Project')
 		alert.connect('confirmed', alert, 'queue_free')
 
 		view.add_child(alert)
 		alert.popup_centered()
-	else:
-		view.disconnect('presenting_hover_menu', self, 'check_xcode_make_project')
 
 
 # -- Xcode Project
@@ -445,6 +440,15 @@ func _on_view_devices_list_edited(oneclickbutton):
 
 
 # -- Xcode
+
+
+func _on_xcode_template_copy_install_failed(template, error):
+	if error == ERR_DOES_NOT_EXIST:
+		# Hook up presenting hover menu so that we can make xcode
+		# project at a later time when template has been installed by
+		# user
+		view.connect('presenting_hover_menu', self, 'check_xcode_make_project')
+
 
 
 func _on_xcode_made_project(xcode, result, project):
