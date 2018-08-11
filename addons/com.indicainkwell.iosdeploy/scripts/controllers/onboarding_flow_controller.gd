@@ -73,10 +73,23 @@ func _on_populate(flow, section):
 			flow.display_name = _xcode.project.name
 	
 	if section == flow.SECTION.BUNDLE_ID:
-		if _xcode.project.bundle_id != null:
+		# Use saved _xcode.project.bundle_id when
+		# - flow.provision == null
+		# - flow.provision == project.provision
+		# - flow.provision is * and it matches project
+
+		if get_parent().valid_bundleid(_xcode.project.bundle_id, flow.provision) or\
+		   flow.provision == null:
 			flow.bundle_id = _xcode.project.bundle_id
 		else:
 			flow.bundle_id = flow.provision.bundle_id
+
+		if flow.provision != null and flow.provision.bundle_id != null:
+			# Disable bundle_id editing when provision is not
+			# a wild card
+			flow.get_section_control(section).set_editable(
+				flow.provision.bundle_id.find('*') > -1
+			)
 
 
 func _on_validate(flow, section, input):

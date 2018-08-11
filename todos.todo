@@ -69,10 +69,10 @@
 
 # -- GUI Todos
 
-[ ] onboarding flow
-	[ ] if provision is not a wild card then
-		[ ] bundleid shouldn't be changed
-		[ ] bundle id should also be filled in according to provision
+[X] onboarding flow
+	[X] if provision is not a wild card then
+		[X] bundleid shouldn't be changed
+		[X] bundle id should also be filled in according to provision
 [X] make onboarding flow
 	[X] Create an interface that will connect editing and committing changes to the onboarding screens and elements.
 		[X] Validate when entering a new screen
