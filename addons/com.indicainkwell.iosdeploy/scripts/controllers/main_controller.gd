@@ -35,12 +35,8 @@ var SettingsMenuScene = stc.get_scene('deploy_settings_menu.tscn')
 # ------------------------------------------------------------------------------
 
 
-# TODO: Refactor XcodeProject into Xcode as Project
 var _xcode = Xcode.new()
-var _xcode_project
 
-# TODO: Refactor xcode_project to handle config
-#       Maybe make an xcode_project_controller
 var _config = ConfigFile.new()
 var _settings = ProjSettings.new()
 var _onboarding_flow_controller = OnboardFlCtl.new()
@@ -85,10 +81,13 @@ func _init_xcode():
 
 
 func _init_xcode_project():
-	_xcode_project.set_config(_config)
-	_xcode_project.connect('built', self, '_on_xcode_project_built')
-	_xcode_project.connect('deployed', self, '_on_device_deployed')
-	stc.get_logger().debug('Xcode Project App Path: ' + _xcode_project.get_app_path())
+	"""
+	Only call after _xcode.make_project_async() successfully completes.
+	"""
+	_xcode.project.set_config(_config)
+	_xcode.project.connect('built', self, '_on_xcode_project_built')
+	_xcode.project.connect('deployed', self, '_on_device_deployed')
+	stc.get_logger().debug('Xcode Project App Path: ' + _xcode.project.get_app_path())
 
 
 # ------------------------------------------------------------------------------
@@ -119,9 +118,9 @@ func get_menu():
 func execute_deploy_pipeline():
 	# Pipeline: Build Project -> Then Deploy to Devices
 	emit_signal('began_pipeline', self)
-	_update_xcode_project_custom_info(_xcode_project, _settings)
+	_update_xcode_project_custom_info(_xcode.project, _settings)
 	view.update_build_progress(0.3, 'Building Xcode Project')
-	_xcode_project.build()
+	_xcode.project.build()
 
 
 
@@ -147,10 +146,6 @@ func check_xcode_make_project(oneclickbutton=null):
 
 
 # -- Xcode Project
-
-
-func is_xcode_project_ready():
-	return _xcode_project != null
 
 
 func _update_xcode_project_custom_info(xcode_project, settings):
@@ -194,15 +189,15 @@ func valid_bundleid(bundle_id, provision):
 
 func valid_xcode_project():
 	# Conditions for automanaged project to be valid
-	if _xcode_project.provision == null and _xcode_project.automanaged and\
-	   _xcode_project.team      != null:
+	if _xcode.project.provision == null and _xcode.project.automanaged and\
+	   _xcode.project.team      != null:
 		   return true
 	# Conditions for non automanaged project to be valid
-	return _xcode_project        != null and\
-	   (_xcode_project.provision != null and\
-	    _xcode_project.team      != null and\
-	    valid_bundleid(_xcode_project.bundle_id, _xcode_project.provision) and\
-	    valid_team(_xcode_project.team, _xcode_project.provision))
+	return _xcode.project        != null and\
+	   (_xcode.project.provision != null and\
+	    _xcode.project.team      != null and\
+	    valid_bundleid(_xcode.project.bundle_id, _xcode.project.provision) and\
+	    valid_team(_xcode.project.team, _xcode.project.provision))
 
 
 func filter_provisions(provisions):
@@ -257,38 +252,38 @@ func _on_request_populate(menu):
 
 func _on_request_fill(menu):
 	print('filling')
-	menu.fill_devices_group(_xcode_project.get_devices())
+	menu.fill_devices_group(_xcode.project.get_devices())
 	menu.fill_bundle_group(
-		_xcode_project.name,
-		_xcode_project.bundle_id
+		_xcode.project.name,
+		_xcode.project.bundle_id
 	)
 	menu.fill_identity_group(
-		_xcode_project.team,
-		_xcode_project.automanaged,
-		_xcode_project.provision
+		_xcode.project.team,
+		_xcode.project.automanaged,
+		_xcode.project.provision
 	)
 
 
 func _on_edited_team(menu, new_team):
 	if new_team == null:
-		_xcode_project.team = null
+		_xcode.project.team = null
 		return
 
 	# assert(new_team extends _xcode.Team)
-	if _xcode_project.team != null and\
-	   _xcode_project.team.id == new_team.id and\
-	   _xcode_project.team.name == new_team.name:
+	if _xcode.project.team != null and\
+	   _xcode.project.team.id == new_team.id and\
+	   _xcode.project.team.name == new_team.name:
 		   return
 
 	# make sure to set new team
-	_xcode_project.team = new_team
+	_xcode.project.team = new_team
 
-	if _xcode_project.provision == null:
+	if _xcode.project.provision == null:
 		return
 
 	# Notify menu if provision is invalid due to new team
 
-	if _xcode_project.provision.team_ids.has(new_team.id):
+	if _xcode.project.provision.team_ids.has(new_team.id):
 		menu.validate_provision()
 		menu.validate_team()
 	else:
@@ -298,22 +293,22 @@ func _on_edited_team(menu, new_team):
 
 func _on_edited_provision(menu, new_provision):
 	if new_provision == null:
-		_xcode_project.provision = null
-		if not _xcode_project.automanaged:
+		_xcode.project.provision = null
+		if not _xcode.project.automanaged:
 			menu.invalidate_provision()
 		return
 
 	# assert(new_provision extends _xcode.Provision)
-	if _xcode_project.provision != null and _xcode_project.provision.id == new_provision.id:
+	if _xcode.project.provision != null and _xcode.project.provision.id == new_provision.id:
 		return
 
 	# make sure to set new provision
-	_xcode_project.provision = new_provision
+	_xcode.project.provision = new_provision
 
 	# Notify menu if teams and bundleid are invalid due to new provision
 
-	if _xcode_project.team != null:
-		if new_provision.team_ids.has(_xcode_project.team.id):
+	if _xcode.project.team != null:
+		if new_provision.team_ids.has(_xcode.project.team.id):
 			menu.validate_team()
 		else:
 			# team is invalid as it is not supported by provision
@@ -321,16 +316,16 @@ func _on_edited_provision(menu, new_provision):
 
 	# Check bundleid
 
-	if _xcode_project.bundle_id == null or _xcode_project.bundle_id.empty():
+	if _xcode.project.bundle_id == null or _xcode.project.bundle_id.empty():
 		return
 
-	if valid_bundleid(_xcode_project.bundle_id, new_provision):
+	if valid_bundleid(_xcode.project.bundle_id, new_provision):
 		menu.validate_bundle_id()
 	else:
-		_xcode_project.bundle_id = new_provision.bundle_id
+		_xcode.project.bundle_id = new_provision.bundle_id
 		# if bundle_id is a wildcard, invalidate so user
 		# will edit
-		if _xcode_project.bundle_id.find('*') > -1:
+		if _xcode.project.bundle_id.find('*') > -1:
 			menu.invalidate_bundle_id()
 		_on_request_fill(menu)
 
@@ -338,10 +333,10 @@ func _on_edited_provision(menu, new_provision):
 
 
 func _on_edited_bundle_id(menu, new_bundle_id):
-	_xcode_project.bundle_id = new_bundle_id
-	if _xcode_project.provision == null:
+	_xcode.project.bundle_id = new_bundle_id
+	if _xcode.project.provision == null:
 		return
-	if valid_bundleid(new_bundle_id, _xcode_project.provision):
+	if valid_bundleid(new_bundle_id, _xcode.project.provision):
 		menu.validate_bundle_id()
 	else:
 		menu.invalidate_bundle_id()
@@ -349,16 +344,16 @@ func _on_edited_bundle_id(menu, new_bundle_id):
 
 func _on_finished_editing(menu):
 	var bundle = menu.get_bundle_group()
-	_xcode_project.bundle_id = bundle.id
-	_xcode_project.name = bundle.display
+	_xcode.project.bundle_id = bundle.id
+	_xcode.project.name = bundle.display
 
 	var identity = menu.get_identity_group()
-	_xcode_project.team = identity.team
-	_xcode_project.provision = identity.provision
-	_xcode_project.automanaged = identity.automanaged
-	_xcode_project.set_devices(menu.get_active_devices())
+	_xcode.project.team = identity.team
+	_xcode.project.provision = identity.provision
+	_xcode.project.automanaged = identity.automanaged
+	_xcode.project.set_devices(menu.get_active_devices())
 
-	_xcode_project.update()
+	_xcode.project.update()
 
 
 # -- OneClickButton (view)
@@ -366,7 +361,7 @@ func _on_finished_editing(menu):
 
 func _on_view_pressed():
 	stc.get_logger().debug('OneClickButton: Pressed')
-	if is_xcode_project_ready():
+	if _xcode.is_project_ready():
 		if not valid_xcode_project():
 			get_menu().popup_centered()
 		else:
@@ -375,22 +370,22 @@ func _on_view_pressed():
 
 func _on_view_presenting_hover_menu(oneclickbutton):
 	stc.get_logger().debug('OneClickButton: Presenting Hover Menu')
-	if is_xcode_project_ready():
+	if _xcode.is_project_ready():
 		oneclickbutton.set_project_valid(valid_xcode_project())
 		oneclickbutton.devices_list_populate(_xcode.finder.find_devices())
-		oneclickbutton.devices_list_set_active(_xcode_project.get_devices())
+		oneclickbutton.devices_list_set_active(_xcode.project.get_devices())
 
 
 func _on_view_settings_button_pressed(oneclickbutton):
 	stc.get_logger().debug('OneClickButton: Settings Button Pressed')
-	if is_xcode_project_ready():
+	if _xcode.is_project_ready():
 		get_menu().popup_centered()
 
 
 func _on_view_devices_list_edited(oneclickbutton):
 	stc.get_logger().debug('OneClickButton: Devices List Edited')
-	if is_xcode_project_ready():
-		_xcode_project.set_devices(
+	if _xcode.is_project_ready():
+		_xcode.project.set_devices(
 			oneclickbutton.get_devices_list().get_active()
 		)
 
@@ -409,13 +404,11 @@ func _on_xcode_template_copy_install_failed(template, error):
 
 func _on_xcode_made_project(xcode, result, project):
 	stc.get_logger().debug('Xcode: Made Xcode Project')
-	_xcode_project = project
 	_init_xcode_project()
-	_onboarding_flow_controller.set_xcode_project(project)
 	view.set_disabled(false)
 
 
-# -- XcodeProject
+# -- Project
 
 
 func _on_xcode_project_built(xcode_project, result):

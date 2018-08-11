@@ -1,4 +1,7 @@
-# xcode_project.gd
+# xcode/project.gd
+#
+# Loosely reflects a project.xcodeproj by managing bundle id, name, team,
+# provision, info plist, and builds and deploys to devices.
 extends Reference
 
 

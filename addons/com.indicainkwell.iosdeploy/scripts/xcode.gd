@@ -25,7 +25,7 @@ const stc = preload('static.gd')
 
 var PList = stc.get_gdscript('xcode/plist.gd')
 var PBX = stc.get_gdscript('xcode/pbx.gd')
-var Project = stc.get_gdscript('xcode/xcode_project.gd')
+var Project = stc.get_gdscript('xcode/project.gd')
 var iOSExportTemplate = stc.get_gdscript('xcode/ios_export_template.gd')
 var Team = stc.get_gdscript('xcode/team.gd')
 var Provision = stc.get_gdscript('xcode/provision.gd')
@@ -49,18 +49,21 @@ func get_template():
 	return template
 
 
-# ------------------------------------------------------------------------------
-#                                Setter and Getters
-# ------------------------------------------------------------------------------
-
-
 var finder = stc.get_gdscript('xcode/finders/finder.gd') setget ,get_finder
 func get_finder(): return finder
+
+
+var project setget ,get_project
+func get_project(): return project
 
 
 # ------------------------------------------------------------------------------
 #                                      Methods
 # ------------------------------------------------------------------------------
+
+
+func is_project_ready():
+	return project != null
 
 
 func make_project_async(bundle_id=null, display_name=null):
@@ -83,7 +86,7 @@ func make_project_async(bundle_id=null, display_name=null):
 
 
 func _made_project(template, result, bundle_id, display_name):
-	var project = Project.new()
+	project = Project.new()
 	project.bundle_id = bundle_id
 	project.name = display_name
 	project.open(template.get_destination_path())

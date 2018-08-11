@@ -12,10 +12,6 @@ extends 'Controller.gd'
 var OnboardingFlowScene = stc.get_scene('onboarding_flow.tscn')
 
 var _xcode
-var _xcode_project
-
-func set_xcode_project(project):
-	_xcode_project = project
 
 func set_xcode(xcode):
 	_xcode = xcode
@@ -34,20 +30,20 @@ func _on_populate(flow, section):
 	if section == flow.SECTION.PROVISION:
 		var provisions = get_parent().filter_provisions(_xcode.finder.find_provisions())
 		flow.populate_option_section(section, provisions)
-		if _xcode_project.provision != null:
-			flow.provision = _xcode_project.provision
+		if _xcode.project.provision != null:
+			flow.provision = _xcode.project.provision
 		elif provisions.size() > 0:
 			flow.provision = provisions.front()
 	
 	if section == flow.SECTION.AUTOMANAGE:
-		flow.automanaged = _xcode_project.automanaged
+		flow.automanaged = _xcode.project.automanaged
 	
 	if section == flow.SECTION.TEAM:
 		var teams = _xcode.finder.find_teams()
 		var team = null
 
-		if _xcode_project.team != null:
-			team = _xcode_project.team
+		if _xcode.project.team != null:
+			team = _xcode.project.team
 			# Add xcode project's current team to teams. This may
 			# happen when find_teams doesn't find any teams, but
 			# xcode_project has been loaded from saved config.
@@ -73,12 +69,12 @@ func _on_populate(flow, section):
 		flow.team = team
 	
 	if section == flow.SECTION.DISPLAY_NAME:
-		if _xcode_project.name != null:
-			flow.display_name = _xcode_project.name
+		if _xcode.project.name != null:
+			flow.display_name = _xcode.project.name
 	
 	if section == flow.SECTION.BUNDLE_ID:
-		if _xcode_project.bundle_id != null:
-			flow.bundle_id = _xcode_project.bundle_id
+		if _xcode.project.bundle_id != null:
+			flow.bundle_id = _xcode.project.bundle_id
 		else:
 			flow.bundle_id = flow.provision.bundle_id
 
@@ -99,12 +95,12 @@ func _on_validate(flow, section, input):
 
 
 func _on_onboarded(flow):
-	_xcode_project.provision = flow.provision
-	_xcode_project.automanaged = flow.automanaged
-	_xcode_project.team = flow.team
-	_xcode_project.name = flow.display_name
-	_xcode_project.bundle_id = flow.bundle_id
-	_xcode_project.update()
+	_xcode.project.provision = flow.provision
+	_xcode.project.automanaged = flow.automanaged
+	_xcode.project.team = flow.team
+	_xcode.project.name = flow.display_name
+	_xcode.project.bundle_id = flow.bundle_id
+	_xcode.project.update()
 	
 	flow.hide()
 

@@ -65,24 +65,17 @@
 
 # -- GUI Todos
 
-[ ] ! make onboarding flow
-	[ ] Create an interface that will connect editing and committing changes to the onboarding screens and elements.
-		[ ] Extract parts of Controller into subcontrollers
-			[ ] move xcode_project to _xcode and rename to project
-			[X] onboarding controller
-			[X] xcode_project
+[X] make onboarding flow
+	[X] Create an interface that will connect editing and committing changes to the onboarding screens and elements.
 		[X] Validate when entering a new screen
 		[X] Validate on input
 		[X] disable next button depending on valid state
 		[X] Create Controller hierarchy as node tree
 		[X] Create processing methodology for controller node tree
-[ ] design apple button presentation and build flow
-	[ ] extract from export options or have user select or drag profile 
-		[ ] if user does not have profile
-			[ ] automanage a profile for user
-			[ ] have them select a team
-		[ ] have user review or edit bundle name and bundle id
-		[ ] display overview
+		[X] Extract parts of Controller into subcontrollers
+			[X] onboarding controller
+			[X] xcode_project
+			[X] move xcode_project to _xcode and rename to project
 [X] apple button popup
 	[X] hidden progress bar
 		[X] draw as flat color over button rather than using a tiny squished ProgressBar
@@ -182,7 +175,7 @@
 		- godot_path
 	- project.pbxproj
 		- Add godot game project file ref to PBXResourcesBuildPhase object
-		- @see scripts/xcode/xcode_project.gd for more information
+		- @see scripts/xcode/project.gd for more information
 	- xcodebuild environment settings:
 		- DEVELOPMENT_TEAM=teamid
 		- CODE_SIGN_STYLE=Automatic
