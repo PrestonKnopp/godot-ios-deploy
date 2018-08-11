@@ -2,7 +2,14 @@
 #
 # Parent class of xcode data classes.
 # Implements comparison of two data classes.
+tool
 extends Reference
+
+
+# ------------------------------------------------------------------------------
+#                                      Methods
+# ------------------------------------------------------------------------------
+
 
 func equals(data, compare_keys=null):
 	"""
@@ -19,7 +26,13 @@ func equals(data, compare_keys=null):
 
 	return _compare_dicts(this, other, compare_keys)
 
+
 func _compare_dicts(a, b, compare_keys=null):
+	"""
+	Comparison impl for self.equals
+	@return Bool
+	  true when equal
+	"""
 	if compare_keys != null:
 		for key in compare_keys:
 			if a.has(key) and not b.has(key):
@@ -49,8 +62,46 @@ func _compare_dicts(a, b, compare_keys=null):
 	
 	return true
 
+
+# ------------------------------------------------------------------------------
+#                                 Dict Conversions
+# ------------------------------------------------------------------------------
+
+
 func to_dict():
+	""" @virtual
+	Convert self into dict.
+	@return Dictionary?
+	"""
 	return {}
 
+
 func from_dict(d):
+	""" @virtual
+	Convert dict to self, in place.
+	"""
 	pass
+
+
+# The following methods were static.
+# However, it did not work because static functions cannot access the script
+# object they are attached to. So, usage is as follows: DataObj.new().FromDict()
+
+func FromDict(dict):
+	"""
+	Creates a data object from dict. When dict is null, returns null.
+	@return Data?
+	"""
+	if dict == null: return null
+	var this = get_script().new()
+	this.from_dict(dict)
+	return this
+
+
+func ToDict(data):
+	"""
+	Creates a dict from a data object. When data is null, returns null.
+	@return Dictionary?
+	"""
+	if data == null: return null
+	return data.to_dict()

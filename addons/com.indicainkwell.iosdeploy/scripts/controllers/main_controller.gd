@@ -62,13 +62,19 @@ func _init():
 	view.connect('settings_button_pressed', self, '_on_view_settings_button_pressed')
 	view.connect('devices_list_edited', self, '_on_view_devices_list_edited')
 
+	_init_config()
 	_init_onboarding_flow_controller()
 	_init_xcode()
 
 
+func _init_config():
+	# TODO: mv config loading and stuff to plugin
+	if _config.load(stc.get_data_path('config.cfg')) != OK:
+		stc.get_logger().info('unable to load config')
+
+
 func _init_onboarding_flow_controller():
 	_onboarding_flow_controller.set_xcode(_xcode)
-	_onboarding_flow_controller.set_config(_config)
 	add_child(_onboarding_flow_controller)
 
 
@@ -79,36 +85,9 @@ func _init_xcode():
 
 
 func _init_xcode_project():
+	_xcode_project.set_config(_config)
 	_xcode_project.connect('built', self, '_on_xcode_project_built')
 	_xcode_project.connect('deployed', self, '_on_device_deployed')
-	if _config.load(stc.get_data_path('config.cfg')) != OK:
-		stc.get_logger().info('unable to load config')
-	else:
-		_xcode_project.bundle_id = _config.get_value('xcode/project', 'bundle_id', null)
-		_xcode_project.name = _config.get_value('xcode/project', 'name', null)
-
-		_xcode_project.automanaged = _config.get_value('xcode/project', 'automanaged', false)
-		_xcode_project.debug = _config.get_value('xcode/project', 'debug', true)
-		_xcode_project.custom_info = _config.get_value('xcode/project', 'custom_info', {})
-
-		var saved_team_dict = _config.get_value('xcode/project', 'team', null)
-		if saved_team_dict != null:
-			var team = _xcode.Team.new()
-			team.from_dict(saved_team_dict)
-			_xcode_project.team = team
-
-		var saved_provision_dict = _config.get_value('xcode/project', 'provision', null)
-		if saved_provision_dict != null:
-			var provision = _xcode.Provision.new()
-			provision.from_dict(saved_provision_dict)
-			_xcode_project.provision = provision
-
-		var devices = _config.get_value('xcode/project', 'devices', [])
-		for i in range(devices.size()):
-			var device = _xcode.Device.new()
-			device.from_dict(devices[i])
-			devices[i] = device
-		_xcode_project.set_devices(devices)
 	stc.get_logger().debug('Xcode Project App Path: ' + _xcode_project.get_app_path())
 
 
@@ -372,37 +351,14 @@ func _on_finished_editing(menu):
 	var bundle = menu.get_bundle_group()
 	_xcode_project.bundle_id = bundle.id
 	_xcode_project.name = bundle.display
-	_config.set_value('xcode/project', 'bundle_id', bundle.id)
-	_config.set_value('xcode/project', 'name', bundle.display)
 
 	var identity = menu.get_identity_group()
 	_xcode_project.team = identity.team
 	_xcode_project.provision = identity.provision
 	_xcode_project.automanaged = identity.automanaged
-
-	var team_dict = null
-	var prov_dict = null
-	# TODO: {to,from}_dict() would probably be better as static method on
-	# _xcode.Type
-	if identity.team != null:
-		team_dict = identity.team.to_dict()
-	if identity.provision != null:
-		prov_dict = identity.provision.to_dict()
-
-	_config.set_value('xcode/project', 'team', team_dict)
-	_config.set_value('xcode/project', 'provision', prov_dict)
-	_config.set_value('xcode/project', 'automanaged', identity.automanaged)
-
 	_xcode_project.set_devices(menu.get_active_devices())
 
-	var savable_devices_fmt = []
-	for device in _xcode_project.get_devices():
-		savable_devices_fmt.append(device.to_dict())
-	_config.set_value('xcode/project', 'devices', savable_devices_fmt)
-
 	_xcode_project.update()
-	if _config.save(stc.get_data_path('config.cfg')) != OK:
-		stc.get_logger().info('unable to save config')
 
 
 # -- OneClickButton (view)

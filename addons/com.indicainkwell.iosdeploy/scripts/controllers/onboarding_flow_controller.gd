@@ -13,16 +13,12 @@ var OnboardingFlowScene = stc.get_scene('onboarding_flow.tscn')
 
 var _xcode
 var _xcode_project
-var _config
 
 func set_xcode_project(project):
 	_xcode_project = project
 
 func set_xcode(xcode):
 	_xcode = xcode
-
-func set_config(cfg):
-	_config = cfg
 
 func _enter_tree():
 	view = OnboardingFlowScene.instance()
@@ -108,13 +104,8 @@ func _on_onboarded(flow):
 	_xcode_project.team = flow.team
 	_xcode_project.name = flow.display_name
 	_xcode_project.bundle_id = flow.bundle_id
-
-	_config.set_value('xcode/project', 'provision', flow.provision.to_dict())
-	_config.set_value('xcode/project', 'automanaged', flow.automanaged)
-	_config.set_value('xcode/project', 'team', flow.team.to_dict())
-	_config.set_value('xcode/project', 'name', flow.display_name)
-	_config.set_value('xcode/project', 'bundle_id', flow.bundle_id)
-
+	_xcode_project.update()
+	
 	flow.hide()
 
 

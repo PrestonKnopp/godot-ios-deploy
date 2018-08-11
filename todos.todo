@@ -68,8 +68,9 @@
 [ ] ! make onboarding flow
 	[ ] Create an interface that will connect editing and committing changes to the onboarding screens and elements.
 		[ ] Extract parts of Controller into subcontrollers
-			[ ] xcode_project
+			[ ] move xcode_project to _xcode and rename to project
 			[X] onboarding controller
+			[X] xcode_project
 		[X] Validate when entering a new screen
 		[X] Validate on input
 		[X] disable next button depending on valid state

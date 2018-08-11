@@ -32,6 +32,9 @@ var Shell = stc.get_gdscript('shell.gd')
 var iOSDeploy = stc.get_gdscript('xcode/ios_deploy.gd')
 var PList = stc.get_gdscript('xcode/plist.gd')
 var PBX = stc.get_gdscript('xcode/pbx.gd')
+var Team = stc.get_gdscript('xcode/team.gd')
+var Provision = stc.get_gdscript('xcode/provision.gd')
+var Device = stc.get_gdscript('xcode/device.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -48,6 +51,8 @@ var automanaged = false
 
 var debug = true
 var custom_info = {}
+
+var _config
 
 var _needs_building = true
 var _iosdeploy = iOSDeploy.new()
@@ -89,6 +94,63 @@ func mark_needs_building():
 
 func needs_building():
 	return _needs_building
+
+
+# ------------------------------------------------------------------------------
+#                                    Config File
+# ------------------------------------------------------------------------------
+
+
+func set_config(cfg):
+	"""
+	Set the config to use for future reading and writing.
+	"""
+	_config = cfg
+
+	# TODO: get rid of null not being a default value by creating a subclass
+	# of Config to handle our general config use case
+	automanaged = _config.get_value('xcode/project', 'automanaged', automanaged)
+	bundle_id = _config.get_value('xcode/project', 'bundle_id', bundle_id)
+	custom_info = _config.get_value('xcode/project', 'custom_info', custom_info)
+	debug = _config.get_value('xcode/project', 'debug', debug)
+	name = _config.get_value('xcode/project', 'name', name)
+
+	provision = Provision.new().FromDict(
+		_config.get_value('xcode/project', 'provision', provision)
+	)
+	team = Team.new().FromDict(_config.get_value('xcode/project', 'team', team))
+
+	var saved_device_dicts = _config.get_value('xcode/project', 'devices', [])
+	if saved_device_dicts.size() != 0:
+		_devices.clear()
+		for dev in saved_device_dicts:
+			_devices.append(Device.new().FromDict(dev))
+
+
+# -- Updating (config)
+
+
+func update_config():
+	"""
+	Update config with self's properties.
+	"""
+	_config.set_value('xcode/project', 'automanaged', automanaged)
+	_config.set_value('xcode/project', 'bundle_id', bundle_id)
+	_config.set_value('xcode/project', 'name', name)
+	_config.set_value('xcode/project', 'provision', Provision.new().ToDict(provision))
+	_config.set_value('xcode/project', 'team', Team.new().ToDict(team))
+
+	var savable_devices_fmt = []
+	for device in _devices:
+		savable_devices_fmt.append(Device.new().ToDict(device))
+	_config.set_value('xcode/project', 'devices', savable_devices_fmt)
+
+	# TODO: abstract this save out, self should not know about the path to
+	# config.cfg
+	if _config.save(stc.get_data_path('config.cfg')) != OK:
+		stc.get_logger().info('unable to save config')
+
+
 
 
 # ------------------------------------------------------------------------------
@@ -147,6 +209,7 @@ func get_info_plist_path():
 func update():
 	update_pbx()
 	update_info_plist()
+	update_config()
 
 
 func update_pbx():
