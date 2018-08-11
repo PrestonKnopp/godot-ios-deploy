@@ -3,6 +3,10 @@
 # ------------------------------------------------------------------------------
 
 
+[ ] Specially handle Xcode Managed Provisions
+	[ ] Onboarding flow should show a Automanage or no profile or something item
+	    for the profile chooser
+	[ ] Xcode filter out xcode managed profiles
 [ ] read export settings for ios and use it to prefill
 [ ] use export template for environment or see what's best
 	[ ] if environment has XDG_*, templates will install at XDG_*. Otherwise it's installed in the Application Support directory.
@@ -65,6 +69,10 @@
 
 # -- GUI Todos
 
+[ ] onboarding flow
+	[ ] if provision is not a wild card then
+		[ ] bundleid shouldn't be changed
+		[ ] bundle id should also be filled in according to provision
 [X] make onboarding flow
 	[X] Create an interface that will connect editing and committing changes to the onboarding screens and elements.
 		[X] Validate when entering a new screen
@@ -108,6 +116,9 @@
 
 # -- Xcode Todos
 
+[ ] Remove some buildSettings keys from project.pbxproj
+	[ ] <key>DEVELOPMENT_TEAM</key><string>$team_id</string>
+	[ ] <key>PRODUCT_BUNDLE_IDENTIFIER</key> <string>$identifier</string>
 [ ] write codesigner.gd
 [X] #v3 is not deploying. @see notes
 [X] #v3 strip pbxproj file of shell expansion lines
@@ -139,11 +150,16 @@
 [X] parse provision profile dates
 
 
-
 # ------------------------------------------------------------------------------
 #                                       Notes
 # ------------------------------------------------------------------------------
 
+
+- Xcode Managed Provisioning Profiles
+	- You can't manually specify them.
+	- You can set CODE_SIGN_STYLE=Automatic and then use the same bundle id
+		- Xcode will generate and install a provision for that bundle id.
+		- So all you need is a bundle id and to make sure automanaged to true
 
 - v3 is tough.
 	- It's building but not deploying due to internal api error.
@@ -225,12 +241,40 @@
 # ------------------------------------------------------------------------------
 
 
-=== BUILD TARGET godot_ios OF PROJECT godot_ios WITH CONFIGURATION Debug ===
+> Code Signing Error: Code signing is required for product type 'Application' in SDK 'iOS 11.4'
+> Code Signing Error: Provisioning profile "MyProfile" doesn't support the Push Notifications capability.
+> Code Signing Error: Provisioning profile "MyProfile" doesn't include the aps-environment entitlement.
+> Code Signing Error: Provisioning profile "MyProfile" doesn't support the In-App Purchase capability.
+> Code Signing Error: Provisioning profile "MyProfile" is Xcode managed, but signing settings require a manually managed profile.
 
-Check dependencies
-Code Signing Error: Provisioning profile "My Development Profile" doesn't support the Push Notifications capability.
-Code Signing Error: Provisioning profile "My Development Profile" doesn't include the aps-environment entitlement.
-Code Signing Error: Code signing is required for product type 'Application' in SDK 'iOS 11.4'
+> Code Signing Error: godot_ios has conflicting provisioning settings. godot_ios is automatically signed, but provisioning profile $provisioning_profile_uuid_debug has been manually specified. Set the provisioning profile value to "Automatic" in the build settings editor, or switch to manual signing in the project editor.
+
+Xcode is expecting automatic signing, but when you set the
+PROVISIONING_PROFILE_SPECIFIER that confuses xcode. Either use
+CODE_SIGN_STYLE=Automatic and don't pass profile specifier or use
+CODE_SIGN_STYLE=Manual.
+
+> Code Signing Error: Provisioning profile "MyProfile" doesn't include signing certificate "iPhone Developer: Newer Certificate Name (124444E331)"
+
+You have to regenerate your profile.
+
+Go to developer.apple.com/account/ios/profile, edit your "MyProfile" and
+download it then double click it to install it. You can also install the new
+"MyProfile" from Xcode -> Preferences -> Accounts -> YourAccount and press
+'Download Manual Profiles'.
+
+
+# ------------------------------------------------------------------------------
+#                                 xcodebuild Errors
+# ------------------------------------------------------------------------------
+
+
+> It says something like "xcodebuild needs xcode but its
+  '../path/to/XcodeCommandLineTool' is a command line tool instance"
+
+Run: xcode-select --reset
+
+To use default command line tools path.
 
 
 # ------------------------------------------------------------------------------

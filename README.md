@@ -45,15 +45,8 @@ I will eventually put this up on the asset library.
 An apple button will appear in Godots Editor's toolbar. Pressing this button
 will
 
-1. Open Settings menu if not setup or
+1. Open onboarding flow menu if not setup or
 2. Begin build and deploy
-
-### Setting Up
-
-Get set up by selecting your provisioning profile and team. Then fill out your
-bundle display name. Check the devices you want to deploy to and close the menu.
-Test it by pressing the apple button. Check Godot's console for information on
-the build and deploy.
 
 ## Troubleshooting
 
