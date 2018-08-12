@@ -257,8 +257,16 @@ func update_pbx():
 	
 	var resource_build_phase_q = PBX.Query.new()
 	resource_build_phase_q.type = 'PBXResourcesBuildPhase'
+
+	var xc_build_configuration_q = PBX.Query.new()
+	xc_build_configuration_q.type = 'XCBuildConfiguration'
+	xc_build_configuration_q.keypath = 'buildSettings/PROVISIONING_PROFILE'
 	
-	var res = pbx.find_objects([root_pbxgroup_q, resource_build_phase_q])
+	var res = pbx.find_objects([
+		root_pbxgroup_q,         # res[0]
+		resource_build_phase_q,  # res[1]
+		xc_build_configuration_q # res[2]
+	])
 
 	# add godot project folder to xcode project
 	var pbxgroup_children = res[0][0]['children']
@@ -269,6 +277,13 @@ func update_pbx():
 	var buildphase_files = res[1][0]['files']
 	if not buildphase_files.has(PBXPROJ_UUIDS.BUILD_FILE):
 		buildphase_files.append(PBXPROJ_UUIDS.BUILD_FILE)
+	
+	# Erase the PROVISIONING_PROFILE in xcode editor buildSettings because
+	# it causes automanage to fail with an error saying it expects to be
+	# automatically signed but provisioning profile is still specified which
+	# implies manual signing.
+	for build_cfg in res[2]:
+		build_cfg['buildSettings'].erase('PROVISIONING_PROFILE')
 	
 	pbx.save_plist(get_pbx_path())
 	mark_needs_building()

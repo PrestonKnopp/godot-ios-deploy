@@ -3,6 +3,7 @@
 # ------------------------------------------------------------------------------
 
 
+[ ] Replace all prints with logs and use correct level
 [ ] Specially handle Xcode Managed Provisions
 	[ ] Onboarding flow should show a Automanage or no profile or something item
 	    for the profile chooser
@@ -116,10 +117,9 @@
 
 # -- Xcode Todos
 
-[ ] Remove some buildSettings keys from project.pbxproj
-	[ ] <key>DEVELOPMENT_TEAM</key><string>$team_id</string>
-	[ ] <key>PRODUCT_BUNDLE_IDENTIFIER</key> <string>$identifier</string>
 [ ] write codesigner.gd
+[X] Remove some buildSettings keys from project.pbxproj
+	[X] <key>PROVISIONING_PROFILE</key> <string>$provisioning_profile_uuid_debug</string>
 [X] #v3 is not deploying. @see notes
 [X] #v3 strip pbxproj file of shell expansion lines
 	[X] process this in ios_export_template
