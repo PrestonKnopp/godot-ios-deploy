@@ -168,7 +168,7 @@ func set_section_value(section, value):
 	"""
 	var section_control = get_section_control(section)
 	if section in [PROVISION, TEAM]:
-		for i in section_control.get_item_count():
+		for i in range(section_control.get_item_count()):
 			var meta = section_control.get_item_metadata(i)
 			if meta != null and meta.equals(value):
 				section_control.select(i)
