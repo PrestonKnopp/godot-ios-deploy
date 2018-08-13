@@ -6,9 +6,8 @@
 [ ] Implement Data subclass' {from,to}_dict in Data by using Object.get_property_list()
 [ ] Replace all prints with logs and use correct level
 [ ] Specially handle Xcode Managed Provisions
-	[ ] Onboarding flow should show a Automanage or no profile or something item
-	    for the profile chooser
-	[ ] Xcode filter out xcode managed profiles
+	[ ] So with xcode_managed projects and the new "Automanaged" placeholder provision, we don't need the SECTION.AUTOMANAGE anymore. For now just hide the control in the scene
+	[X] Onboarding flow should show a Automanage or no profile or something item for the profile chooser
 	[X] add xcode_managed prop to provision
 [ ] read export settings for ios and use it to prefill
 [ ] use export template for environment or see what's best

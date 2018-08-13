@@ -5,16 +5,33 @@
 #
 # Implements onboarding validation logic.
 #
+# Be sure to set_xcode().
+#
 # TODO: get rid of get_parent() calls
 tool
 extends 'Controller.gd'
 
+
+# ------------------------------------------------------------------------------
+#                                      Scenes
+# ------------------------------------------------------------------------------
+
+
 var OnboardingFlowScene = stc.get_scene('onboarding_flow.tscn')
+
+
+# ------------------------------------------------------------------------------
+#                                     Variables
+# ------------------------------------------------------------------------------
+
 
 var _xcode
 
-func set_xcode(xcode):
-	_xcode = xcode
+
+# ------------------------------------------------------------------------------
+#                                  Node Overrides
+# ------------------------------------------------------------------------------
+
 
 func _enter_tree():
 	view = OnboardingFlowScene.instance()
@@ -23,12 +40,43 @@ func _enter_tree():
 	view.connect('validate', self, '_on_validate')
 	get_plugin().add_menu(view)
 
+
 func _exit_tree():
 	view.queue_free()
 
+
+# ------------------------------------------------------------------------------
+#                                      Methods
+# ------------------------------------------------------------------------------
+
+
+func set_xcode(xcode):
+	_xcode = xcode
+
+
+func _make_automanaged_provision_representation():
+	var provision = _xcode.Provision.new()
+	provision.name = 'Automanaged'
+	provision.bundle_id = '*'
+	provision.xcode_managed = true
+	provision.team_ids = []
+
+	for team in _xcode.finder.find_teams():
+		provision.team_ids.append(team.id)
+	
+	return provision
+
+
+# ------------------------------------------------------------------------------
+#                             Onboarding Flow Callbacks
+# ------------------------------------------------------------------------------
+
+
 func _on_populate(flow, section):
 	if section == flow.SECTION.PROVISION:
-		var provisions = get_parent().filter_provisions(_xcode.finder.find_provisions())
+		var provisions = [_make_automanaged_provision_representation()] +\
+			get_parent().filter_provisions(_xcode.finder.find_provisions())
+
 		flow.populate_option_section(section, provisions)
 		if _xcode.project.provision != null:
 			flow.provision = _xcode.project.provision
@@ -95,7 +143,9 @@ func _on_populate(flow, section):
 func _on_validate(flow, section, input):
 	var valid = true
 	if section == flow.SECTION.PROVISION:
-		pass
+		# xcode_managed provisions must be automanaged
+		flow.automanaged = input.xcode_managed
+		flow.get_section_control(flow.SECTION.AUTOMANAGE).set_disabled(input.xcode_managed)
 	if section == flow.SECTION.AUTOMANAGE:
 		pass
 	if section == flow.SECTION.TEAM:
@@ -103,7 +153,7 @@ func _on_validate(flow, section, input):
 	if section == flow.SECTION.DISPLAY_NAME:
 		pass
 	if section == flow.SECTION.BUNDLE_ID:
-		valid = get_parent().valid_bundleid(input, flow.provision)
+		valid = input != '*' and get_parent().valid_bundleid(input, flow.provision)
 	flow.validate(section, valid)
 
 
