@@ -49,7 +49,7 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 472.0
-margin_bottom = 271.0
+margin_bottom = 177.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 0
@@ -101,7 +101,7 @@ anchor_bottom = 0.0
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 446.0
-margin_bottom = 217.0
+margin_bottom = 123.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -498,6 +498,7 @@ _sections_unfolded = [ "Rect", "Size Flags" ]
 [node name="VBoxContainer" type="VBoxContainer" parent="control_stack/select_provision" index="6"]
 
 editor/display_folded = true
+visible = false
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -566,7 +567,7 @@ _sections_unfolded = [ "Size Flags" ]
 [node name="PreferredSize" type="Node" parent="control_stack/select_provision" index="7"]
 
 script = SubResource( 5 )
-size = Vector2( 436, 172 )
+size = Vector2( 436, 130 )
 
 [node name="select_team" type="VBoxContainer" parent="control_stack" index="1"]
 
@@ -579,7 +580,7 @@ anchor_bottom = 0.0
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 446.0
-margin_bottom = 217.0
+margin_bottom = 123.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -718,9 +719,9 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 122.0
+margin_top = 75.0
 margin_right = 436.0
-margin_bottom = 142.0
+margin_bottom = 95.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -756,7 +757,7 @@ anchor_bottom = 0.0
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 446.0
-margin_bottom = 217.0
+margin_bottom = 170.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1

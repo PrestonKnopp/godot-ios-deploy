@@ -8,6 +8,7 @@
 # Be sure to set_xcode().
 #
 # TODO: get rid of get_parent() calls
+# TODO: remove onboarding_flow automanage section
 tool
 extends 'Controller.gd'
 
