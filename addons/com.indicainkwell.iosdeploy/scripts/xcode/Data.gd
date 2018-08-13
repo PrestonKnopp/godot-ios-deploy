@@ -68,10 +68,27 @@ func _compare_dicts(a, b, compare_keys=null):
 # ------------------------------------------------------------------------------
 
 
+func _get_script_property_list():
+	""" @unused
+	Removes properties from get_property_list() that are not variables of
+	script and returns the result.
+	@return [Dictionary]
+	"""
+	var props = get_property_list()
+	var s = props.size()
+	while s >= 0:
+		if props.front().name == 'Script Variables':
+			props.pop_front()
+			return props
+		props.pop_front()
+		s -= 1
+	return props
+
+
 func to_dict():
 	""" @virtual
 	Convert self into dict.
-	@return Dictionary?
+	@return Dictionary
 	"""
 	return {}
 
