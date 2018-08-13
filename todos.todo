@@ -119,7 +119,6 @@
 
 # -- Xcode Todos
 
-[ ] write codesigner.gd
 [X] Remove some buildSettings keys from project.pbxproj
 	[X] <key>PROVISIONING_PROFILE</key> <string>$provisioning_profile_uuid_debug</string>
 [X] #v3 is not deploying. @see notes
@@ -141,6 +140,7 @@
 		[X] isa=PBXFileReference
 		[X] explicitFileType=wrapper.application
 		[X] path=godot_ios.app
+[X][D] write codesigner.gd (not going to do this)
 
 # -- Provision Todos
 

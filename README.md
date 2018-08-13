@@ -5,13 +5,12 @@
 ## Prerequisites
 
 1. macOS
-2. iOS Developer account
-    - sign up on apple's website, its free
-    - Xcode should help set this up to be used for code signing
-3. Xcode and its command line tools
-    - Install Xcode from the App Store and 
-    - Open Terminal and type xcodebuild 
-        - should ask to install the command line tools
+2. Xcode and its command line tools
+    - Install Xcode from the App Store and
+    - Open Terminal and type `xcode-select --install`
+3. iOS Developer account
+    - sign up on [developer.apple](https://developer.apple.com), its free
+    - Open Xcode and register your account
 4. [Godot export templates](https://godotengine.org/download)
 6. [ios-deploy](https://github.com/ios-control/ios-deploy)
     - Install ios-deploy with [homebrew](https://brew.sh)
@@ -26,11 +25,12 @@ hearing about ways to improve workflow, usability, and QoL.
 
 1. Supports Godot versions 2 and 3 in one package
 2. One click deploy
-3. No need to open xcode (after you have registered your apple developer
-   account)
+3. No need to open xcode (after you have registered your apple developer account)
 4. Finds installed provisioning profiles and teams
-5. Builds and signs project
-6. Deploy to multiple ios devices in parallel
+5. Automatic xcode managed provisions (automanaged)
+6. Builds and signs project
+7. Deploy to multiple ios devices in parallel
+8. Onboarding flow for easy project setup
 
 ## Install
 
@@ -42,11 +42,18 @@ I will eventually put this up on the asset library.
 
 ## Usage
 
-An apple button will appear in Godots Editor's toolbar. Pressing this button
+An apple button will appear in Godot Editor's toolbar. Pressing this button
 will
 
 1. Open onboarding flow menu if not setup or
 2. Begin build and deploy
+
+Hovering over the button will show a popup with
+
+1. The progress of the build and deploy.
+2. A settings button to open up the onboarding flow menu.
+3. A checkmark the tells you if the project is valid and setup.
+4. **Device selection**, use this to choose what devices to deploy to.
 
 ## Troubleshooting
 
@@ -55,5 +62,5 @@ If all goes well it will attempt to deploy it, but can fail for multiple reasons
 1. Security Failure
     - You must verify your app or developer account on your iOS device by going
       to `Settings > General > Device Management > Your account` and tap verify.
-2. More in todo.txt
+2. More in todos.todo
 3. ...
