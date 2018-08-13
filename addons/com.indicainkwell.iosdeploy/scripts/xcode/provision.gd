@@ -7,6 +7,7 @@ var name
 var app_id # entitled bundleid prefixed with teamid
 var app_id_name
 var bundle_id
+var xcode_managed # is this a xcode or user created provision
 #var entitlements
 var platforms
 var team_ids
@@ -22,6 +23,7 @@ func to_dict():
 		app_id = app_id,
 		app_id_name = app_id_name,
 		bundle_id = bundle_id,
+		xcode_managed = xcode_managed,
 		platforms = platforms,
 		team_ids = team_ids,
 		team_name = team_name,
@@ -37,6 +39,7 @@ func from_dict(d):
 	app_id = d['app_id']
 	app_id_name = d['app_id_name']
 	bundle_id = d['bundle_id']
+	xcode_managed = d['xcode_managed']
 	platforms = d['platforms']
 	team_ids = d['team_ids']
 	team_name = d['team_name']

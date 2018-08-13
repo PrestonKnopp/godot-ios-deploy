@@ -68,6 +68,7 @@ func find():
 		provision.app_id = json.get_value('Entitlements/application-identifier', '')
 		provision.app_id_name = json.get_value('AppIDName', '')
 		provision.bundle_id = provision.app_id.right(provision.app_id.find('.') + 1)
+		provision.xcode_managed = json.get_value('IsXcodeManaged', false)
 		provision.platforms = json.get_value('Platform', [])
 		provision.team_ids = json.get_value('TeamIdentifier', [])
 		provision.team_name = json.get_value('TeamName', '')
@@ -75,7 +76,7 @@ func find():
 		provision.expiration_date = _date_parse(json.get_value('ExpirationDate'))
 
 		provisions.append(provision)
-
+	
 	return provisions
 
 
