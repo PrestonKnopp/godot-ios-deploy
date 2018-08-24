@@ -26,12 +26,7 @@ const stc = preload('../static.gd')
 # ------------------------------------------------------------------------------
 
 
-class Error:
-	var code
-	var message
-
-
-var Regex = stc.get_gdscript('regex.gd')
+var ErrorCapturer = stc.get_gdscript('xcode/error_capturer.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -56,7 +51,7 @@ var ignore_wifi_devices = false
 var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.ios-deploy')
 var _bash = stc.get_gdscript('shell.gd').new().make_command('/bin/bash')
 var _bashinit = ['-l', '-c']
-var _error_regex = Regex.new()
+var _error_capturer = ErrorCapturer.new()
 
 
 # ------------------------------------------------------------------------------
@@ -67,8 +62,12 @@ var _error_regex = Regex.new()
 func _init():
 	# 1. Error Code
 	# 2. Error Message
-	#                                           1            2
-	assert(_error_regex.compile('[ !! ] Error 0x(\\d*): \\w* (\\w*)') == OK)
+	# ----------------------------------------------->1            2
+	_error_capturer.set_regex_pattern('.*[ !! ] Error 0x(\\d*): \\w* (\\w*)')
+	_error_capturer.set_error_captures_map({
+		code = 1,
+		message = 2
+	})
 
 
 # ------------------------------------------------------------------------------
@@ -132,15 +131,10 @@ func uninstall():
 
 
 func _deploy_finished(command, result, device_id):
-	var errors = []
-	for line in result.output[0].split('\n', false):
-		if line.begins_with('[ !! ] Error 0x'):
-			# do regex match to cap message and code
-			var captures = _error_regex.search(line)
-			var error = Error.new()
-			error.code = captures[1]
-			error.message = captures[2]
-			errors.append(error)
+	var errors = _error_capturer.capture_from(result.output)
+	_log.info(""">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	DEPLOY RESULT:\n%s
+	<<<<<<<<<<<<<<<<<<<<<<<<<""" % result.output)
 	emit_signal('deployed', self, result, errors, device_id)
 
 

@@ -10,7 +10,7 @@ extends Reference
 # ------------------------------------------------------------------------------
 
 
-signal built(this, result)
+signal built(this, result, errors)
 signal deployed(this, result, errors, device_id)
 
 
@@ -38,6 +38,7 @@ var PBX = stc.get_gdscript('xcode/pbx.gd')
 var Team = stc.get_gdscript('xcode/team.gd')
 var Provision = stc.get_gdscript('xcode/provision.gd')
 var Device = stc.get_gdscript('xcode/device.gd')
+var ErrorCapturer = stc.get_gdscript('xcode/error_capturer.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -68,6 +69,7 @@ var _shell = Shell.new()
 var _xcodebuild = _shell.make_command('xcodebuild')
 
 var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.xcode-project')
+var _error_capturer = ErrorCapturer.new()
 
 
 # ------------------------------------------------------------------------------
@@ -77,6 +79,15 @@ var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.xcode-proje
 
 func _init():
 	_iosdeploy.connect('deployed', self, '_on_deployed')
+
+	# 1. Error Category (system)
+	# 2. Error Message
+	# -------------------------------->1           2
+	_error_capturer.set_regex_pattern('(.*) Error: (.*)')
+	_error_capturer.set_error_captures_map({
+		category = 1,
+		message = 2
+	})
 
 
 # ------------------------------------------------------------------------------
@@ -335,10 +346,11 @@ func built():
 
 
 func _on_xcodebuild_finished(command, result):
-	# TODO: parse result.output for xcodebuild errors here
-	# for now assume it works
-	_log.info('XCODEBUILD RESULT:\n%s' % result.output[0])
-	emit_signal('built', self, result)
+	_log.info(""">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	XCODEBUILD RESULT:\n%s
+	<<<<<<<<<<<<<<<<<<<<<<<<<""" % result.output)
+	var errors = _error_capturer.capture_from(result.output)
+	emit_signal('built', self, result, errors)
 
 
 func _build_xcodebuild_args():

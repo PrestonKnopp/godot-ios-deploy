@@ -12,21 +12,19 @@
 [ ] error parsing and displaying
 	[ ] shell
 		[ ] stderr
-			[ ] pipe to stdout
+			[ ] pipe to stdout or to a file and read it in later from Shell
 		[ ] figure out how to get program return codes from shell
 			[ ] write shell script that captures code and outputs it as the last line. Shell can then parse and remove that line.
-		[ ] test using a file based output, so godot can execute a command and
-		  have non blocking output/error/input
-			[ ] input could be used for ios-deploy when deploying and linking
-			  lldb.
-	[ ] xcodebuild errors
-		[ ] parse from output and display to user
-		[ ] printed with fmt: "<system> Error: <message>"
-		[ ] printed: ** Build Failed **
-	[ ] ios-deploy errors
-		[ ] defined ios-deploy/src/errors.h
-		[ ] printed with fmt: "Error 0x<code>: <call> <message>"
+		[ ] test using a file based output, so godot can execute a command and have non blocking output/error/input
+			[ ] input could be used for ios-deploy when deploying and linking lldb.
 	[ ] better build status using errors and tips to fix
+	[X] xcodebuild errors
+		[X] parse from output and display to user
+		[X] printed with fmt: "<system> Error: <message>"
+		[X] printed: ** Build Failed **
+	[X] ios-deploy errors
+		[X] defined ios-deploy/src/errors.h
+		[X] printed with fmt: "Error 0x<code>: <call> <message>"
 [ ] allow user to set custom plist values
 [ ] change plist to use build vars, maybe use xcconfig
 [ ] What to do when:

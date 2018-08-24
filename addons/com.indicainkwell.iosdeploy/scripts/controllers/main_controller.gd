@@ -35,6 +35,7 @@ var SettingsMenuScene = stc.get_scene('deploy_settings_menu.tscn')
 # ------------------------------------------------------------------------------
 
 
+var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.main-controller')
 var _xcode = Xcode.new()
 
 var _config = ConfigFile.new()
@@ -66,7 +67,7 @@ func _init():
 func _init_config():
 	# TODO: mv config loading and stuff to plugin
 	if _config.load(stc.get_data_path('config.cfg')) != OK:
-		stc.get_logger().info('unable to load config')
+		_log.info('unable to load config')
 
 
 func _init_onboarding_flow_controller():
@@ -87,7 +88,7 @@ func _init_xcode_project():
 	_xcode.project.set_config(_config)
 	_xcode.project.connect('built', self, '_on_xcode_project_built')
 	_xcode.project.connect('deployed', self, '_on_device_deployed')
-	stc.get_logger().debug('Xcode Project App Path: ' + _xcode.project.get_app_path())
+	_log.debug('Xcode Project App Path: ' + _xcode.project.get_app_path())
 
 
 # ------------------------------------------------------------------------------
@@ -123,13 +124,21 @@ func execute_deploy_pipeline():
 	_xcode.project.build()
 
 
+func print_errors(errors, with_message=''):
+	_log.error('>> %s' % with_message)
+	for error in errors:
+		_log.error('- Error(Code:%s, Category:%s, Message:%s)' %
+				[error.code, error.category, error.message])
+	_log.error('<<')
+
+
 
 # -- Xcode
 
 
 func check_xcode_make_project(oneclickbutton=null):
 	if _xcode.template.exists():
-		stc.get_logger().debug('Xcode template installed after init. Attempting to make project...')
+		_log.debug('Xcode template installed after init. Attempting to make project...')
 		view.disconnect('presenting_hover_menu', self, 'check_xcode_make_project')
 		_xcode.make_project_async()
 	else:
@@ -360,7 +369,7 @@ func _on_finished_editing(menu):
 
 
 func _on_view_pressed():
-	stc.get_logger().debug('OneClickButton: Pressed')
+	_log.debug('OneClickButton: Pressed')
 	if _xcode.is_project_ready():
 		if not valid_xcode_project():
 			get_menu().popup_centered()
@@ -369,7 +378,7 @@ func _on_view_pressed():
 
 
 func _on_view_presenting_hover_menu(oneclickbutton):
-	stc.get_logger().debug('OneClickButton: Presenting Hover Menu')
+	_log.debug('OneClickButton: Presenting Hover Menu')
 	if _xcode.is_project_ready():
 		oneclickbutton.set_project_valid(valid_xcode_project())
 		oneclickbutton.devices_list_populate(_xcode.finder.find_devices())
@@ -377,13 +386,13 @@ func _on_view_presenting_hover_menu(oneclickbutton):
 
 
 func _on_view_settings_button_pressed(oneclickbutton):
-	stc.get_logger().debug('OneClickButton: Settings Button Pressed')
+	_log.debug('OneClickButton: Settings Button Pressed')
 	if _xcode.is_project_ready():
 		get_menu().popup_centered()
 
 
 func _on_view_devices_list_edited(oneclickbutton):
-	stc.get_logger().debug('OneClickButton: Devices List Edited')
+	_log.debug('OneClickButton: Devices List Edited')
 	if _xcode.is_project_ready():
 		_xcode.project.set_devices(
 			oneclickbutton.get_devices_list().get_active()
@@ -403,7 +412,7 @@ func _on_xcode_template_copy_install_failed(template, error):
 
 
 func _on_xcode_made_project(xcode, result, project):
-	stc.get_logger().debug('Xcode: Made Xcode Project')
+	_log.debug('Xcode: Made Xcode Project')
 	_init_xcode_project()
 	view.set_disabled(false)
 
@@ -411,8 +420,11 @@ func _on_xcode_made_project(xcode, result, project):
 # -- Project
 
 
-func _on_xcode_project_built(xcode_project, result):
-	if xcode_project.get_devices().size() > 0:
+func _on_xcode_project_built(xcode_project, result, errors):
+
+	if errors.size() > 0:
+		print_errors(errors, 'Errors found while building Xcode Project')
+	elif xcode_project.get_devices().size() > 0:
 		view.update_build_progress(0.5, 'Deploying %s/%s'%[1, xcode_project.get_devices().size()])
 		xcode_project.deploy()
 	else:
@@ -421,13 +433,9 @@ func _on_xcode_project_built(xcode_project, result):
 
 
 func _on_device_deployed(xcode_project, result, errors, device_id):
-#	stc.get_logger().debug('DEVICE DEPLOYED: ', xcode_project, result.output, device_id)
 
 	if errors.size() > 0:
-		print('>> iOSDeploy errors found while deploying to ', device_id)
-		for error in errors:
-			prints('-', error.code, error.message)
-		print('<<')
+		print_errors(errors, 'iOSDeploy errors found while deploying to %s' % device_id)
 
 	var runningdeploys = xcode_project.get_running_deploys_count()
 	var devsiz = xcode_project.get_devices().size()
@@ -437,7 +445,7 @@ func _on_device_deployed(xcode_project, result, errors, device_id):
 		'Deploying %s/%s' % [devnum, devsiz]
 	)
 
-	print('RUNNING DEPLOY ', runningdeploys)
+	_log.debug('RUNNING DEPLOY %s' % runningdeploys)
 
 	if not xcode_project.is_deploying():
 		# this is the last device
