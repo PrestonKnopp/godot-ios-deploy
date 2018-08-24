@@ -49,8 +49,7 @@ var ignore_wifi_devices = false
 
 
 var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.ios-deploy')
-var _bash = stc.get_gdscript('shell.gd').new().make_command('/bin/bash')
-var _bashinit = ['-l', '-c']
+var _iosdeploy = stc.get_gdscript('shell.gd').new().make_command('/usr/local/bin/ios-deploy')
 var _error_capturer = ErrorCapturer.new()
 
 
@@ -83,8 +82,9 @@ func detect_devices():
 	var args = ['--detect', '--timeout', '1']
 	if ignore_wifi_devices:
 		args.append('--no-wifi')
-	var res = _bash.run(_bashinit, _build_deploy_cmd(args))
-	_log.info(res.output)
+	_log.debug('Detect Devices Command: '+str(args))
+	var res = _iosdeploy.run(args)
+	_log.debug('Detect Devices Output: '+str(res.output))
 	return res.output[0].split('\n', false)
 
 
@@ -111,12 +111,12 @@ func _launch_on(device_id, install, async):
 	"""
 	assert(bundle != null)
 	assert(device_id != null)
-	var args = _build_deploy_cmd(_build_launch_args(device_id, install))
-	_log.debug('Built Deploy Command: %s'%args)
+	var args = _build_launch_args(device_id, install)
+	_log.debug('Deploy Command Launch Args: '+str(args))
 	if async:
-		_bash.run_async(_bashinit + [args], self, '_deploy_finished', [device_id])
+		_iosdeploy.run_async(args, self, '_deploy_finished', [device_id])
 	else:
-		var res = _bash.run(_bashinit,  args)
+		var res = _iosdeploy.run(args)
 		return res.output[0].split('\n', false)
 	return []
 
@@ -132,9 +132,7 @@ func uninstall():
 
 func _deploy_finished(command, result, device_id):
 	var errors = _error_capturer.capture_from(result.output)
-	_log.info(""">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	DEPLOY RESULT:\n%s
-	<<<<<<<<<<<<<<<<<<<<<<<<<""" % result.output)
+	_log.info("DEPLOY RESULT:\n" + str(result.output))
 	emit_signal('deployed', self, result, errors, device_id)
 
 
@@ -143,15 +141,11 @@ func _deploy_finished(command, result, device_id):
 # ------------------------------------------------------------------------------
 
 
-func _build_deploy_cmd(args):
-	return 'ios-deploy ' + _join(args)
-
-
 func _build_launch_args(device_id, install=true):
 	var args = [
 		'--justlaunch',
 		'--id', device_id,
-		'--bundle', "'"+bundle+"'" # quote in case bundle has spaces
+		'--bundle', bundle
 	]
 	if not install:
 		args.append('--noinstall')
