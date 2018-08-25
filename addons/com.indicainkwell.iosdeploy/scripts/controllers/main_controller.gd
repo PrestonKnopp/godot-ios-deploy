@@ -124,13 +124,11 @@ func execute_deploy_pipeline():
 	_xcode.project.build()
 
 
-func print_errors(errors, with_message=''):
+func log_errors(errors, with_message=''):
 	var error_str = ''
 	for error in errors:
-		error_str += ('- Error(Code:%s, Category:%s, Message:%s)\n' %
-				[error.code, error.category, error.message])
+		error_str += '- %s\n' % error.to_string()
 	_log.error('%s\n%s' % [with_message, error_str])
-
 
 
 # -- Xcode
@@ -424,7 +422,7 @@ func _on_xcode_project_built(xcode_project, result, errors):
 	_log.info('XCODEBUILD RESULT:\n' + str(result.output))
 
 	if errors.size() > 0:
-		print_errors(errors, 'Errors found while building Xcode Project')
+		log_errors(errors, 'Errors found while building Xcode Project')
 		emit_signal('finished_pipeline', self)
 		view.update_build_progress(1.0, 'Failed', true)
 	elif xcode_project.get_devices().size() > 0:
@@ -440,7 +438,7 @@ func _on_device_deployed(xcode_project, result, errors, device_id):
 	_log.info('DEPLOY RESULT:\n' + str(result.output))
 
 	if errors.size() > 0:
-		print_errors(errors, 'iOSDeploy errors found while deploying to %s' % device_id)
+		log_errors(errors, 'iOSDeploy errors found while deploying to %s' % device_id)
 
 	var runningdeploys = xcode_project.get_running_deploys_count()
 	var devsiz = xcode_project.get_devices().size()
