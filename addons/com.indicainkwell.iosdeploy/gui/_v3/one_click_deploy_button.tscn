@@ -4,7 +4,7 @@
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/one_click_deploy_button.gd" type="Script" id=2]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/_v3/devices_group.tscn" type="PackedScene" id=3]
 
-[node name="one_click_deploy_button" type="Button" index="0"]
+[node name="one_click_deploy_button" type="ToolButton" index="0"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -17,14 +17,14 @@ rect_clip_content = false
 focus_mode = 2
 mouse_filter = 0
 mouse_default_cursor_shape = 0
-size_flags_horizontal = 2
-size_flags_vertical = 2
+size_flags_horizontal = 1
+size_flags_vertical = 1
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
 group = null
 icon = ExtResource( 1 )
-flat = false
+flat = true
 align = 1
 script = ExtResource( 2 )
 
