@@ -125,11 +125,11 @@ func execute_deploy_pipeline():
 
 
 func print_errors(errors, with_message=''):
-	_log.error('>> %s' % with_message)
+	var error_str = ''
 	for error in errors:
-		_log.error('- Error(Code:%s, Category:%s, Message:%s)' %
+		error_str += ('- Error(Code:%s, Category:%s, Message:%s)\n' %
 				[error.code, error.category, error.message])
-	_log.error('<<')
+	_log.error('%s\n%s' % [with_message, error_str])
 
 
 
@@ -260,7 +260,6 @@ func _on_request_populate(menu):
 
 
 func _on_request_fill(menu):
-	print('filling')
 	menu.fill_devices_group(_xcode.project.get_devices())
 	menu.fill_bundle_group(
 		_xcode.project.name,
@@ -451,6 +450,6 @@ func _on_device_deployed(xcode_project, result, errors, device_id):
 
 	if not xcode_project.is_deploying():
 		# this is the last device
-		print('LAST DEPLOY')
+		_log.debug('Last device has deployed.')
 		emit_signal('finished_pipeline', self)
 		view.update_build_progress(1.0, 'Done', true)

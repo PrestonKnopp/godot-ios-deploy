@@ -86,9 +86,6 @@ class Command:
 			}
 		}
 		thread.start(self, '_run_thread', {cmd=name, args=args, thread=thread, thread_id=_current_thread_id})
-
-		print(_thread_map)
-
 		return _current_thread_id
 
 	func _run_thread(data):
