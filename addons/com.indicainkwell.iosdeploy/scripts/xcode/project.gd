@@ -346,9 +346,6 @@ func built():
 
 
 func _on_xcodebuild_finished(command, result):
-	_log.info(""">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-	XCODEBUILD RESULT:\n%s
-	<<<<<<<<<<<<<<<<<<<<<<<<<""" % result.output)
 	var errors = _error_capturer.capture_from(result.output)
 	emit_signal('built', self, result, errors)
 

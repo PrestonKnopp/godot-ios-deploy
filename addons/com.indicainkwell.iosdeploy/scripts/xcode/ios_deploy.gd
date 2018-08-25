@@ -132,7 +132,6 @@ func uninstall():
 
 func _deploy_finished(command, result, device_id):
 	var errors = _error_capturer.capture_from(result.output)
-	_log.info("DEPLOY RESULT:\n" + str(result.output))
 	emit_signal('deployed', self, result, errors, device_id)
 
 

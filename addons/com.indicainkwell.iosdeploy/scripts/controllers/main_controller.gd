@@ -421,6 +421,8 @@ func _on_xcode_made_project(xcode, result, project):
 
 func _on_xcode_project_built(xcode_project, result, errors):
 
+	_log.info('XCODEBUILD RESULT:\n' + str(result.output))
+
 	if errors.size() > 0:
 		print_errors(errors, 'Errors found while building Xcode Project')
 		emit_signal('finished_pipeline', self)
@@ -434,6 +436,8 @@ func _on_xcode_project_built(xcode_project, result, errors):
 
 
 func _on_device_deployed(xcode_project, result, errors, device_id):
+
+	_log.info('DEPLOY RESULT:\n' + str(result.output))
 
 	if errors.size() > 0:
 		print_errors(errors, 'iOSDeploy errors found while deploying to %s' % device_id)
