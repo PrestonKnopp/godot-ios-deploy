@@ -424,6 +424,8 @@ func _on_xcode_project_built(xcode_project, result, errors):
 
 	if errors.size() > 0:
 		print_errors(errors, 'Errors found while building Xcode Project')
+		emit_signal('finished_pipeline', self)
+		view.update_build_progress(1.0, 'Failed', true)
 	elif xcode_project.get_devices().size() > 0:
 		view.update_build_progress(0.5, 'Deploying %s/%s'%[1, xcode_project.get_devices().size()])
 		xcode_project.deploy()
