@@ -282,6 +282,13 @@ To use default command line tools path.
 # ------------------------------------------------------------------------------
 
 
+> [ !! ] Unable to locate DeviceSupport directory with suffix 'Symbols'. This probably means you don't have Xcode installed, you will need to launch the app manually and logging output will not be shown!
+
+Reasons:
+	- DeviceSupport has not been installed onto target device.
+	- Solution: Open xcode, go to *Window > Devices and Simulators*, and click target device. At the top it should say "Preparing Debugger Support"
+
+
 > 2018-06-05 00:31:34.471 ios-deploy[10328:205469] [ !! ] Error 0xe8000067: There was an internal API error. AMDeviceSecureInstallApplication(0, device, url, options, install_callback, 0)
 
 Reasons:

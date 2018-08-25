@@ -1,20 +1,6 @@
-# iOS Deploy
+# Godot iOS Deploy
 
 > Deploy to iOS for testing in one click from within Godot!
-
-## Prerequisites
-
-1. macOS
-2. Xcode and its command line tools
-    - Install Xcode from the App Store and
-    - Open Terminal and type `xcode-select --install`
-3. iOS Developer account
-    - sign up on [developer.apple](https://developer.apple.com), its free
-    - Open Xcode and register your account
-4. [Godot export templates](https://godotengine.org/download)
-6. [ios-deploy](https://github.com/ios-control/ios-deploy)
-    - Install ios-deploy with [homebrew](https://brew.sh)
-        - `brew install ios-deploy`
 
 ## NOTE
 
@@ -25,12 +11,32 @@ hearing about ways to improve workflow, usability, and QoL.
 
 1. Supports Godot versions 2 and 3 in one package
 2. One click deploy
-3. No need to open xcode (after you have registered your apple developer account)
+3. No need to open xcode (after you have registered your apple developer account and downloaded manual provisioning profiles)
 4. Finds installed provisioning profiles and teams
 5. Automatic xcode managed provisions (automanaged)
 6. Builds and signs project
 7. Deploy to multiple ios devices in parallel
 8. Onboarding flow for easy project setup
+
+## Prerequisites
+
+1. macOS
+2. Xcode and its command line tools
+    - Install Xcode from the App Store and
+    - Open Terminal and type `xcode-select --install`
+3. iOS Developer account
+    - sign up on [developer.apple.com](https://developer.apple.com), its free
+    - Open Xcode and register your account
+4. [Godot export templates](https://godotengine.org/download)
+6. [ios-deploy](https://github.com/ios-control/ios-deploy)
+    - Install with [homebrew](https://brew.sh): `brew install ios-deploy`
+7. To automatically launch your installed game by ensuring debugger support for
+   your device
+    1. Open Xcode and go to *Window > Devices and Simulators* while device is
+       connected.
+    2. Select you device and at the top it should say "Preparing Debugger
+       Support"
+    3. Wait awhile. That's it.
 
 ## Install
 
