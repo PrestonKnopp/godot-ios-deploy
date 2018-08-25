@@ -57,6 +57,7 @@ func _init_logger():
 	"""
 	var logger = Logger.new()
 	add_child(logger)
+
 	logger.add_to_group(stc.PLUGIN_DOMAIN)
 	logger.set_name(stc.LOGGER_DOMAIN)
 	_log = stc.get_logger().make_module_logger(stc.LOGGER_DOMAIN)
@@ -69,12 +70,13 @@ func meets_software_requirements():
 		_log.error('macOS is needed to build and deploy iOS projects')
 		meets = false
 
-	if not ext_sw_exists('ios-deploy'):
+	if not ext_sw_exists('/usr/local/bin/ios-deploy'):
+		# TODO: don't hard code path to ios-deploy
 		_log.error('ios-deploy is missing: install ios-deploy with homebrew -- brew install ios-deploy')
 		meets = false
 
 	if not ext_sw_exists('xcodebuild'):
-		_log.error('xcodebuild is missing: install xcode command line tools')
+		_log.error('xcodebuild is missing: install xcode command line tools -- xcode-select --install')
 		meets = false
 
 	return meets
@@ -83,7 +85,8 @@ func meets_software_requirements():
 func ext_sw_exists(software):
 	var out = []
 	OS.execute('command', ['-v', software], true, out)
-	return out.size() > 0
+	_log.verbose(out[0])
+	return out[0].find(software) > -1
 
 
 func add_menu(menu):
