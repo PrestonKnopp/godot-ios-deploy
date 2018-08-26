@@ -13,26 +13,24 @@ class Query:
 	var excludekeypath
 
 	func _process(json, uuid, object):
-		var valid = true
 		if type != null:
 			if not object.has('isa') or \
 			   object['isa'] != type:
-				valid = false
+				return false
 
 		var res
-		var bad_res = "That's Number Wang!"
 
 		if keypath != null:
-			res = json.get_value('objects/'+uuid+'/'+keypath, bad_res)
-			if res == bad_res:
-				valid = false
+			res = json.get_value('objects/'+uuid+'/'+keypath)
+			if res == null:
+				return false
 
 		if excludekeypath:
-			res = json.get_value('objects/'+uuid+'/'+excludekeypath, bad_res)
-			if res != bad_res:
-				valid = false
+			res = json.get_value('objects/'+uuid+'/'+excludekeypath)
+			if res != null:
+				return false
 
-		return valid
+		return true
 
 
 

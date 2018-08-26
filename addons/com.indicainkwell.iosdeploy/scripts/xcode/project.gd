@@ -39,6 +39,7 @@ var Team = stc.get_gdscript('xcode/team.gd')
 var Provision = stc.get_gdscript('xcode/provision.gd')
 var Device = stc.get_gdscript('xcode/device.gd')
 var ErrorCapturer = stc.get_gdscript('xcode/error_capturer.gd')
+var Capabilities = stc.get_gdscript('xcode/capabilities.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -242,6 +243,12 @@ func update_pbx():
 	# 4. Add build file to PBXResourcesBuildPhase
 	#   - isa = PBXResourcesBuildPhase
 	#   - files = array of ids
+	# 5. Erase PROVISIONING_PROFILE in buildSettings
+	#   - isa = XCBuildConfiguration
+	#   - buildSettings = dict of settings
+	# 6. Set system capabilities in rootObject
+	#   - isa = PBXProject
+	#   - attributes/TargetAttributes/<TARGET_OBJID>/SystemCapabilities
 	
 	var pbx = PBX.new()
 	if pbx.open(get_pbx_path()) != OK:
@@ -272,11 +279,16 @@ func update_pbx():
 	var xc_build_configuration_q = PBX.Query.new()
 	xc_build_configuration_q.type = 'XCBuildConfiguration'
 	xc_build_configuration_q.keypath = 'buildSettings/PROVISIONING_PROFILE'
-	
+
+	var proj_target_attr_q = PBX.Query.new()
+	proj_target_attr_q.type = 'PBXProject'
+	proj_target_attr_q.keypath = 'attributes/TargetAttributes'
+
 	var res = pbx.find_objects([
-		root_pbxgroup_q,         # res[0]
-		resource_build_phase_q,  # res[1]
-		xc_build_configuration_q # res[2]
+		root_pbxgroup_q,          # res[0]
+		resource_build_phase_q,   # res[1]
+		xc_build_configuration_q, # res[2]
+		proj_target_attr_q,       # res[3]
 	])
 
 	# add godot project folder to xcode project
@@ -295,6 +307,26 @@ func update_pbx():
 	# implies manual signing.
 	for build_cfg in res[2]:
 		build_cfg['buildSettings'].erase('PROVISIONING_PROFILE')
+	
+	# Remove SystemCapabilities requirements if team is a free account
+	# Or Add Capabilities if team is in apple developer program
+	#
+	# SystemCapabilities is in main PBXProject object, under
+	# attributes/TargetAttributes/<TARGET_OBJID>. There can be multiple
+	# targets.
+	#
+	# TODO: add a way for user to enable or disable capabilities
+	assert(team != null)
+	for proj in res[3]:
+		var target_attr = proj['attributes']['TargetAttributes']
+		for target_id in target_attr:
+			var target = target_attr[target_id]
+			if team.is_free_account:
+				target['SystemCapabilities'] = {}
+			else:
+				var cap = Capabilities.new()
+				target['SystemCapabilities'] = cap.to_dict()
+			_log.debug(target)
 	
 	pbx.save_plist(get_pbx_path())
 	mark_needs_building()
