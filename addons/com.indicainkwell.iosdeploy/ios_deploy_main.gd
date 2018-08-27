@@ -60,7 +60,7 @@ func _init_logger():
 
 	logger.add_to_group(stc.PLUGIN_DOMAIN)
 	logger.set_name(stc.LOGGER_DOMAIN)
-	_log = stc.get_logger().make_module_logger(stc.LOGGER_DOMAIN)
+	_log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN)
 
 
 func meets_software_requirements():
