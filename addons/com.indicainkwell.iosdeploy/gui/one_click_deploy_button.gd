@@ -107,23 +107,6 @@ func _on_hover_exit_timer_timeout():
 	get_node('hover_panel').hide()
 
 
-func get_devices_list():
-	return get_node("hover_panel/devices_group/devices_list")
-
-
-func devices_list_populate(devices):
-	get_devices_list().populate(devices)
-
-
-func devices_list_set_active(devices):
-	get_devices_list().set_active(devices)
-
-
-func _on_devices_list_item_edited():
-	emit_signal("devices_list_edited", self)
-
-
-
 func check_is_hidden(canvas_item):
 	if stc.get_version().is2():
 		return canvas_item.is_hidden()
@@ -146,6 +129,36 @@ func _place_panel(panel):
 		panel.rect_position = newpos
 
 
+# ------------------------------------------------------------------------------
+#                                   Devices List
+# ------------------------------------------------------------------------------
+
+
+func get_devices_list():
+	return get_node("hover_panel/devices_group/devices_list")
+
+
+func devices_list_populate(devices):
+	get_devices_list().populate(devices)
+
+
+func devices_list_set_active(devices):
+	get_devices_list().set_active(devices)
+
+
+func _on_devices_list_item_edited():
+	emit_signal("devices_list_edited", self)
+
+
+# ------------------------------------------------------------------------------
+#                                   Build Status
+# ------------------------------------------------------------------------------
+
+
+func set_build_status(status):
+	get_node('hover_panel/build_progress_bar/HBoxContainer/build_status').set_text(status)
+
+
 func update_build_progress(percent, status=null, finished=false):
 	var tween = get_node('build_progress_tweener')
 	var bar = get_node('build_progress_bar')
@@ -161,14 +174,6 @@ func update_build_progress(percent, status=null, finished=false):
 	else:
 		tween.interpolate_method(bar, 'set_value', bar.get_value(), percent * 100.0, 0.5, 0, 0)
 		tween.start()
-
-
-func set_build_status(status):
-	get_node('hover_panel/build_progress_bar/HBoxContainer/build_status').set_text(status)
-
-
-func set_project_valid(valid):
-	get_node('hover_panel/HBoxContainer/project_valid').set_pressed(valid)
 
 
 func _draw_build_progress_overlay():
@@ -193,6 +198,20 @@ func _draw():
 
 func _on_build_progress_bar_changed():
 	update()
+
+
+# ------------------------------------------------------------------------------
+#                                 Project Validity
+# ------------------------------------------------------------------------------
+
+
+func set_project_valid(valid):
+	get_node('hover_panel/HBoxContainer/project_valid').set_pressed(valid)
+
+
+# ------------------------------------------------------------------------------
+#                                  Settings Button
+# ------------------------------------------------------------------------------
 
 
 func _on_settings_button_pressed():
