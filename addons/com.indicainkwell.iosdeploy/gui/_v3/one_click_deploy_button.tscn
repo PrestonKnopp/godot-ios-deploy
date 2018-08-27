@@ -30,6 +30,7 @@ script = ExtResource( 2 )
 
 [node name="hover_panel" type="PopupPanel" parent="." index="0"]
 
+editor/display_folded = true
 visible = false
 anchor_left = 0.0
 anchor_top = 0.0
@@ -134,7 +135,6 @@ _sections_unfolded = [ "Mouse", "Size Flags" ]
 
 [node name="devices_group" parent="hover_panel" index="1" instance=ExtResource( 3 )]
 
-editor/display_folded = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 2.0
@@ -285,15 +285,7 @@ wait_time = 0.5
 one_shot = true
 autostart = false
 
-[connection signal="mouse_entered" from="." to="." method="_on_mouse_enter"]
-
-[connection signal="mouse_exited" from="." to="." method="_on_mouse_exit"]
-
-[connection signal="gui_input" from="hover_panel" to="." method="_on_hover_panel_input_event"]
-
-[connection signal="mouse_entered" from="hover_panel" to="." method="_on_hover_panel_mouse_enter"]
-
-[connection signal="mouse_exited" from="hover_panel" to="." method="_on_hover_panel_mouse_exit"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
 
 [connection signal="pressed" from="hover_panel/HBoxContainer/settings_button" to="." method="_on_settings_button_pressed"]
 

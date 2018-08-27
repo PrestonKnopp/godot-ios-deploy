@@ -216,15 +216,7 @@ wait_time = 0.5
 one_shot = true
 autostart = false
 
-[connection signal="mouse_enter" from="." to="." method="_on_mouse_enter"]
-
-[connection signal="mouse_exit" from="." to="." method="_on_mouse_exit"]
-
-[connection signal="input_event" from="hover_panel" to="." method="_on_hover_panel_input_event"]
-
-[connection signal="mouse_enter" from="hover_panel" to="." method="_on_hover_panel_mouse_enter"]
-
-[connection signal="mouse_exit" from="hover_panel" to="." method="_on_hover_panel_mouse_exit"]
+[connection signal="mouse_enter" from="." to="." method="_on_mouse_entered"]
 
 [connection signal="pressed" from="hover_panel/HBoxContainer/settings_button" to="." method="_on_settings_button_pressed"]
 
