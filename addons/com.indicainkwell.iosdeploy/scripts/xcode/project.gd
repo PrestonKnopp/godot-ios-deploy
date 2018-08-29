@@ -404,9 +404,9 @@ func _build_xcodebuild_args():
 		# -destination 'platform=iOS,id={device_id}'
 		args.append('-allowProvisioningDeviceRegistration')
 		args.append('CODE_SIGN_STYLE=Automatic')
-	
-	# no provision profile needed if it's automanaged
-	if not automanaged and provision != null:
+	else:
+		assert(provision != null)
+		args.append('CODE_SIGN_STYLE=Manual')
 		args.append('PROVISIONING_PROFILE_SPECIFIER='+provision.name)
 	
 	if stc.get_version().is3():
@@ -416,6 +416,8 @@ func _build_xcodebuild_args():
 	args.append('PRODUCT_NAME='+name)
 	args.append('PRODUCT_BUNDLE_IDENTIFIER='+bundle_id)
 	args.append('DEVELOPMENT_TEAM='+team.id)
+
+	_log.debug('XcodeBuild Args: '+str(args))
 	
 	return args
 
