@@ -19,7 +19,7 @@ func _init():
 
 func enable(capability):
 	if not capability in _dict:
-		_dict[value] = {
+		_dict[capability] = {
 			# Enabled is a string in the pbxproj
 			enabled = '1'
 		}
