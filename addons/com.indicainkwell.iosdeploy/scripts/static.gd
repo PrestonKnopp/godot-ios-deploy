@@ -1,6 +1,7 @@
 # static.gd
 extends Object
 
+
 const PLUGIN_DOMAIN = 'com.indicainkwell.iosdeploy'
 const LOGGER_DOMAIN = 'ios-deploy'
 
@@ -17,6 +18,8 @@ const SHELL_SCRIPTS = ADDON_PREFIX + '/shell'
 const GDSCRIPTS = ADDON_PREFIX + '/scripts'
 const GDSCRIPTS_2 = GDSCRIPTS  + '/_v2'
 const GDSCRIPTS_3 = GDSCRIPTS  + '/_v3'
+
+const CONFIG_VERSION = 0
 
 
 # Get rid of this and just use get_shell_script() with string input

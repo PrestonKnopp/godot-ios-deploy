@@ -3,10 +3,8 @@
 # ------------------------------------------------------------------------------
 
 
-[ ] Add version to config
 [ ] Make detect_devices() async
 [ ] Implement Data subclass' {from,to}_dict in Data by using Object.get_property_list()
-[ ] Replace all prints with logs and use correct level
 [ ] read export settings for ios and use it to prefill
 [ ] use export template for environment or see what's best
 	[ ] if environment has XDG_*, templates will install at XDG_*. Otherwise it's installed in the Application Support directory.
@@ -33,6 +31,8 @@
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
 [ ] write tests
+[X] Add version to config
+[X] Replace all prints with logs and use correct level
 [X] Disable unsupported system capabilities (Push, GameCenter) when automanaging with free developer team
 [X] Specially handle Xcode Managed Provisions
 	[X] So with xcode_managed projects and the new "Automanaged" placeholder provision, we don't need the SECTION.AUTOMANAGE anymore. For now just hide the control in the scene

@@ -68,6 +68,14 @@ func _init_config():
 	# TODO: mv config loading and stuff to plugin
 	if _config.load(stc.get_data_path('config.cfg')) != OK:
 		_log.info('unable to load config')
+	
+	var cfg_version = _config.get_value('meta', 'version', -1)
+	if cfg_version != stc.CONFIG_VERSION:
+		# TODO: implement config versioning
+		_log.verbose('Differing config version. Update cfg here.')
+	_log.verbose('Changing config version from %s to %s' % [str(cfg_version), stc.CONFIG_VERSION])
+	_config.set_value('meta', 'version', stc.CONFIG_VERSION)
+
 
 
 func _init_onboarding_flow_controller():
