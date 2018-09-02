@@ -50,7 +50,7 @@ func p(arg0=_nil_, arg1=_nil_, arg2=_nil_, arg3=_nil_, arg4=_nil_, arg5=_nil_, a
 signal wait_test_signal(name)
 
 
-var _signals_waiting = 0
+var _signals_waiting = []
 var _failed_tests = []
 var _failed_assertions = 0
 
@@ -58,15 +58,20 @@ func a(assertion, success_msg='', fail_msg=''):
 	p('Success: '+success_msg if assertion else 'Failure: '+fail_msg)
 	if not assertion: _failed_assertions += 1
 
+
 func ae(a, b, smsg='%s == %s', fmsg='%s != %s'):
 	a(a == b, smsg %[a,b], fmsg%[a,b])
+
+func ai(a, arr, smsg='%s in %s', fmsg='%s not in %s'):
+	a(a in arr, smsg %[a,arr], fmsg%[a,arr])
+
 
 func ane(a, b, smsg='%s != %s', fmsg='%s == %s'):
 	a(a != b, smsg %[a,b], fmsg%[a,b])
 
 
 func wait_for(name):
-	_signals_waiting += 1
+	_signals_waiting.append(name)
 
 
 var _prep_method_map = {}
@@ -88,6 +93,15 @@ func find_test_prep(test_method):
 
 
 func run_tests():
+	# Init logger as everything depends on it.
+	# This shouldn't need to be done.
+	var logger = preload('res://addons/com.indicainkwell.iosdeploy/scripts/logger.gd').new()
+	get_root().add_child(logger)
+	logger.add_to_group(stc.PLUGIN_DOMAIN)
+	logger.set_name(stc.LOGGER_DOMAIN)
+
+	# TODO: sort methods before running.
+
 	for method in get_method_list():
 		if method.flags == 65 and method.name.begins_with('test_'):
 			_failed_assertions = 0
@@ -107,6 +121,8 @@ func run_tests():
 				p(method.name, 'has __SUCCEEDED__')
 			dedent()
 	
+
+func show_failed_tests():
 	print('\n------------ Failed Tests -------------')
 	for test in _failed_tests:
 		print('\t', test)
@@ -114,14 +130,15 @@ func run_tests():
 
 
 func _wait_test_signal_callback(name):
-	_signals_waiting -= 1
+	_signals_waiting.erase(name)
 
 func _initialize():
 	connect('wait_test_signal', self, '_wait_test_signal_callback')
 	run_tests()
-	while _signals_waiting > 0:
-		print('Waiting Signals: ', _signals_waiting)
+	while _signals_waiting.size() > 0:
+		print('\nWaiting Signals: ', _signals_waiting)
 		yield(self, 'wait_test_signal')
+	show_failed_tests()
 	# _nil_.free()
 	quit()
 
@@ -140,6 +157,7 @@ var iOSDeploy = stc.get_gdscript('xcode/ios_deploy.gd')
 var Xcode = stc.get_gdscript('xcode.gd')
 var ProvisionFinder = stc.get_gdscript('xcode/finders/provision_finder.gd')
 var PBX = stc.get_gdscript('xcode/pbx.gd')
+var Data = stc.get_gdscript('xcode/Data.gd')
 
 
 # -- Test Static
@@ -158,26 +176,26 @@ func test_static_paths():
 
 func test_logger_add_module():
 	var l = stc.get_logger()
-	l.add_module('test')
-	for logT in ['info', 'warn', 'error']:
-		l.call(logT, 'Test ' + logT, 'test')
+	# l.add_module('test')
+	# for logT in ['info', 'warn', 'error']:
+	# 	l.call(logT, 'Test ' + logT, 'test')
 
 
 func test_logger_get_module():
 	var l = stc.get_logger()
-	var m = l.get_module('test').get_name()
-	for logT in ['info', 'warn', 'error']:
-		l.call(logT, 'Test ' + logT, m)
+	# var m = l.get_module('test').get_name()
+	# for logT in ['info', 'warn', 'error']:
+	# 	l.call(logT, 'Test ' + logT, m)
 	
-	m = l.get_module('no.mod.test').get_name()
-	for logT in ['info', 'warn', 'error']:
-		l.call(logT, 'Test ' + logT, m)
+	# m = l.get_module('no.mod.test').get_name()
+	# for logT in ['info', 'warn', 'error']:
+	# 	l.call(logT, 'Test ' + logT, m)
 
 
 func test_module_logger():
 	var l = stc.get_logger().make_module_logger('modlog')
-	l.info('hello world')
-	l.error('hello world')
+	# l.info('hello world')
+	# l.error('hello world')
 
 
 # -- Test Shell
@@ -193,9 +211,9 @@ var echo
 func test_shell_async():
 	var _shell = Shell.new()
 	echo = _shell.make_command('echo')
-	echo.run_async(['Hello World'], self, '_test_shell_async_callback')
+	var id = echo.run_async(['Hello World'], self, '_test_shell_async_callback')
 	wait_for('_test_shell_async_callback')
-	echo.wait()
+	echo.wait(id)
 
 
 func _test_shell_async_callback(command, result):
@@ -339,14 +357,14 @@ func test_pbx():
 		onemore = 'omg'
 	})
 	var d = pbx.get_dict()
-	for key in d:
-		print(key)
-		if typeof(d[key]) == TYPE_DICTIONARY:
-			for k in d[key]:
-				print('\t', k)
-				print('\t\t', d[key][k])
-		else:
-			print('\t', d[key])
+	# for key in d:
+	# 	print(key)
+	# 	if typeof(d[key]) == TYPE_DICTIONARY:
+	# 		for k in d[key]:
+	# 			print('\t', k)
+	# 			print('\t\t', d[key][k])
+	# 	else:
+	# 		print('\t', d[key])
 	pbx.save_plist('res://tests/files/pbxprojs/destination/project.pbxproj')
 
 
@@ -358,10 +376,6 @@ func test_iosDeploy():
 	deploy.bundle = 'hello.app'
 	var launch_args = deploy._build_launch_args('DEVICE_ID')
 	p('launch_args:', launch_args)
-	var deploy_cmd = deploy._build_deploy_cmd(launch_args)
-	p('deploy_cmd:', deploy_cmd)
-	var joined = deploy._bashinit + [deploy_cmd]
-	p('joined_args:', joined)
 
 
 var deploy
@@ -373,10 +387,11 @@ func test_iosDeploy_install():
 	wait_for('_test_iosDeploy_install_callback')
 
 
-func _test_iosDeploy_install_callback(iosdeploy, result, device_id):
-	emit_signal('wait_test_signal', '_test_iosDeploy_install_callback')
+func _test_iosDeploy_install_callback(iosdeploy, result, errors, device_id):
 	p('DEVICE_ID:', device_id)
 	p('Result:', result)
+	p('Result Errors: ', errors)
+	emit_signal('wait_test_signal', '_test_iosDeploy_install_callback')
 
 
 # --  Test iOSExportTemplate
@@ -390,25 +405,43 @@ func test_iosExportTemplate_destination_path():
 # --  Test Xcode Project
 
 
+var xcode
 func test_xcodeproject_make():
-	var proj = Xcode.new().make_project('com.my.bundle.id', 'MyTestProject')
+	xcode = Xcode.new()
+	xcode.connect('made_project', self, '_test_xcodeproject_make_callback')
+	wait_for('_test_xcodeproject_make_callback')
+	xcode.make_project_async('com.my.bundle.id', 'MyTestProject')
+	print('Waiting for xcode project to finish making')
+
+
+func _test_xcodeproject_make_callback(xcode, result, proj):
+	print('Xcode Project Make Callback Called')
 	ane(proj, null)
 
-
-func test_xcodeproject_paths():
-	var proj = Xcode.new().make_project('com.my.bundle.id', 'MyTestProject')
 	p(proj.get_path())
 	p(proj.get_xcodeproj_path())
 	p(proj.get_app_path())
 	p(proj.get_pbx_path())
 	p(proj.get_info_plist_path())
 
-
-
-func _test_xcodeproject_build():
-	var proj = Xcode.new().make_project('com.my.bundle.id', 'MyTestProject')
-	var team = stc.get_gdscript('xcode/finders/team_finder.gd').Team.new()
+	var team = xcode.Team.new()
 	team.id = 'TeamID'
 	team.name = 'TeamName'
 	proj.team = team
-	proj.build()
+	emit_signal('wait_test_signal', '_test_xcodeproject_make_callback')
+
+
+# -- Test Data
+
+
+class SubData extends 'res://addons/com.indicainkwell.iosdeploy/scripts/xcode/Data.gd':
+	var hello = 'Hello'
+	var world = 'World'
+
+
+func test_data_property_list():
+	var subdata = SubData.new()
+	for prop in subdata._get_script_property_list():
+		var pname = prop['name']
+		ai(pname, ['hello', 'world'])
+		p('-- var', pname, '=', subdata[pname])

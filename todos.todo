@@ -4,6 +4,7 @@
 
 
 [ ] Make detect_devices() async
+[ ] better build status using errors and tips to fix
 [ ] Implement Data subclass' {from,to}_dict in Data by using Object.get_property_list()
 [ ] read export settings for ios and use it to prefill
 [ ] use export template for environment or see what's best
@@ -17,7 +18,6 @@
 			[ ] write shell script that captures code and outputs it as the last line. Shell can then parse and remove that line.
 		[ ] test using a file based output, so godot can execute a command and have non blocking output/error/input
 			[ ] input could be used for ios-deploy when deploying and linking lldb.
-	[ ] better build status using errors and tips to fix
 	[X] xcodebuild errors
 		[X] parse from output and display to user
 		[X] printed with fmt: "<system> Error: <message>"
@@ -30,7 +30,7 @@
 [ ] What to do when:
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
-[ ] write tests
+[X] write tests
 [X] Add version to config
 [X] Replace all prints with logs and use correct level
 [X] Disable unsupported system capabilities (Push, GameCenter) when automanaging with free developer team
