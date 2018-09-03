@@ -2,6 +2,9 @@
 extends Reference
 
 
+const ERROR_FILE_FMT = 'com.indicainkwell.iosdeploy.shell.error.%s.txt'
+
+
 class Result:
 	var output = []
 	var code = 0
@@ -93,7 +96,10 @@ class Command:
 		The background thread func. It runs command, callsback, then
 		waits till itself is finished and cleans itself up.
 		"""
-		var res = _shell.execute(data.cmd, data.args)
+		var res = _shell.execute(
+			data.cmd, data.args,
+			str(data.thread_id)
+		)
 		emit_signal('finished', self, res)
 
 		if data.thread.is_active():
@@ -113,9 +119,56 @@ class Command:
 		_thread_mutex.unlock()
 
 
-func execute(cmd, args=[]):
+func _build_execute_args(cmd, args, err_file_path):
+	var built_args = ['-c', cmd + ' ']
+	for arg in args:
+		# mimics what OS.execute does with args
+		# we have to escape the quotes because OS.execute
+		# will quote built_args
+		built_args[1] += '\\"%s\\" ' % arg
+	# redirect error to file path as OS.execute ignores stderr
+	built_args[1] += '2>' + err_file_path
+	# Echo resulting code of cmd as OS.execute does not provide this
+	# will need to be parsed out of result
+	built_args[1] += "; echo -n $'\n'$?"
+	return built_args
+
+
+func get_error_file_path(fname):
+	return '/tmp/' + fname
+
+
+func get_file_contents(file_path):
+	var f = File.new()
+	var c = ''
+	if f.open(file_path, f.READ) == OK:
+		c = f.get_as_text()
+	f.close()
+	return c
+
+
+func execute(cmd, args=[], error_file_name='default'):
+	var errfpath = get_error_file_path(ERROR_FILE_FMT % error_file_name)
+	var built_args = _build_execute_args(
+		cmd, args,
+		errfpath
+	)
+	var last_nl_idx = -1
+
 	var res = Result.new()
-	res.pid = OS.execute(cmd, args, true, res.output)
+	res.pid = OS.execute('/bin/bash', built_args, true, res.output)
+	res.output.resize(2)
+
+	# get error code and not the last newline
+	last_nl_idx = res.output[0].rfind('\n')
+	res.code = int(res.output[0].right(last_nl_idx + 1))
+
+	# remove error code from stdout
+	res.output[0] = res.output[0].left(last_nl_idx)
+
+	# set stderr output
+	res.output[1] = get_file_contents(errfpath)
+
 	return res
 
 

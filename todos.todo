@@ -5,19 +5,21 @@
 
 [ ] Make detect_devices() async
 [ ] better build status using errors and tips to fix
-[ ] Implement Data subclass' {from,to}_dict in Data by using Object.get_property_list()
 [ ] read export settings for ios and use it to prefill
 [ ] use export template for environment or see what's best
 	[ ] if environment has XDG_*, templates will install at XDG_*. Otherwise it's installed in the Application Support directory.
 [ ] properly destroy threads before exiting
-[ ] error parsing and displaying
-	[ ] shell
-		[ ] stderr
-			[ ] pipe to stdout or to a file and read it in later from Shell
-		[ ] figure out how to get program return codes from shell
-			[ ] write shell script that captures code and outputs it as the last line. Shell can then parse and remove that line.
-		[ ] test using a file based output, so godot can execute a command and have non blocking output/error/input
-			[ ] input could be used for ios-deploy when deploying and linking lldb.
+[ ] allow user to set custom plist values
+[ ] change plist to use build vars, maybe use xcconfig
+[ ] What to do when:
+	[ ] theres no provisioning profiles
+	[ ] theres no teams
+[X] error parsing and displaying
+	[X] shell
+		[X] stderr
+			[X] pipe to stdout or to a file and read it in later from Shell
+		[X] figure out how to get program return codes from shell
+			[X] write shell script that captures code and outputs it as the last line. Shell can then parse and remove that line.
 	[X] xcodebuild errors
 		[X] parse from output and display to user
 		[X] printed with fmt: "<system> Error: <message>"
@@ -25,11 +27,6 @@
 	[X] ios-deploy errors
 		[X] defined ios-deploy/src/errors.h
 		[X] printed with fmt: "Error 0x<code>: <call> <message>"
-[ ] allow user to set custom plist values
-[ ] change plist to use build vars, maybe use xcconfig
-[ ] What to do when:
-	[ ] theres no provisioning profiles
-	[ ] theres no teams
 [X] write tests
 [X] Add version to config
 [X] Replace all prints with logs and use correct level
