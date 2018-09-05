@@ -345,7 +345,7 @@ func update_info_plist():
 	
 	if stc.get_version().is3():
 		# TODO: plist should escape shell stuff
-		plist.set_value('CFBundleExecutable', "\\${EXECUTABLE_NAME}")
+		plist.set_value('CFBundleExecutable', "\\\\\\${EXECUTABLE_NAME}")
 	
 	for key in custom_info:
 		plist.set_value(key, custom_info[key])
