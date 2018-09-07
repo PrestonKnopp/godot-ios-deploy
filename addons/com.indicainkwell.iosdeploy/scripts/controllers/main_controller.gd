@@ -127,7 +127,9 @@ func get_menu():
 func execute_deploy_pipeline():
 	# Pipeline: Build Project -> Then Deploy to Devices
 	emit_signal('began_pipeline', self)
-	_update_xcode_project_custom_info(_xcode.project, _settings)
+	_set_xcode_project_custom_info(_xcode.project, _settings)
+	_walk_dir_recursively_for_dlls(_xcode.project, 'res://')
+	_xcode.project.update()
 	view.update_build_progress(0.3, 'Building Xcode Project')
 	_xcode.project.build()
 
@@ -163,7 +165,30 @@ func check_xcode_make_project(oneclickbutton=null):
 # -- Xcode Project
 
 
-func _update_xcode_project_custom_info(xcode_project, settings):
+func _walk_dir_recursively_for_dlls(xcode_project, dirpath):
+	var dir = Directory.new()
+	if dir.open(dirpath) != OK:
+		_log.info('failed to open ' + dirpath)
+		return
+
+	dir.list_dir_begin(true, true)
+	var cur
+	var curpath
+	while true:
+		cur = dir.get_next()
+		if cur == '':
+			# end of list dir stream
+			break
+		curpath = stc.globalize_path(dirpath.plus_file(cur))
+		if dir.current_is_dir():
+			_walk_dir_recursively_for_dlls(xcode_project, curpath)
+			continue
+		if xcode_project.add_lib(curpath) == OK:
+			_log.info('Added iOS lib: ' + curpath)
+	dir.list_dir_end()
+
+
+func _set_xcode_project_custom_info(xcode_project, settings):
 	var orientation
 	if stc.get_version().is2():
 		orientation = settings.get_setting('display/orientation')
@@ -184,7 +209,7 @@ func _update_xcode_project_custom_info(xcode_project, settings):
 	# will be there until the generated template is trashed
 	xcode_project.custom_info['UISupportedInterfaceOrientations'] = mapped_ios_orientations
 	xcode_project.custom_info['UISupportedInterfaceOrientations~ipad'] = mapped_ios_orientations
-	xcode_project.update_info_plist()
+	# xcode_project.update_info_plist()
 
 
 # -- Validation
