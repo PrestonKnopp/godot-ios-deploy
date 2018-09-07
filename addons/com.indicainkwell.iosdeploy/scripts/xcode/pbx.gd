@@ -2,6 +2,9 @@
 extends Reference
 
 
+const OBJ_ID_LENGTH = 24
+
+
 # ------------------------------------------------------------------------------
 #                                    Sub Classes
 # ------------------------------------------------------------------------------
@@ -11,6 +14,7 @@ class Query:
 	var type
 	var keypath
 	var excludekeypath
+	var keypathvalue
 
 	func _process(json, uuid, object):
 		if type != null:
@@ -22,7 +26,9 @@ class Query:
 
 		if keypath != null:
 			res = json.get_value('objects/'+uuid+'/'+keypath)
-			if res == null:
+			if res == null and keypathvalue == null:
+				return false
+			elif keypathvalue != null and res != keypathvalue:
 				return false
 
 		if excludekeypath:
@@ -114,6 +120,25 @@ var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.pbx')
 
 func get_dict():
 	return _json.get_dict()
+
+
+# ------------------------------------------------------------------------------
+#                                       UUID
+# ------------------------------------------------------------------------------
+
+
+func generate_unique_object_id():
+	var id
+	while true:
+		id = ''
+		for i in range(OBJ_ID_LENGTH):
+			# build id with a string of digits 0..<10
+			id += str(randi() % 10)
+			
+		if get_object(id) == null:
+			break
+	return id
+
 
 
 # ------------------------------------------------------------------------------
