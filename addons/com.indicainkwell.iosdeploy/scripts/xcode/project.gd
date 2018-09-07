@@ -2,6 +2,7 @@
 #
 # Loosely reflects a project.xcodeproj by managing bundle id, name, team,
 # provision, info plist, and builds and deploys to devices.
+tool
 extends Reference
 
 
@@ -42,6 +43,34 @@ var ErrorCapturer = stc.get_gdscript('xcode/error_capturer.gd')
 var Capabilities = stc.get_gdscript('xcode/capabilities.gd')
 
 
+class _Lib:
+
+	const FileTypeDomains = [
+		"archive.ar", "compiled.mach-o.dylib", "wrapper.framework"
+	]
+	const FileExts = [
+		"a", "dylib", "framework"
+	]
+	enum Type {
+		ARCHIVE=0, DYLIB, FRAMEWORK
+	}
+
+	# The global path to this lib file
+	var _filepath
+	# The type of this lib, @see _Lib.Type
+	var _type
+
+	func _init(filepath, type):
+		_filepath = filepath
+		_type = type
+	
+	func get_filepath():
+		return _filepath
+
+	func get_file_type_domain():
+		return FileTypeDomains[_type]
+
+
 # ------------------------------------------------------------------------------
 #                                     Variables
 # ------------------------------------------------------------------------------
@@ -56,6 +85,8 @@ var automanaged = false
 
 var debug = true
 var custom_info = {}
+
+var _libs = []
 
 var _config
 
@@ -109,6 +140,35 @@ func mark_needs_building():
 
 func needs_building():
 	return _needs_building
+
+
+# ------------------------------------------------------------------------------
+#                                       Libs
+# ------------------------------------------------------------------------------
+
+
+func add_lib(filepath):
+	"""
+	Add lib at filepath. Lib file must end in _Lib.FileExts. It must also
+	have ios in its file name.
+	@filepath String
+	    Path to lib file to add.
+	@return Error
+	    OK when successfully added lib
+	    ERR_FILE_BAD_PATH when failed
+	"""
+	var file = filepath.get_file()
+	var ext = (file.extension() if stc.get_version().is2() else
+		   file.get_extension())
+	var ext_idx = _Lib.FileExts.find(ext)
+	if file.find('ios') > -1 and ext_idx > -1:
+		if Directory.new().file_exists(filepath):
+			# ext_idx should map to _Lib.Type
+			var lib = _Lib.new(filepath, ext_idx)
+			_libs.append(lib)
+			return OK
+
+	return ERR_FILE_BAD_PATH
 
 
 # ------------------------------------------------------------------------------
@@ -249,6 +309,18 @@ func update_pbx():
 	# 6. Set system capabilities in rootObject
 	#   - isa = PBXProject
 	#   - attributes/TargetAttributes/<TARGET_OBJID>/SystemCapabilities
+	# 7. Process Lib Files
+	#   1. Make lib file references
+	#     - isa = PBXFileReference
+	#     - lastKnownFileType = _Lib.FileTypeDomains
+	#     - name = libname.ext
+	#   2. Add lib file reference to Frameworks group
+	#   3. Make lib build file
+	#     - isa = PBXBuildFile
+	#     - fileRef = lib file reference
+	#   4. Add lib build file to PBXFrameworksBuildPhase.files
+	#     - isa = PBXFrameworksBuildPhase
+	#     - files = [PBXBuildFile]
 	
 	var pbx = PBX.new()
 	if pbx.open(get_pbx_path()) != OK:
@@ -284,11 +356,26 @@ func update_pbx():
 	proj_target_attr_q.type = 'PBXProject'
 	proj_target_attr_q.keypath = 'attributes/TargetAttributes'
 
+	var all_file_refs_q = PBX.Query.new()
+	all_file_refs_q.type = 'PBXFileReference'
+
+	var frameworks_group_q = PBX.Query.new()
+	frameworks_group_q.type = 'PBXGroup'
+	frameworks_group_q.keypath = 'name'
+	frameworks_group_q.keypathvalue = 'Frameworks'
+
+	var frameworks_build_phase_q = PBX.Query.new()
+	frameworks_build_phase_q.type = 'PBXFrameworksBuildPhase'
+	frameworks_build_phase_q.keypath = 'files'
+
 	var res = pbx.find_objects([
 		root_pbxgroup_q,          # res[0]
 		resource_build_phase_q,   # res[1]
 		xc_build_configuration_q, # res[2]
 		proj_target_attr_q,       # res[3]
+		all_file_refs_q,          # res[4]
+		frameworks_group_q,       # res[5]
+		frameworks_build_phase_q  # res[6]
 	])
 
 	# add godot project folder to xcode project
@@ -328,6 +415,57 @@ func update_pbx():
 				target['SystemCapabilities'] = cap.to_dict()
 			_log.debug(target)
 	
+	# Process lib files
+
+	var newly_added_libs = _libs.duplicate()
+	# remove found and already processed libs from newly_added_libs
+	for file_ref_obj in res[4]:
+		if not file_ref_obj.has('lastKnownFileType'):
+			continue
+		var ft = file_ref_obj['lastKnownFileType']
+		if not (ft in _Lib.FileTypeDomains):
+			continue
+		for lib in _libs:
+			if file_ref_obj['name'] != lib.get_filepath().get_file():
+				continue
+
+			# file_ref_obj represents lib from here on
+			# update path in case it has changed
+			file_ref_obj['path'] = lib.get_filepath()
+
+			newly_added_libs.erase(lib)
+	
+	# the left over libs in newly_added_libs are the actual new libs
+	for new_lib in newly_added_libs:
+		# create a pbxfileref object for each new lib
+		var lib_file_ref_id = pbx.generate_unique_object_id()
+		pbx.add_object(lib_file_ref_id, 'PBXFileReference', {
+			name = new_lib.get_filepath().get_file(),
+			path = new_lib.get_filepath(),
+			lastKnownFileType = new_lib.get_file_type_domain()
+		})
+
+		# then add it to frameworks group if it exists
+		if res[5].size() > 0:
+			# use first frameworks group
+			var frameworks_group = res[5][0]
+			if not frameworks_group.has('children'):
+				frameworks_group['children'] = []
+			frameworks_group['children'].append(lib_file_ref_id)
+
+		# then add pbxbuildfile object for lib
+		var lib_build_file_id = pbx.generate_unique_object_id()
+		pbx.add_object(lib_build_file_id, 'PBXBuildFile', {
+			fileRef = lib_file_ref_id
+		})
+
+		# lastly add lib_build_file_id to PBXFrameworksBuildPhase.files
+		for frameworks_build_phase in res[6]:
+			if not frameworks_build_phase.has('files'):
+				frameworks_build_phase['files'] = []
+			frameworks_build_phase['files'].append(lib_build_file_id)
+
+
 	pbx.save_plist(get_pbx_path())
 	mark_needs_building()
 
