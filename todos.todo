@@ -3,6 +3,8 @@
 # ------------------------------------------------------------------------------
 
 
+[ ] Add ios dylibs, archives, and frameworks to build file
+	- Looks like set for lib file ref object is wrong. Try having a relative path that starts at godot project path name.
 [ ] Make detect_devices() async
 [ ] better build status using errors and tips to fix
 [ ] read export settings for ios and use it to prefill
