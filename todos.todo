@@ -3,21 +3,30 @@
 # ------------------------------------------------------------------------------
 
 
+[ ] plan out crossplatform
+[ ] make plist.gd readwrite
+[ ] abstract ios-deploy behind an interface to support libimobiledevice
 [ ] properly fill in xcodeproj so user can open and edit it if needed
-[ ] add more configurability
-	[ ] open directory where generated xcode project is stored
-	[ ] read export settings for ios and use it to prefill
-	[ ] set log level, from env and in editor
-	[ ] set where to generate xcodeproj
-	[ ] set custom plist values
-	[ ] set custom godot binary -- or lib. Whichever one godot uses.
-		- in godot's export template it uses an archive
+[ ] Config
+	[ ] mv config loading to plugin main
+	[ ] implement config versioning
+	[ ] add more configurability
+		[ ] open directory where generated xcode project is stored
+		[ ] read export settings for ios and use it to prefill
+		[ ] set path to ios deploy tool
+		[ ] set log level, from env and in editor
+		[ ] set where to generate xcodeproj
+		[ ] set custom plist values
+		[ ] set custom godot binary
+			- or lib. Whichever one godot uses
+			- in godot's export template it uses an archive
 [ ] make async
 	[ ] detect_devices()
 	[ ] find_teams()
 [ ] better build status using errors and tips to fix
 [ ] use export template for environment or see what's best
-	[ ] if environment has XDG_*, templates will install at XDG_*. Otherwise it's installed in the Application Support directory.
+	- if environment has XDG_*, templates will install at XDG_*. Otherwise it's installed in the
+	  Application Support directory.
 [ ] properly destroy threads before exiting
 [ ] what to do when:
 	[ ] theres no provisioning profiles
@@ -27,7 +36,8 @@
 		[X] stderr
 			[X] pipe to stdout or to a file and read it in later from Shell
 		[X] figure out how to get program return codes from shell
-			[X] write shell script that captures code and outputs it as the last line. Shell can then parse and remove that line.
+			- write shell script that captures code and outputs it as the last line. Shell can then
+			  parse and remove that line.
 	[X] xcodebuild errors
 		[X] parse from output and display to user
 		[X] printed with fmt: "<system> Error: <message>"
@@ -40,51 +50,55 @@
 [X] Replace all prints with logs and use correct level
 [X] Disable unsupported system capabilities (Push, GameCenter) when automanaging with free developer team
 [X] Specially handle Xcode Managed Provisions
-	[X] So with xcode_managed projects and the new "Automanaged" placeholder provision, we don't need the SECTION.AUTOMANAGE anymore. For now just hide the control in the scene
+	- So with xcode_managed projects and the new "Automanaged" placeholder provision, we don't need
+	  the SECTION.AUTOMANAGE anymore. For now just hide the control in the scene
 	[X] Onboarding flow should show a Automanage or no profile or something item for the profile chooser
 	[X] add xcode_managed prop to provision
 [X] handle when export template not installed
 [X] test automanage setting
-	[X] works, just have to allow no provision selected in gui
+	- works, just have to allow no provision selected in gui
 [X] get orientation information from project settings
+	- #v3 display/window,handheld/orientation
+	- #v2 display/orientation
 	[X] map godot orientations
-		[X] landscape         -> UIInterfaceOrientationLandscapeLeft
-		[X] reverse_landscape -> UIInterfaceOrientationLandscapeRight
-		[X] sensor_landscape  -> landscape & reverse_landscape
-		[X] portrait          -> UIInterfaceOrientationPortrait
-		[X] reverse_portrait  -> UIInterfaceOrientationPortraitUpsideDown
-		[X] sensor_portrait   -> portrait & reverse_portrait
-		[X] sensor            -> all
-	[X] v3 display/window,handheld/orientation
-	[X] v2 display/orientation
+		- landscape         -> UIInterfaceOrientationLandscapeLeft
+		- reverse_landscape -> UIInterfaceOrientationLandscapeRight
+		- sensor_landscape  -> landscape & reverse_landscape
+		- portrait          -> UIInterfaceOrientationPortrait
+		- reverse_portrait  -> UIInterfaceOrientationPortraitUpsideDown
+		- sensor_portrait   -> portrait & reverse_portrait
+		- sensor            -> all
 [X] #v3 remove global logger from ProjectSettings (Globals)
-	[X] add logger as child of main (EditorPlugin)
-	[X] add it to group 'com.indicainkwell.ios-deploy'
-	[X] name logger node 'ios-deploy'
-	[X] have static get_logger() retrieve logger from MainLoop
+	- add logger as child of main (EditorPlugin)
+	- add it to group 'com.indicainkwell.ios-deploy'
+	- name logger node 'ios-deploy'
+	- have static get_logger() retrieve logger from MainLoop
 [X] #v3 Godot Project Directory can't be the same as Bundle Name @see notes
-[X] Figure out what is breaking v3 from reading pbx and plist @see notes
+[X] Figure out what is breaking #v3 from reading pbx and plist @see notes
 [X] async everything
-	[X] write everything sync, then spin up one thread to do the whole build process.
-	[X] write everything async, then use signals to control build process
+	- write everything sync, then spin up one thread to do the whole build process.
+	- write everything async, then use signals to control build process
 [X] make config file to store past settings
 [X] impl module logger
 [X] use `security cms -D -i` instead of awk to strip provision file of signature pre json conversion
-	[X] does not work for non-signed provisioning profiles, I'm not sure if that would be a big problem.
-	[X] Awk may not work for all signed profiles due to binary format.
-	[X] Find someway to detect if profile is signed.
-    [X] security prints "failed to add data to decoder: UNKNOWN (-8183(d)" when not signed.
+	- does not work for non-signed provisioning profiles, I'm not sure if that would be a big problem.
+	- Awk may not work for all signed profiles due to binary format.
+	- Find someway to detect if profile is signed.
+    - security prints "failed to add data to decoder: UNKNOWN (-8183(d)" when not signed.
 
 # -- GUI Todos
 
-[ ] Fix control overflow in v2 for onboarding flow
-[ ] Fix hover menu
+[ ] add plist entry menu
+[ ] refactor settings menu
+[ ] fix control overflow in v2 for onboarding flow
+[ ] fix hover menu
 [X] onboarding flow
 	[X] if provision is not a wild card then
-		[X] bundleid shouldn't be changed
-		[X] bundle id should also be filled in according to provision
+		- bundleid shouldn't be changed
+		- bundle id should also be filled in according to provision
 [X] make onboarding flow
-	[X] Create an interface that will connect editing and committing changes to the onboarding screens and elements.
+	[X] Create an interface that will connect editing and committing changes to the onboarding
+	    screens and elements.
 		[X] Validate when entering a new screen
 		[X] Validate on input
 		[X] disable next button depending on valid state
@@ -98,21 +112,22 @@
 	[X] hidden progress bar
 		[X] draw as flat color over button rather than using a tiny squished ProgressBar
 	[X] show devices
-[X] fix v3 ui rough edges
+[X] fix #v3 ui rough edges
 	[X] apple button popup
 		[X] text does not fit
 		[X] add padding to content
 		[X] fix settings button from stopping mouse hover
-[X] make v3 gui
+[X] make #v3 gui
 	[X] replace panel with popup_panel
 	[X] replace invalid_sbx.tres gui invalidation by drawing a simple red box around invalid control
 [X] make signal connections via editor where possible
 [X] settings take to long to open up
-	[X] deploy_settings_menu visibility change signal is being emitted twice the first time it is shown
-	[X] the second consecutive call seems to be from itself. it doesn't have a trace.
-	[X] this seems to be caused by how the deploy_settings_menu scene is instantiated. It is set hidden at init and before it is added to the tree.
-	[X] Solved. This is programmerd into godotengine/canvas_item.cpp.
-		[X] Set flag to check for first draw.
+	- deploy_settings_menu visibility change signal is being emitted twice the first time it is shown
+	- the second consecutive call seems to be from itself. it doesn't have a trace.
+	- this seems to be caused by how the deploy_settings_menu scene is instantiated. It is set
+	  hidden at init and before it is added to the tree.
+	- Solved. This is programmerd into godotengine/canvas_item.cpp.
+		- Set flag to check for first draw.
 [X] one click button
 	[X] popup fully on screen
 	[X] appear over everything
@@ -120,8 +135,8 @@
 [X] hook up build progress and status to hover menu
 [X] hover menu
 [X] remove BundleName from deploy setting menu
-	[X] bundlename will be the godot project dir name
-	[X] only display name is needed
+	- bundlename will be the godot project dir name
+	- only display name is needed
 [X] just use Device, Team, and Provision structs instead of dicts
 
 # -- Xcode Todos
