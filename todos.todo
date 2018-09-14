@@ -3,15 +3,23 @@
 # ------------------------------------------------------------------------------
 
 
-[ ] Make detect_devices() async
+[ ] properly fill in xcodeproj so user can open and edit it if needed
+[ ] add more configurability
+	[ ] open directory where generated xcode project is stored
+	[ ] read export settings for ios and use it to prefill
+	[ ] set log level, from env and in editor
+	[ ] set where to generate xcodeproj
+	[ ] set custom plist values
+	[ ] set custom godot binary -- or lib. Whichever one godot uses.
+		- in godot's export template it uses an archive
+[ ] make async
+	[ ] detect_devices()
+	[ ] find_teams()
 [ ] better build status using errors and tips to fix
-[ ] read export settings for ios and use it to prefill
 [ ] use export template for environment or see what's best
 	[ ] if environment has XDG_*, templates will install at XDG_*. Otherwise it's installed in the Application Support directory.
 [ ] properly destroy threads before exiting
-[ ] allow user to set custom plist values
-[ ] change plist to use build vars, maybe use xcconfig
-[ ] What to do when:
+[ ] what to do when:
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
 [X] error parsing and displaying
