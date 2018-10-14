@@ -118,7 +118,7 @@ func _place_panel(panel):
 	# have panel popup to the left of button so it isn't clipped
 	# offscreen.
 	if stc.get_version().is2():
-		var newpos = get_global_pos()
+		var newpos = call('get_global_pos')
 		newpos.x -= panel.get_size().x - get_size().x
 		newpos.y = panel.get_pos().y
 		panel.set_pos(newpos)
