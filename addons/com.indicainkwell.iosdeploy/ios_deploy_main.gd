@@ -34,7 +34,7 @@ var _log
 
 
 func _enter_tree():
-	_init_logger()
+	_log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN)
 	
 	if not meets_software_requirements():
 		return
@@ -48,19 +48,6 @@ func _enter_tree():
 # ------------------------------------------------------------------------------
 #                                      Methods
 # ------------------------------------------------------------------------------
-
-
-func _init_logger():
-	"""
-	Add logger as a child of plugin and in it's own group to simulate a
-	global that can be accessed via stc.get_logger()
-	"""
-	var logger = Logger.new()
-	add_child(logger)
-
-	logger.add_to_group(stc.PLUGIN_DOMAIN)
-	logger.set_name(stc.LOGGER_DOMAIN)
-	_log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN)
 
 
 func meets_software_requirements():
@@ -84,13 +71,13 @@ func meets_software_requirements():
 
 func ext_sw_exists(software):
 	var out = []
-	OS.execute('command', ['-v', software], true, out)
+	OS.execute('command', PoolStringArray(['-v', software]), true, out)
 	_log.verbose(out[0])
 	return out[0].find(software) > -1
 
 
 func add_menu(menu):
 	if stc.get_version().is2():
-		get_base_control().add_child(menu)
+		call('get_base_control').add_child(menu)
 	else:
 		get_editor_interface().get_base_control().add_child(menu)

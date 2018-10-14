@@ -3,14 +3,25 @@
 # Godot Project Settings
 extends Reference
 
-
-func has_setting(setting):
+static func has_setting(setting):
 	pass
 
 
-func get_setting(setting):
+static func get_setting(setting):
 	pass
 
 
-func set_setting(setting, value):
+static func set_setting(setting, value):
+	pass
+
+
+static func has_metadata(key):
+	pass
+
+
+static func set_metadata(key, value):
+	pass
+
+
+static func get_metadata(key):
 	pass

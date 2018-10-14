@@ -21,6 +21,8 @@ const GDSCRIPTS_3 = GDSCRIPTS  + '/_v3'
 
 const CONFIG_VERSION = 0
 
+const Logger = preload('logger.gd')
+
 
 # Get rid of this and just use get_shell_script() with string input
 const shell = {
@@ -52,15 +54,10 @@ static func get_version():
 
 
 static func get_logger():
-	var main_loop = get_gdscript('main_loop_getter.gd').new().get_main_loop()
-	var nodes = main_loop.get_nodes_in_group(PLUGIN_DOMAIN)
-	if nodes.size() != 1:
-		print('ERROR GETTINGs LOGGER WITH #%s IN GROUP %s'%[nodes.size(),PLUGIN_DOMAIN])
-		return null
-	if nodes[0].get_name() != LOGGER_DOMAIN:
-		print('ERROR GETTING LOGGER NODE %s IN GROUP %s, GOT %s INSTEAD'%[LOGGER_DOMAIN,PLUGIN_DOMAIN,nodes[0].get_name()])
-		return null
-	return nodes[0]
+	var project_settings = get_gdscript('project_settings.gd')
+	if not project_settings.has_meta(PLUGIN_DOMAIN + '.logger.singleton'):
+		project_settings.set_meta(PLUGIN_DOMAIN + '.logger.singleton', Logger.new())
+	return project_settings.get_meta(PLUGIN_DOMAIN + '.logger.singleton')
 
 
 static func globalize_path(path):
