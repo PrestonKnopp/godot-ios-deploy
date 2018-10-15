@@ -143,7 +143,7 @@ func log_errors(errors, with_message=''):
 
 
 func check_xcode_make_project(oneclickbutton=null):
-	if _xcode.template.exists():
+	if _xcode.template.get_existing_zip_path() != null:
 		_log.debug('Xcode template installed after init. Attempting to make project...')
 		view.disconnect('presenting_hover_menu', self, 'check_xcode_make_project')
 		_xcode.make_project_async()

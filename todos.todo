@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------------------
 
 
-[ ] support 3.1 with gdscript's stricter typing
+[X] support 3.1 with gdscript's stricter typing
 	[X] refactor logger.gd
 		[X] fix operator usage as precedence seems to have changed
 		- singleton pattern for logger using builtin godot singleton's

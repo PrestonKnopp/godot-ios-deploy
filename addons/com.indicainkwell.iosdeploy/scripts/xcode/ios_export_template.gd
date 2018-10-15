@@ -41,38 +41,55 @@ var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.ios-export-
 # ------------------------------------------------------------------------------
 
 
-func exists():
+func get_existing_zip_path():
 	"""
-	Checks if Godot's iOS Export xcode template is installed
+	@returns String
+	  Path to existing zip or null if it does not exist.
 	"""
-	return File.new().file_exists(get_zip_path())
+	var f = File.new()
+	for path in get_possible_zip_paths():
+		if f.file_exists(path):
+			_log.info('Zip Path Exists: ' + path)
+			return path
+	return null
 
 
-func get_zip_path():
+func get_possible_zip_paths():
 	"""
-	Returns the path to the current godot's version ios xcode template zip.
+	Returns the possible path variations to the current godot's version ios
+	xcode template zip.
 	"""
 	var home = OS.get_environment('HOME')
 
 	var v = stc.get_version()
 	if v.is2():
-		return home.plus_file('.godot/templates')\
-		       .plus_file(TEMPLATE_NAME.V2)
+		return [home.plus_file('.godot/templates')\
+		       .plus_file(TEMPLATE_NAME.V2)]
 	else:
-		# TODO: figure out what to do for 3.0 export templates
 		# NOTE: Different template name formats
 		#       - 3.0-stable/
 		#       - 3.0.2.stable/ <-- use this one
-		var tname = '%s.%s.%s.%s' % [
-			v.get_major(),
-			v.get_minor(),
-			v.get_patch(),
-			v.get_status()
+		var tnames = [
+			'%s.%s.%s.%s' % [ v.get_major(), v.get_minor(),
+				v.get_patch(), v.get_status() ],
+			'%s.%s.%s' % [ v.get_major(), v.get_minor(),
+				v.get_status() ],
+			'%s.%s-%s' % [ v.get_major(), v.get_minor(),
+				v.get_status() ],
 		]
-		return home\
-		       .plus_file('Library/Application Support/Godot/templates')\
-		       .plus_file(tname)\
-		       .plus_file(TEMPLATE_NAME.V3)
+		var storage_paths = [
+			home.plus_file('Library/Application Support/Godot/templates'),
+			OS.get_environment('XDG_DATA_HOME').plus_file('Godot/templates')
+		]
+		var paths = []
+		for storage_path in storage_paths:
+			for template_name in tnames:
+				var path = storage_path\
+				       .plus_file(template_name)\
+				       .plus_file(TEMPLATE_NAME.V3)
+				paths.append(path)
+		_log.info('Possible iOS Export Template zip paths: ' + str(paths))
+		return paths
 
 
 func get_destination_path(make_dir=false, make_template_file_dir=true):
@@ -139,11 +156,12 @@ func copy_install_async():
 	Async install copy of xcode template for ios-deploy.
 	@emits copy_install_failed, copy_installed
 	"""
-	if exists():
+	var zip_path = get_existing_zip_path()
+	if zip_path != null:
 		if stc.get_version().is2():
-			_copy_ios_export_template_v2()
+			_copy_ios_export_template_v2(zip_path)
 		else:
-			_copy_ios_export_template_v3()
+			_copy_ios_export_template_v3(zip_path)
 	else:
 		_log.error('Godot iOS Xcode Template not installed.')
 		emit_signal('copy_install_failed', self, ERR_DOES_NOT_EXIST)
@@ -155,27 +173,27 @@ func copy_install_async():
 # ------------------------------------------------------------------------------
 
 
-func _copy_ios_export_template_v2():
+func _copy_ios_export_template_v2(zip_path):
 	# V2 unzips from GodotiOSXCode.zip to godot_ios_xcode
 	#
 	# Steps:
 	# 1. unzip to destination
 	# 2. rename from godot_ios_xcode -> GodotiOSXCode.zip
 	var args = [
-		get_zip_path(),
+		zip_path,
 		'-d',
 		get_destination_path(true, false).get_base_dir()
 	]
 	_unzip.run_async(args, self, '_on_v2_unzip_finished')
 
 
-func _copy_ios_export_template_v3():
+func _copy_ios_export_template_v3(zip_path):
 	# V3 unzips from iphone.zip to all of its files
 	#
 	# Steps:
 	# 1. unzip to destination
 	var args = [
-		get_zip_path(),
+		zip_path,
 		'-d',
 		get_destination_path(true)
 	]
