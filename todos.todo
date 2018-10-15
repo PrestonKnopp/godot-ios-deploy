@@ -3,17 +3,6 @@
 # ------------------------------------------------------------------------------
 
 
-[X] support 3.1 with gdscript's stricter typing
-	[X] update ui and ui scripts to support 3.1 new layout stuff
-		- use find node, so difference in node structure doesn't matter
-	[X] refactor logger.gd
-		[X] fix operator usage as precedence seems to have changed
-		- singleton pattern for logger using builtin godot singleton's
-		  ProjectSettings metadata
-	[X] use direct engine api (Array -> StringPoolArray)
-	[X] top level function calls that may not exist
-		- parser now throws errors when class does not define function
-		- use `call` api instead
 [ ] plan out crossplatform
 [ ] make plist.gd readwrite
 [ ] abstract ios-deploy behind an interface to support libimobiledevice
@@ -42,6 +31,17 @@
 [ ] what to do when:
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
+[X] support 3.1 with gdscript's stricter typing
+	[X] update ui and ui scripts to support 3.1 new layout stuff
+		- use find node, so difference in node structure doesn't matter
+	[X] refactor logger.gd
+		[X] fix operator usage as precedence seems to have changed
+		- singleton pattern for logger using builtin godot singleton's
+		  ProjectSettings metadata
+	[X] use direct engine api (Array -> StringPoolArray)
+	[X] top level function calls that may not exist
+		- parser now throws errors when class does not define function
+		- use `call` api instead
 [X] error parsing and displaying
 	[X] shell
 		[X] stderr
