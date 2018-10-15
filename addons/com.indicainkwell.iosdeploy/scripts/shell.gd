@@ -2,6 +2,9 @@
 extends Reference
 
 
+const stc = preload('static.gd')
+
+
 const ERROR_FILE_FMT = 'com.indicainkwell.iosdeploy.shell.error.%s.txt'
 
 
@@ -149,10 +152,10 @@ func get_file_contents(file_path):
 
 func execute(cmd, args=[], error_file_name='default'):
 	var errfpath = get_error_file_path(ERROR_FILE_FMT % error_file_name)
-	var built_args = _build_execute_args(
+	var built_args = stc.to_pool_string_array(_build_execute_args(
 		cmd, args,
 		errfpath
-	)
+	))
 	var last_nl_idx = -1
 
 	var res = Result.new()

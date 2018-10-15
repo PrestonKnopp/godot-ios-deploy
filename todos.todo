@@ -5,10 +5,10 @@
 
 [ ] support 3.1 with gdscript's stricter typing
 	[X] refactor logger.gd
+		[X] fix operator usage as precedence seems to have changed
 		- singleton pattern for logger using builtin godot singleton's
 		  ProjectSettings metadata
-	[ ] fix operator usage as precedence seems to have changed
-	[ ] use direct engine api (Array -> StringPoolArray)
+	[X] use direct engine api (Array -> StringPoolArray)
 	[X] top level function calls that may not exist
 		- parser now throws errors when class does not define function
 		- use `call` api instead

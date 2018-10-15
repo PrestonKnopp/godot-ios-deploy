@@ -71,7 +71,7 @@ func meets_software_requirements():
 
 func ext_sw_exists(software):
 	var out = []
-	OS.execute('command', PoolStringArray(['-v', software]), true, out)
+	OS.execute('command', stc.to_pool_string_array(['-v', software]), true, out)
 	_log.verbose(out[0])
 	return out[0].find(software) > -1
 
