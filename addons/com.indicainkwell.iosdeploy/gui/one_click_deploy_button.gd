@@ -73,7 +73,7 @@ func _input(event):
 		# - When mouse is hovering self or hp stop exit timer
 		# - When mouse is NOT hovering self or hp and hp is visible then
 		# start exit timer
-		var hp = get_node('hover_panel')
+		var hp = _get_hover_panel()
 		var hp_hidden = check_is_hidden(hp)
 
 		# grow self rect because tool buttons border is larger then rect
@@ -96,7 +96,7 @@ func _input(event):
 func _on_hover_enter_timer_timeout():
 	emit_signal('presenting_hover_menu', self)
 
-	var hover_panel = get_node('hover_panel')
+	var hover_panel = _get_hover_panel()
 	hover_panel.set_as_toplevel(true)
 	_place_panel(hover_panel)
 	hover_panel.show()
@@ -104,7 +104,7 @@ func _on_hover_enter_timer_timeout():
 
 func _on_hover_exit_timer_timeout():
 	set_process_input(false)
-	get_node('hover_panel').hide()
+	_get_hover_panel().hide()
 
 
 func check_is_hidden(canvas_item):
@@ -112,6 +112,10 @@ func check_is_hidden(canvas_item):
 		return canvas_item.is_hidden()
 	else:
 		return not canvas_item.is_visible()
+
+
+func _get_hover_panel():
+	return get_node('hover_panel')
 
 
 func _place_panel(panel):
@@ -135,7 +139,7 @@ func _place_panel(panel):
 
 
 func get_devices_list():
-	return get_node("hover_panel/devices_group/devices_list")
+	return _get_hover_panel().find_node('devices_list')
 
 
 func devices_list_populate(devices):
@@ -156,13 +160,13 @@ func _on_devices_list_item_edited():
 
 
 func set_build_status(status):
-	get_node('hover_panel/build_progress_bar/HBoxContainer/build_status').set_text(status)
+	_get_hover_panel().find_node('build_status').set_text(status)
 
 
 func update_build_progress(percent, status=null, finished=false):
 	var tween = get_node('build_progress_tweener')
 	var bar = get_node('build_progress_bar')
-	bar.share(get_node('hover_panel/build_progress_bar'))
+	bar.share(_get_hover_panel().find_node('build_progress_bar'))
 
 	if status != null:
 		set_build_status(status)
@@ -206,7 +210,7 @@ func _on_build_progress_bar_changed():
 
 
 func set_project_valid(valid):
-	get_node('hover_panel/HBoxContainer/project_valid').set_pressed(valid)
+	_get_hover_panel().find_node('project_valid').set_pressed(valid)
 
 
 # ------------------------------------------------------------------------------
