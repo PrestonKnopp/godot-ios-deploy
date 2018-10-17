@@ -3,13 +3,14 @@
 # ------------------------------------------------------------------------------
 
 
-[ ] plan out crossplatform
-[ ] make plist.gd readwrite
-[ ] abstract ios-deploy behind an interface to support libimobiledevice
-[ ] properly fill in xcodeproj so user can open and edit it if needed
+[ ] make async
+	[ ] detect_devices()
+	[ ] find_teams()
 [ ] Config
+	[ ] make plist.gd readwrite
 	[ ] mv config loading to plugin main
 	[ ] implement config versioning
+	[ ] new settings menu
 	[ ] add more configurability
 		[ ] open directory where generated xcode project is stored
 		[ ] read export settings for ios and use it to prefill
@@ -20,17 +21,17 @@
 		[ ] set custom godot binary
 			- or lib. Whichever one godot uses
 			- in godot's export template it uses an archive
-[ ] make async
-	[ ] detect_devices()
-	[ ] find_teams()
+[ ] plan out crossplatform
+	[ ] abstract ios-deploy behind an interface to support libimobiledevice
+[ ] properly fill in xcodeproj so user can open and edit it if needed
 [ ] better build status using errors and tips to fix
-[ ] use export template for environment or see what's best
-	- if environment has XDG_*, templates will install at XDG_*. Otherwise it's installed in the
-	  Application Support directory.
 [ ] properly destroy threads before exiting
 [ ] what to do when:
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
+[X] use export template for environment or see what's best
+	- if environment has XDG_*, templates will install at XDG_*. Otherwise it's installed in the
+	  Application Support directory.
 [X] support 3.1 with gdscript's stricter typing
 	[X] update ui and ui scripts to support 3.1 new layout stuff
 		- use find node, so difference in node structure doesn't matter
