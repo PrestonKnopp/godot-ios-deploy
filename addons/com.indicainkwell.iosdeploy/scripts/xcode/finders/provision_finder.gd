@@ -1,5 +1,5 @@
 # provision_finder.gd
-extends 'finder.gd'
+extends 'Finder.gd'
 
 
 # ------------------------------------------------------------------------------
@@ -22,12 +22,50 @@ func get_provisions_path():
 
 
 # ------------------------------------------------------------------------------
-#                                     Overrides
+#                                 Private Variables
 # ------------------------------------------------------------------------------
 
 
-func find():
-	var prov_path = get_provisions_path()
+var _thread
+
+
+# ------------------------------------------------------------------------------
+#                                  Private Methods
+# ------------------------------------------------------------------------------
+
+
+func _date_make_dict(year=0, month=0, day=0, hour=0, mint=0, sec=0):
+	return {
+		year = year,
+		month = month,
+		day = day,
+		hour = hour,
+		minute = mint,
+		second = sec
+	}
+
+
+# Provision Profile Date Format: YYYY-MM-DDThh:mm:ssTZD
+func _date_parse(date):
+	if date == null or date.empty():
+		return _date_make_dict()
+	var reg = stc.get_gdscript('regex.gd').new()
+	var err = reg.compile("(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})")
+	assert(err == OK)
+	var captures = reg.search(date)
+	assert(captures.size() == 7) # 6 groups + whole group
+	return _date_make_dict(
+		int(captures[1]),
+		int(captures[2]),
+		int(captures[3]),
+		int(captures[4]),
+		int(captures[5]),
+		int(captures[6])
+	)
+
+
+func _thread_func(data):
+	var prov_path = data.provisions_path
 
 	var dir = Directory.new()
 	var err = dir.open(prov_path)
@@ -41,7 +79,7 @@ func find():
 		dir.list_dir_end()
 		return []
 
-	var prov2json = stc.get_shell_script(stc.shell.provision2json)
+	var prov2json = data.prov2json
 	var provisions = []
 
 	var cur = dir.get_next()
@@ -77,39 +115,30 @@ func find():
 
 		provisions.append(provision)
 	
-	return provisions
+	if data.thread.is_active():
+		data.thread.wait_to_finish()
+	
+	_finished(provisions)
 
 
 # ------------------------------------------------------------------------------
-#                                      Methods
+#                                     Overrides
 # ------------------------------------------------------------------------------
 
 
-func _date_make_dict(year=0, month=0, day=0, hour=0, mint=0, sec=0):
-	return {
-		year = year,
-		month = month,
-		day = day,
-		hour = hour,
-		minute = mint,
-		second = sec
+func begin_find():
+	if _thread == null:
+		_thread = Thread.new()
+	elif _thread.is_active():
+		return
+
+	var data = {
+		provisions_path = get_provisions_path(),
+		prov2json = stc.get_shell_script(stc.shell.provision2json),
+		thread = _thread,
 	}
-
-
-# Provision Profile Date Format: YYYY-MM-DDThh:mm:ssTZD
-func _date_parse(date):
-	if date == null or date.empty():
-		return _date_make_dict()
-	var reg = stc.get_gdscript('regex.gd').new()
-	var err = reg.compile("(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})")
-	assert(err == OK)
-	var captures = reg.search(date)
-	assert(captures.size() == 7) # 6 groups + whole group
-	return _date_make_dict(
-		int(captures[1]),
-		int(captures[2]),
-		int(captures[3]),
-		int(captures[4]),
-		int(captures[5]),
-		int(captures[6])
-	)
+	var err = _thread.start(self, '_thread_func', data)
+	if err != OK:
+		_log.error('Error<%s>: Could not start thread for prov finder.'
+				% [err])
+		_finished([])

@@ -14,6 +14,16 @@ extends 'Controller.gd'
 
 
 # ------------------------------------------------------------------------------
+#                                     Constants
+# ------------------------------------------------------------------------------
+
+
+const _NONE = 0
+const _PROVISION = 1
+const _TEAM = 2
+
+
+# ------------------------------------------------------------------------------
 #                                      Scenes
 # ------------------------------------------------------------------------------
 
@@ -27,6 +37,14 @@ var OnboardingFlowScene = stc.get_scene('onboarding_flow.tscn')
 
 
 var _xcode
+var _requesting = {
+	results_mask = _NONE,
+	count = 0,
+	provisions_and_teams = false,
+	just_teams = false,
+}
+var _teams_cache = []
+var _provisions_cache = []
 
 
 # ------------------------------------------------------------------------------
@@ -53,6 +71,8 @@ func _exit_tree():
 
 func set_xcode(xcode):
 	_xcode = xcode
+	if not _xcode.finder.is_connected('result', self, '_on_xcode_finder_result'):
+		_xcode.finder.connect('result', self, '_on_xcode_finder_result')
 
 
 func _make_automanaged_provision_representation():
@@ -62,40 +82,74 @@ func _make_automanaged_provision_representation():
 	provision.xcode_managed = true
 	provision.team_ids = []
 
-	for team in _xcode.finder.find_teams():
+	for team in _teams_cache:
 		provision.team_ids.append(team.id)
 	
 	return provision
 
 
+func _request_teams():
+	_requesting.count += 1
+	_requesting.results_mask = _NONE
+	_requesting.just_teams = true
+	_xcode.finder.begin_find_teams()
+
+
+func _request_provisions_and_teams():
+	_requesting.count += 2
+	_requesting.results_mask = _NONE
+	_requesting.provisions_and_teams = true
+	_xcode.finder.begin_find_teams()
+	_xcode.finder.begin_find_provisions()
+
+
 # ------------------------------------------------------------------------------
-#                             Onboarding Flow Callbacks
+#                               Xcode Finder Callback
 # ------------------------------------------------------------------------------
 
 
-func _on_populate(flow, section):
-	if section == flow.SECTION.PROVISION:
+func _on_xcode_finder_result(finder, type, objects):
+	if _requesting.count <= 0 or not type in [finder.TEAM, finder.PROVISION]:
+		return
+	
+	if type == finder.TEAM:
+		_teams_cache = objects
+		_requesting.results_mask |= _TEAM
+	elif type == finder.PROVISION:
+		_provisions_cache = objects
+		_requesting.results_mask |= _PROVISION
+	
+	_requesting.count -= 1
+	
+	var flow = get_view()
+	if _requesting.provisions_and_teams and\
+	   _requesting.results_mask == _TEAM | _PROVISION:
+		
+		_requesting.provisions_and_teams = false
+		
 		var provisions = [_make_automanaged_provision_representation()] +\
-			get_parent().filter_provisions(_xcode.finder.find_provisions())
-
-		flow.populate_option_section(section, provisions)
+			get_parent().filter_provisions(_provisions_cache)
+		
+		flow.populate_option_section(flow.SECTION.PROVISION, provisions)
 		if _xcode.project.provision != null:
 			flow.provision = _xcode.project.provision
 		elif provisions.size() > 0:
 			flow.provision = provisions.front()
+		flow.request_validation(flow.SECTION.PROVISION, flow.provision)
 	
-	if section == flow.SECTION.AUTOMANAGE:
-		flow.automanaged = _xcode.project.automanaged
-	
-	if section == flow.SECTION.TEAM:
-		var teams = _xcode.finder.find_teams()
+	if _requesting.just_teams and\
+	   _requesting.results_mask & _TEAM == _TEAM:
+		
+		_requesting.just_teams = false
+		
+		var teams = _teams_cache
 		var team = null
-
+		
 		if _xcode.project.team != null:
 			team = _xcode.project.team
 			# Add xcode project's current team to teams. This may
-			# happen when find_teams doesn't find any teams, but
-			# xcode_project has been loaded from saved config.
+			# happen when begin_find_teams() doesn't find any teams,
+			# but xcode_project has been loaded from saved config.
 			if teams.size() == 0:
 				teams.append(team)
 		else:
@@ -113,10 +167,27 @@ func _on_populate(flow, section):
 					team.id = team_id
 					team.name = flow.provision.team_name
 					teams.append(team)
-
-		flow.populate_option_section(section, teams)
+		
+		flow.populate_option_section(flow.SECTION.TEAM, teams)
 		flow.team = team
+		flow.request_validation(flow.SECTION.TEAM, team)
+
+
+# ------------------------------------------------------------------------------
+#                             Onboarding Flow Callbacks
+# ------------------------------------------------------------------------------
+
+
+func _on_populate(flow, section):
+	if section == flow.SECTION.PROVISION:
+		_request_provisions_and_teams()
+
+	if section == flow.SECTION.AUTOMANAGE:
+		flow.automanaged = _xcode.project.automanaged
 	
+	if section == flow.SECTION.TEAM:
+		_request_teams()
+
 	if section == flow.SECTION.DISPLAY_NAME:
 		if _xcode.project.name != null:
 			flow.display_name = _xcode.project.name
@@ -142,6 +213,10 @@ func _on_populate(flow, section):
 
 
 func _on_validate(flow, section, input):
+	if input == null:
+		flow.validate(section, false)
+		return
+	
 	var valid = true
 	if section == flow.SECTION.PROVISION:
 		# xcode_managed provisions must be automanaged

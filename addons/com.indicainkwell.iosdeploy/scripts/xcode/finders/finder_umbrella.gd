@@ -1,5 +1,4 @@
-# Finder.gd
-tool
+# finder_umbrella.gd
 extends Reference
 
 
@@ -8,7 +7,7 @@ extends Reference
 # ------------------------------------------------------------------------------
 
 
-signal result(this, objects)
+signal result(this, type, objects)
 
 
 # ------------------------------------------------------------------------------
@@ -19,12 +18,21 @@ signal result(this, objects)
 const stc = preload('../../static.gd')
 
 
+enum Type {
+	TEAM,
+	DEVICE,
+	PROVISION
+}
+
+
 # ------------------------------------------------------------------------------
 #                                     Subtypes
 # ------------------------------------------------------------------------------
 
 
-var Json = stc.get_gdscript('json.gd')
+var TeamFinder = stc.get_gdscript('xcode/finders/team_finder.gd')
+var ProvisionFinder = stc.get_gdscript('xcode/finders/provision_finder.gd')
+var DeviceFinder = stc.get_gdscript('xcode/finders/device_finder.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -32,19 +40,9 @@ var Json = stc.get_gdscript('json.gd')
 # ------------------------------------------------------------------------------
 
 
-var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.finder')
-var _shell = stc.get_gdscript('shell.gd').new()
-var _sh = _shell.make_command('/bin/bash')
-var _json = Json.new()
-
-
-# ------------------------------------------------------------------------------
-#                                      Methods
-# ------------------------------------------------------------------------------
-
-
-func _finished(objects):
-	emit_signal('result', self, objects)
+var _team_finder = TeamFinder.new()
+var _provision_finder = ProvisionFinder.new()
+var _device_finder = DeviceFinder.new()
 
 
 # ------------------------------------------------------------------------------
@@ -52,5 +50,34 @@ func _finished(objects):
 # ------------------------------------------------------------------------------
 
 
-func begin_find():
-	assert(false)
+func _init():
+	_team_finder.connect('result', self, '_on_finder_result', [TEAM])
+	_device_finder.connect('result', self, '_on_finder_result', [DEVICE])
+	_provision_finder.connect('result', self, '_on_finder_result',
+			[PROVISION])
+
+
+# ------------------------------------------------------------------------------
+#                                      Methods
+# ------------------------------------------------------------------------------
+
+
+func begin_find_teams():
+	_team_finder.begin_find()
+
+
+func begin_find_provisions():
+	_provision_finder.begin_find()
+
+
+func begin_find_devices():
+	_device_finder.begin_find()
+
+
+# ------------------------------------------------------------------------------
+#                                     Handlers
+# ------------------------------------------------------------------------------
+
+
+func _on_finder_result(finder, objects, type):
+	emit_signal('result', self, type, objects)

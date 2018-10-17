@@ -3,9 +3,6 @@
 # ------------------------------------------------------------------------------
 
 
-[ ] make async
-	[ ] detect_devices()
-	[ ] find_teams()
 [ ] Config
 	[ ] make plist.gd readwrite
 	[ ] mv config loading to plugin main
@@ -29,6 +26,13 @@
 [ ] what to do when:
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
+[X] make async
+	[X] detect_devices()
+	[X] finders
+	[X] controllers using finders
+		- finder result TEAM will error out when no provision has previously
+		  been chosen
+		- refactor out the _got_results_of and use _is_requesting_* to check
 [X] use export template for environment or see what's best
 	- if environment has XDG_*, templates will install at XDG_*. Otherwise it's installed in the
 	  Application Support directory.

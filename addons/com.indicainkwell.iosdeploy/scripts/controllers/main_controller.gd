@@ -84,9 +84,14 @@ func _init_onboarding_flow_controller():
 
 
 func _init_xcode():
+	_init_xcode_finder()
 	_xcode.template.connect('copy_install_failed', self, '_on_xcode_template_copy_install_failed')
 	_xcode.connect('made_project', self, '_on_xcode_made_project')
 	_xcode.make_project_async()
+
+
+func _init_xcode_finder():
+	_xcode.finder.connect('result', self, '_on_xcode_finder_result')
 
 
 func _init_xcode_project():
@@ -256,120 +261,6 @@ func filter_provisions(provisions):
 # ------------------------------------------------------------------------------
 
 
-# -- SettingsMenu
-
-
-func _on_request_populate(menu):
-	menu.populate_devices(_xcode.finder.find_devices())
-	menu.populate_provisions(filter_provisions(_xcode.finder.find_provisions()))
-	menu.populate_teams(_xcode.finder.find_teams())
-
-
-func _on_request_fill(menu):
-	menu.fill_devices_group(_xcode.project.get_devices())
-	menu.fill_bundle_group(
-		_xcode.project.name,
-		_xcode.project.bundle_id
-	)
-	menu.fill_identity_group(
-		_xcode.project.team,
-		_xcode.project.automanaged,
-		_xcode.project.provision
-	)
-
-
-func _on_edited_team(menu, new_team):
-	if new_team == null:
-		_xcode.project.team = null
-		return
-
-	# assert(new_team extends _xcode.Team)
-	if _xcode.project.team != null and\
-	   _xcode.project.team.id == new_team.id and\
-	   _xcode.project.team.name == new_team.name:
-		   return
-
-	# make sure to set new team
-	_xcode.project.team = new_team
-
-	if _xcode.project.provision == null:
-		return
-
-	# Notify menu if provision is invalid due to new team
-
-	if _xcode.project.provision.team_ids.has(new_team.id):
-		menu.validate_provision()
-		menu.validate_team()
-	else:
-		# provision is invalid as it does not support team
-		menu.invalidate_provision()
-
-
-func _on_edited_provision(menu, new_provision):
-	if new_provision == null:
-		_xcode.project.provision = null
-		if not _xcode.project.automanaged:
-			menu.invalidate_provision()
-		return
-
-	# assert(new_provision extends _xcode.Provision)
-	if _xcode.project.provision != null and _xcode.project.provision.id == new_provision.id:
-		return
-
-	# make sure to set new provision
-	_xcode.project.provision = new_provision
-
-	# Notify menu if teams and bundleid are invalid due to new provision
-
-	if _xcode.project.team != null:
-		if new_provision.team_ids.has(_xcode.project.team.id):
-			menu.validate_team()
-		else:
-			# team is invalid as it is not supported by provision
-			menu.invalidate_team()
-
-	# Check bundleid
-
-	if _xcode.project.bundle_id == null or _xcode.project.bundle_id.empty():
-		return
-
-	if valid_bundleid(_xcode.project.bundle_id, new_provision):
-		menu.validate_bundle_id()
-	else:
-		_xcode.project.bundle_id = new_provision.bundle_id
-		# if bundle_id is a wildcard, invalidate so user
-		# will edit
-		if _xcode.project.bundle_id.find('*') > -1:
-			menu.invalidate_bundle_id()
-		_on_request_fill(menu)
-
-	menu.validate_provision()
-
-
-func _on_edited_bundle_id(menu, new_bundle_id):
-	_xcode.project.bundle_id = new_bundle_id
-	if _xcode.project.provision == null:
-		return
-	if valid_bundleid(new_bundle_id, _xcode.project.provision):
-		menu.validate_bundle_id()
-	else:
-		menu.invalidate_bundle_id()
-
-
-func _on_finished_editing(menu):
-	var bundle = menu.get_bundle_group()
-	_xcode.project.bundle_id = bundle.id
-	_xcode.project.name = bundle.display
-
-	var identity = menu.get_identity_group()
-	_xcode.project.team = identity.team
-	_xcode.project.provision = identity.provision
-	_xcode.project.automanaged = identity.automanaged
-	_xcode.project.set_devices(menu.get_active_devices())
-
-	_xcode.project.update()
-
-
 # -- OneClickButton (view)
 
 
@@ -385,9 +276,8 @@ func _on_view_pressed():
 func _on_view_presenting_hover_menu(oneclickbutton):
 	_log.debug('OneClickButton: Presenting Hover Menu')
 	if _xcode.is_project_ready():
+		_xcode.finder.begin_find_devices()
 		oneclickbutton.set_project_valid(valid_xcode_project())
-		oneclickbutton.devices_list_populate(_xcode.finder.find_devices())
-		oneclickbutton.devices_list_set_active(_xcode.project.get_devices())
 
 
 func _on_view_settings_button_pressed(oneclickbutton):
@@ -415,11 +305,23 @@ func _on_xcode_template_copy_install_failed(template, error):
 		view.connect('presenting_hover_menu', self, 'check_xcode_make_project')
 
 
-
 func _on_xcode_made_project(xcode, result, project):
 	_log.debug('Xcode: Made Xcode Project')
 	_init_xcode_project()
 	view.set_disabled(false)
+
+
+# -- Finder
+
+
+func _on_xcode_finder_result(finder, type, objects):
+	if type == finder.DEVICE:
+		get_view().devices_list_populate(objects)
+		get_view().devices_list_set_active(_xcode.project.get_devices())
+	elif type == finder.TEAM:
+		pass
+	elif type == finder.PROVISION:
+		pass
 
 
 # -- Project

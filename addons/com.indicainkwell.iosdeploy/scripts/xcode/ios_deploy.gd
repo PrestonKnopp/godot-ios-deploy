@@ -11,6 +11,7 @@ extends Reference
 
 
 signal deployed(this, result, errors, device_id)
+signal device_detection_finished(this, result)
 
 
 # ------------------------------------------------------------------------------
@@ -52,6 +53,8 @@ var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.ios-deploy'
 var _iosdeploy = stc.get_gdscript('shell.gd').new().make_command('/usr/local/bin/ios-deploy')
 var _error_capturer = ErrorCapturer.new()
 
+var _detect_devices_thread_id = -1
+
 
 # ------------------------------------------------------------------------------
 #                                     Overrides
@@ -74,7 +77,7 @@ func _init():
 # ------------------------------------------------------------------------------
 
 
-func detect_devices():
+func detect_devices(async=true):
 	"""
 	This should be used only by device_finder.gd. Cause it does the
 	parsing. This will probably change later.
@@ -83,9 +86,19 @@ func detect_devices():
 	if ignore_wifi_devices:
 		args.append('--no-wifi')
 	_log.debug('Detect Devices Command: '+str(args))
-	var res = _iosdeploy.run(args)
-	_log.debug('Detect Devices Output: '+str(res.output))
-	return res.output[0].split('\n', false)
+
+	if async:
+		if _iosdeploy.running(_detect_devices_thread_id):
+			# No need to run it again
+			return
+
+		_detect_devices_thread_id = _iosdeploy.run_async(
+			args,
+			self,
+			'_detect_devices_finished'
+		)
+	else:
+		return _iosdeploy.run(args)
 
 
 func install_and_launch_on(device_id, async=true):
@@ -133,6 +146,12 @@ func uninstall():
 func _deploy_finished(command, result, device_id):
 	var errors = _error_capturer.capture_from(result.output)
 	emit_signal('deployed', self, result, errors, device_id)
+
+
+func _detect_devices_finished(command, result):
+	_log.debug('Detect Devices Output: '+str(result.output))
+	_detect_devices_thread_id = -1
+	emit_signal('device_detection_finished', self, result)
 
 
 # ------------------------------------------------------------------------------

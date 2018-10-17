@@ -17,6 +17,7 @@ const stc = preload('scripts/static.gd')
 
 var MainController = stc.get_gdscript('controllers/main_controller.gd')
 var Logger = stc.get_gdscript('logger.gd')
+var PoolStringConverter = stc.get_gdscript('pool_string_converter.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -71,7 +72,7 @@ func meets_software_requirements():
 
 func ext_sw_exists(software):
 	var out = []
-	OS.execute('command', stc.to_pool_string_array(['-v', software]), true, out)
+	OS.execute('command', PoolStringConverter.convert_array(['-v', software]), true, out)
 	_log.verbose(out[0])
 	return out[0].find(software) > -1
 

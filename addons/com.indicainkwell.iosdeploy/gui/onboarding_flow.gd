@@ -260,7 +260,7 @@ func resize_for(screen):
 # ------------------------------------------------------------------------------
 
 
-func _request_validation(section, value):
+func request_validation(section, value):
 	emit_signal('validate', self, section, value)
 	get_next_button().set_disabled(not is_screen_valid())
 
@@ -318,7 +318,7 @@ func _on_control_stack_screen_entering( this, from_screen, screen ):
 	for section in screen_sections:
 		emit_signal('populate', self, section)
 	for section in screen_sections:
-		_request_validation(section, get_section_value(section))
+		request_validation(section, get_section_value(section))
 
 	get_back_button().set_disabled(screen.index == 0)
 	if screen.index + 1 >= this.get_screen_count():
@@ -337,22 +337,22 @@ func _on_control_stack_draw():
 func _on_profile_optbutt_item_selected( ID ):
 	var optbutt = get_node('control_stack/select_provision/profile_optbutt')
 	var meta = optbutt.get_selected_metadata()
-	_request_validation(PROVISION, meta)
+	request_validation(PROVISION, meta)
 
 
 func _on_automanage_checkbutt_toggled( pressed ):
-	_request_validation(AUTOMANAGE, pressed)
+	request_validation(AUTOMANAGE, pressed)
 
 
 func _on_team_optbutt_item_selected( ID ):
 	var optbutt = get_node('control_stack/select_team/team_optbutt')
 	var meta = optbutt.get_selected_metadata()
-	_request_validation(TEAM, meta)
+	request_validation(TEAM, meta)
 
 
 func _on_display_name_lineedit_text_changed( text ):
-	_request_validation(DISPLAY_NAME, text)
+	request_validation(DISPLAY_NAME, text)
 
 
 func _on_bundle_id_lineedit_text_changed( text ):
-	_request_validation(BUNDLE_ID, text)
+	request_validation(BUNDLE_ID, text)

@@ -59,9 +59,6 @@ static func get_logger():
 		project_settings.set_meta(PLUGIN_DOMAIN + '.logger.singleton', Logger.new())
 	return project_settings.get_meta(PLUGIN_DOMAIN + '.logger.singleton')
 
-static func to_pool_string_array(array):
-	return get_gdscript('pool_string_converter.gd').convert_array(array)
-
 static func globalize_path(path):
 	var gpath
 	var protocol = 'user://'

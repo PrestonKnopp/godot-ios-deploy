@@ -30,6 +30,7 @@ var iOSExportTemplate = stc.get_gdscript('xcode/ios_export_template.gd')
 var Team = stc.get_gdscript('xcode/team.gd')
 var Provision = stc.get_gdscript('xcode/provision.gd')
 var Device = stc.get_gdscript('xcode/device.gd')
+var Finder = stc.get_gdscript('xcode/finders/finder_umbrella.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -49,7 +50,7 @@ func get_template():
 	return template
 
 
-var finder = stc.get_gdscript('xcode/finders/finder.gd') setget ,get_finder
+var finder = Finder.new() setget ,get_finder
 func get_finder(): return finder
 
 

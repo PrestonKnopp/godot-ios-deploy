@@ -8,6 +8,9 @@ const stc = preload('static.gd')
 const ERROR_FILE_FMT = 'com.indicainkwell.iosdeploy.shell.error.%s.txt'
 
 
+var PoolStringConverter = stc.get_gdscript('pool_string_converter.gd')
+
+
 class Result:
 	var output = []
 	var code = 0
@@ -152,7 +155,7 @@ func get_file_contents(file_path):
 
 func execute(cmd, args=[], error_file_name='default'):
 	var errfpath = get_error_file_path(ERROR_FILE_FMT % error_file_name)
-	var built_args = stc.to_pool_string_array(_build_execute_args(
+	var built_args = PoolStringConverter.convert_array(_build_execute_args(
 		cmd, args,
 		errfpath
 	))

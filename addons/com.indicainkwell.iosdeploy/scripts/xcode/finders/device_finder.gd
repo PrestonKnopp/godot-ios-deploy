@@ -1,5 +1,5 @@
 # device_finder.gd
-extends 'finder.gd'
+extends 'Finder.gd'
 
 
 # ------------------------------------------------------------------------------
@@ -34,6 +34,9 @@ func _init():
 	var pattern = "Found (\\w*) \\((.*)\\) a\\.k\\.a\\. '(.*)' connected through (\\w*)\\."
 	assert(_regex.compile(pattern) == OK)
 
+	_ios_deploy.connect('device_detection_finished', self,
+			'_on_ios_deploy_device_detection_finished')
+
 
 # ------------------------------------------------------------------------------
 #                                      Methods
@@ -43,37 +46,7 @@ func _init():
 # [....] Waiting up to 1 seconds for iOS device to be connected
 # [....] Found 3345abc45b3cab4c5eb5c4bfb3c5998abc3b320a (P105AP, iPad mini, iphoneos, armv7) a.k.a. 'iPad Name' connected through USB.
 func _ios_deploy_find_devices():
-	var result = []
-
-	var output = _ios_deploy.detect_devices()
-
-	for line in output:
-		var captures = _regex.search(line)
-		if captures.size() == 0:
-			# Whole pattern didn't match
-			continue
-
-		var device = Device.new()
-		device.id = captures[1]
-		device.type_info = captures[2]
-		device.name = captures[3]
-
-		# extra required capture checks
-
-		# device.type will never be sim or mac
-		# from ios-deploy
-		if device.type_info.find('iPhone') > -1:
-			device.type = Device.Type.iPhone
-		elif device.type_info.find('iPad') > -1:
-			device.type = Device.Type.iPad
-
-		if captures[4].find('USB') == -1:
-			device.connection = Device.Connection.WIFI
-
-		result.append(device)
-
-	return result
-
+	_ios_deploy.detect_devices()
 
 
 func _instruments_find_devices():
@@ -112,7 +85,45 @@ func _instruments_find_devices():
 			device.type = device.Type.iPad
 
 		devices.append(device)
-	return devices
+	
+	_finished(devices)
+
+
+# ------------------------------------------------------------------------------
+#                                     Handlers
+# ------------------------------------------------------------------------------
+
+
+func _on_ios_deploy_device_detection_finished(iosdeploy, result):
+	var devices = []
+
+	# Parse device information from detect_devices output
+	for line in result.output[0].split('\n', false):
+		var captures = _regex.search(line)
+		if captures.size() == 0:
+			# Whole pattern didn't match
+			continue
+
+		var device = Device.new()
+		device.id = captures[1]
+		device.type_info = captures[2]
+		device.name = captures[3]
+
+		# extra required capture checks
+
+		# device.type will never be sim or mac
+		# from ios-deploy
+		if device.type_info.find('iPhone') > -1:
+			device.type = Device.Type.iPhone
+		elif device.type_info.find('iPad') > -1:
+			device.type = Device.Type.iPad
+
+		if captures[4].find('USB') == -1:
+			device.connection = Device.Connection.WIFI
+
+		devices.append(device)
+
+	_finished(devices)
 
 
 # ------------------------------------------------------------------------------
@@ -120,7 +131,6 @@ func _instruments_find_devices():
 # ------------------------------------------------------------------------------
 
 
-func find():
-	return _ios_deploy_find_devices()
-	# return _instruments_find_devices()
+func begin_find():
+	_ios_deploy_find_devices()
 
