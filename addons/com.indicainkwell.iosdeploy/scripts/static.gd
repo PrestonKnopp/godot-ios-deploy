@@ -22,8 +22,10 @@ const GDSCRIPTS_3 = GDSCRIPTS  + '/_v3'
 const CONFIG_VERSION = 0
 
 const LOGGER_SINGLETON_DOMAIN = PLUGIN_DOMAIN + '.logger.singleton'
-
 const Logger = preload('logger.gd')
+
+const CONFIG_SINGLETON_DOMAIN = PLUGIN_DOMAIN + '.config.singleton'
+const Config = preload('plugin_config.gd')
 
 
 # Get rid of this and just use get_shell_script() with string input
@@ -73,6 +75,10 @@ static func get_logger():
 	# TODO: refactor logger into self contained script. Use groups api to
 	# manage all loggers across project.
 	return get_plugin_singleton(LOGGER_SINGLETON_DOMAIN, Logger)
+
+
+static func get_config():
+	return get_plugin_singleton(CONFIG_SINGLETON_DOMAIN, Config)
 
 
 static func globalize_path(path):

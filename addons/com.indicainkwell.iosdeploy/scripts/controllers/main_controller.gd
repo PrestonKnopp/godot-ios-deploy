@@ -38,7 +38,6 @@ var SettingsMenuScene = stc.get_scene('deploy_settings_menu.tscn')
 var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.main-controller')
 var _xcode = Xcode.new()
 
-var _config = ConfigFile.new()
 var _settings = ProjSettings.new()
 var _onboarding_flow_controller = OnboardFlCtl.new()
 
@@ -59,23 +58,8 @@ func _init():
 	view.connect('settings_button_pressed', self, '_on_view_settings_button_pressed')
 	view.connect('devices_list_edited', self, '_on_view_devices_list_edited')
 
-	_init_config()
 	_init_onboarding_flow_controller()
 	_init_xcode()
-
-
-func _init_config():
-	# TODO: mv config loading and stuff to plugin
-	if _config.load(stc.get_data_path('config.cfg')) != OK:
-		_log.info('unable to load config')
-	
-	var cfg_version = _config.get_value('meta', 'version', -1)
-	if cfg_version != stc.CONFIG_VERSION:
-		# TODO: implement config versioning
-		_log.verbose('Differing config version. Update cfg here.')
-	_log.verbose('Changing config version from %s to %s' % [str(cfg_version), stc.CONFIG_VERSION])
-	_config.set_value('meta', 'version', stc.CONFIG_VERSION)
-
 
 
 func _init_onboarding_flow_controller():
@@ -98,7 +82,6 @@ func _init_xcode_project():
 	"""
 	Only call after _xcode.make_project_async() successfully completes.
 	"""
-	_xcode.project.set_config(_config)
 	_xcode.project.connect('built', self, '_on_xcode_project_built')
 	_xcode.project.connect('deployed', self, '_on_device_deployed')
 	_log.debug('Xcode Project App Path: ' + _xcode.project.get_app_path())

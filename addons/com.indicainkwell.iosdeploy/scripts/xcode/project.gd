@@ -57,8 +57,6 @@ var automanaged = false
 var debug = true
 var custom_info = {}
 
-var _config
-
 var _needs_building = true
 var _iosdeploy = iOSDeploy.new()
 var _runningdeploys = 0
@@ -90,6 +88,8 @@ func _init():
 		message = 2
 	})
 
+	_init_from_config()
+
 
 # ------------------------------------------------------------------------------
 #                                      Methods
@@ -116,26 +116,25 @@ func needs_building():
 # ------------------------------------------------------------------------------
 
 
-func set_config(cfg):
+func _init_from_config():
 	"""
-	Set the config to use for future reading and writing.
+	Init values from global config
 	"""
-	_config = cfg
+	
+	var cfg = stc.get_config()
 
-	# TODO: get rid of null not being a default value by creating a subclass
-	# of Config to handle our general config use case
-	automanaged = _config.get_value('xcode/project', 'automanaged', automanaged)
-	bundle_id = _config.get_value('xcode/project', 'bundle_id', bundle_id)
-	custom_info = _config.get_value('xcode/project', 'custom_info', custom_info)
-	debug = _config.get_value('xcode/project', 'debug', debug)
-	name = _config.get_value('xcode/project', 'name', name)
+	automanaged = cfg.get_value('xcode/project', 'automanaged', automanaged)
+	bundle_id = cfg.get_value('xcode/project', 'bundle_id', bundle_id)
+	custom_info = cfg.get_value('xcode/project', 'custom_info', custom_info)
+	debug = cfg.get_value('xcode/project', 'debug', debug)
+	name = cfg.get_value('xcode/project', 'name', name)
 
 	provision = Provision.new().FromDict(
-		_config.get_value('xcode/project', 'provision', provision)
+		cfg.get_value('xcode/project', 'provision', provision)
 	)
-	team = Team.new().FromDict(_config.get_value('xcode/project', 'team', team))
+	team = Team.new().FromDict(cfg.get_value('xcode/project', 'team', team))
 
-	var saved_device_dicts = _config.get_value('xcode/project', 'devices', [])
+	var saved_device_dicts = cfg.get_value('xcode/project', 'devices', [])
 	if saved_device_dicts.size() != 0:
 		_devices.clear()
 		for dev in saved_device_dicts:
@@ -147,24 +146,23 @@ func set_config(cfg):
 
 func update_config():
 	"""
-	Update config with self's properties.
+	Update global config with self's properties.
 	"""
-	_config.set_value('xcode/project', 'automanaged', automanaged)
-	_config.set_value('xcode/project', 'bundle_id', bundle_id)
-	_config.set_value('xcode/project', 'name', name)
-	_config.set_value('xcode/project', 'provision', Provision.new().ToDict(provision))
-	_config.set_value('xcode/project', 'team', Team.new().ToDict(team))
+	
+	var cfg = stc.get_config()
+
+	cfg.set_value('xcode/project', 'automanaged', automanaged)
+	cfg.set_value('xcode/project', 'bundle_id', bundle_id)
+	cfg.set_value('xcode/project', 'name', name)
+	cfg.set_value('xcode/project', 'provision', Provision.new().ToDict(provision))
+	cfg.set_value('xcode/project', 'team', Team.new().ToDict(team))
 
 	var savable_devices_fmt = []
 	for device in _devices:
 		savable_devices_fmt.append(Device.new().ToDict(device))
-	_config.set_value('xcode/project', 'devices', savable_devices_fmt)
+	cfg.set_value('xcode/project', 'devices', savable_devices_fmt)
 
-	# TODO: abstract this save out, self should not know about the path to
-	# config.cfg
-	if _config.save(stc.get_data_path('config.cfg')) != OK:
-		stc.get_logger().info('unable to save config')
-
+	cfg.save()
 
 
 
