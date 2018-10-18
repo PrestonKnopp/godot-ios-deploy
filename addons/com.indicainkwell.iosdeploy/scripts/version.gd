@@ -13,7 +13,9 @@ func get_minor():
 	return int(get_dict()['minor'])
 
 func get_patch():
-	return int(get_dict()['patch'])
+	var d = get_dict()
+	var patch = d['patch']
+	return int(patch)
 
 func get_status():
 	return get_dict()['status']

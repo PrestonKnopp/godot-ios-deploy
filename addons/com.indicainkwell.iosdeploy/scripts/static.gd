@@ -1,5 +1,4 @@
 # static.gd
-tool
 extends Object
 
 
@@ -23,6 +22,7 @@ const GDSCRIPTS_3 = GDSCRIPTS  + '/_v3'
 const CONFIG_VERSION = 0
 
 const SINGLETON_DOMAIN_CONTAINER = PLUGIN_DOMAIN + '.singletons'
+const VERSION_SINGLETON_DOMAIN = PLUGIN_DOMAIN + '.singleton.version'
 const LOGGER_SINGLETON_DOMAIN = PLUGIN_DOMAIN + '.singleton.logger'
 
 
@@ -41,18 +41,6 @@ const shell = {
 
 static func isa(obj, type):
 	return get_gdscript('isa.gd').test(obj, type)
-
-
-static func get_version():
-	# can't use get_gdscript here because
-	# it's recursive
-	var path
-	if OS.has_method('get_engine_version'):
-		path = GDSCRIPTS_2
-	else:
-		path = GDSCRIPTS_3
-	
-	return load(path.plus_file('version.gd')).new()
 
 
 static func get_plugin_singleton(domain, script_path):
@@ -74,8 +62,13 @@ static func free_plugin_singletons():
 	var project_settings = get_gdscript('project_settings.gd')
 	if project_settings.has_metadata(SINGLETON_DOMAIN_CONTAINER):
 		var domains = project_settings.get_metadata(SINGLETON_DOMAIN_CONTAINER)
-		for singleton in domains.values():
-			singleton.free()
+		for domain in domains:
+			print('Freeing ', domain)
+			domains[domain].free()
+
+
+static func get_version():
+	return get_plugin_singleton(VERSION_SINGLETON_DOMAIN, 'version.gd')
 
 
 static func get_logger():
@@ -128,17 +121,21 @@ static func get_shell_script(shell_script):
 	return SHELL_SCRIPTS.plus_file(shell_script)
 
 
+static func get_versioned_scripts_path():
+	var path
+	if OS.has_method('get_engine_version'):
+		path = GDSCRIPTS_2
+	else:
+		path = GDSCRIPTS_3
+	return path
+
+
 static func get_gdscript(gdscript):
-
-	var f = GDSCRIPTS.plus_file(gdscript)
-
-	if get_version().is2():
-		var v2f = GDSCRIPTS_2.plus_file(gdscript)
-		if File.new().file_exists(v2f):
-			f = v2f
-	elif get_version().is3():
-		var v3f = GDSCRIPTS_3.plus_file(gdscript)
-		if File.new().file_exists(v3f):
-			f = v3f
+	var f
+	var vf = get_versioned_scripts_path().plus_file(gdscript)
+	if File.new().file_exists(vf):
+		f = vf
+	else:
+		f = GDSCRIPTS.plus_file(gdscript)
 
 	return load(f)
