@@ -21,6 +21,8 @@ const GDSCRIPTS_3 = GDSCRIPTS  + '/_v3'
 
 const CONFIG_VERSION = 0
 
+const LOGGER_SINGLETON_DOMAIN = PLUGIN_DOMAIN + '.logger.singleton'
+
 const Logger = preload('logger.gd')
 
 
@@ -53,20 +55,25 @@ static func get_version():
 	return load(path.plus_file('version.gd')).new()
 
 
+static func get_plugin_singleton(domain, script):
+	# - What? This creates a singleton by setting metadata on an instance of
+	# an already global and readily accessible godot object.
+	# - Why project_settings.gd? Godot v2 Globals and Godot v3
+	# ProjectSettings are global objects that allow metadata.
+	var project_settings = get_gdscript('project_settings.gd')
+	if not project_settings.has_metadata(domain):
+		project_settings.set_metadata(domain, script.new())
+	return project_settings.get_metadata(domain)
+
+
 static func get_logger():
-	# - What? This creates a Logger singleton by setting metadata on an
-	# instance of an already global and readily accessible godot object.
 	# - Why? A single logger can have all subloggers associated. And their
 	# output levels can be managed easier. Just now realizing this could
 	# also be done with groups.
-	# - Why project_settings.gd? Godot v2 Globals and Godot v3
-	# ProjectSettings are global objects that allow metadata.
 	# TODO: refactor logger into self contained script. Use groups api to
 	# manage all loggers across project.
-	var project_settings = get_gdscript('project_settings.gd')
-	if not project_settings.has_metadata(PLUGIN_DOMAIN + '.logger.singleton'):
-		project_settings.set_metadata(PLUGIN_DOMAIN + '.logger.singleton', Logger.new())
-	return project_settings.get_metadata(PLUGIN_DOMAIN + '.logger.singleton')
+	return get_plugin_singleton(LOGGER_SINGLETON_DOMAIN, Logger)
+
 
 static func globalize_path(path):
 	var gpath
