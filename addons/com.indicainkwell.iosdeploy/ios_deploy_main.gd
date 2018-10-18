@@ -16,7 +16,6 @@ const stc = preload('scripts/static.gd')
 
 
 var MainController = stc.get_gdscript('controllers/main_controller.gd')
-var Logger = stc.get_gdscript('logger.gd')
 var PoolStringConverter = stc.get_gdscript('pool_string_converter.gd')
 
 
@@ -44,6 +43,10 @@ func _enter_tree():
 	
 	main_controller = MainController.new()
 	add_child(main_controller)
+
+
+func _exit_tree():
+	stc.free_plugin_singletons()
 
 
 # ------------------------------------------------------------------------------

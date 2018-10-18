@@ -21,9 +21,8 @@ const GDSCRIPTS_3 = GDSCRIPTS  + '/_v3'
 
 const CONFIG_VERSION = 0
 
-const LOGGER_SINGLETON_DOMAIN = PLUGIN_DOMAIN + '.logger.singleton'
-
-const Logger = preload('logger.gd')
+const SINGLETON_DOMAIN_CONTAINER = PLUGIN_DOMAIN + '.singletons'
+const LOGGER_SINGLETON_DOMAIN = PLUGIN_DOMAIN + '.singleton.logger'
 
 
 # Get rid of this and just use get_shell_script() with string input
@@ -61,9 +60,21 @@ static func get_plugin_singleton(domain, script):
 	# - Why project_settings.gd? Godot v2 Globals and Godot v3
 	# ProjectSettings are global objects that allow metadata.
 	var project_settings = get_gdscript('project_settings.gd')
-	if not project_settings.has_metadata(domain):
-		project_settings.set_metadata(domain, script.new())
-	return project_settings.get_metadata(domain)
+	if not project_settings.has_metadata(SINGLETON_DOMAIN_CONTAINER):
+		project_settings.set_metadata(SINGLETON_DOMAIN_CONTAINER, {})
+
+	var domains = project_settings.get_metadata(SINGLETON_DOMAIN_CONTAINER)
+	if not domains.has(domain):
+		domains[domain] = get_gdscript(script_path).new()
+	return domains[domain]
+
+
+static func free_plugin_singletons():
+	var project_settings = get_gdscript('project_settings.gd')
+	if project_settings.has_metadata(SINGLETON_DOMAIN_CONTAINER):
+		var domains = project_settings.get_metadata(SINGLETON_DOMAIN_CONTAINER)
+		for singleton in domains.values():
+			singleton.free()
 
 
 static func get_logger():
