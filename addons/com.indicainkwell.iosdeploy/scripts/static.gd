@@ -1,4 +1,5 @@
 # static.gd
+tool
 extends Object
 
 
@@ -54,7 +55,7 @@ static func get_version():
 	return load(path.plus_file('version.gd')).new()
 
 
-static func get_plugin_singleton(domain, script):
+static func get_plugin_singleton(domain, script_path):
 	# - What? This creates a singleton by setting metadata on an instance of
 	# an already global and readily accessible godot object.
 	# - Why project_settings.gd? Godot v2 Globals and Godot v3
@@ -83,7 +84,7 @@ static func get_logger():
 	# also be done with groups.
 	# TODO: refactor logger into self contained script. Use groups api to
 	# manage all loggers across project.
-	return get_plugin_singleton(LOGGER_SINGLETON_DOMAIN, Logger)
+	return get_plugin_singleton(LOGGER_SINGLETON_DOMAIN, 'logger.gd')
 
 
 static func globalize_path(path):
