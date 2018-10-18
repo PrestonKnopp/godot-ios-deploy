@@ -1,5 +1,5 @@
 # plugin_config.gd
-extends Reference
+extends Object
 
 
 # ------------------------------------------------------------------------------
