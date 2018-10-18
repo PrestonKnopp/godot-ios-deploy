@@ -67,7 +67,7 @@ func is_project_ready():
 	return project != null
 
 
-func make_project_async(bundle_id=null, display_name=null):
+func make_project_async():
 	"""
 	Async make xcode project.
 
@@ -77,19 +77,17 @@ func make_project_async(bundle_id=null, display_name=null):
 	var template = get_template()
 	if template.is_connected('copy_installed', self, '_on_template_copy_installed'):
 		template.disconnect('copy_installed', self, '_on_template_copy_installed')
-	template.connect('copy_installed', self, '_on_template_copy_installed', [bundle_id, display_name], CONNECT_ONESHOT)
+	template.connect('copy_installed', self, '_on_template_copy_installed', [], CONNECT_ONESHOT)
 
 	if template.copy_exists():
-		_made_project(template, null, bundle_id, display_name)
+		_made_project(template, null)
 	else:
 		template.copy_install_async()
 
 
 
-func _made_project(template, result, bundle_id, display_name):
+func _made_project(template, result):
 	project = Project.new()
-	project.bundle_id = bundle_id
-	project.name = display_name
 	project.open(template.get_destination_path())
 
 	emit_signal('made_project', self, result, project)
@@ -100,6 +98,6 @@ func _made_project(template, result, bundle_id, display_name):
 # ------------------------------------------------------------------------------
 
 
-func _on_template_copy_installed(template, result, bundle_id, display_name):
+func _on_template_copy_installed(template, result):
 	# TODO: For now, assume copy succeeded if this callback has been called.
-	_made_project(template, result, bundle_id, display_name)
+	_made_project(template, result)
