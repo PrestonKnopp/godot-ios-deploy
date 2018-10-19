@@ -3,7 +3,7 @@ extends Object
 
 
 const PLUGIN_DOMAIN = 'com.indicainkwell.iosdeploy'
-const LOGGER_DOMAIN = 'ios-deploy'
+const LOGGER_DOMAIN = PLUGIN_DOMAIN + '.logger'
 
 const PLUGIN_DATA_PATH = 'user://' + PLUGIN_DOMAIN
 
@@ -22,9 +22,9 @@ const GDSCRIPTS_3 = GDSCRIPTS  + '/_v3'
 const CONFIG_VERSION = 0
 
 const SINGLETON_DOMAIN_CONTAINER = PLUGIN_DOMAIN + '.singletons'
-const VERSION_SINGLETON_DOMAIN = PLUGIN_DOMAIN + '.singleton.version'
-const LOGGER_SINGLETON_DOMAIN = PLUGIN_DOMAIN + '.singleton.logger'
-const CONFIG_SINGLETON_DOMAIN = PLUGIN_DOMAIN + '.config.singleton'
+const SINGLETON_VERSION_DOMAIN = PLUGIN_DOMAIN + '.version.singleton'
+const SINGLETON_LOGGER_DOMAIN = LOGGER_DOMAIN + '.singleton'
+const SINGLETON_CONFIG_DOMAIN = PLUGIN_DOMAIN + '.config.singleton'
 
 
 # Get rid of this and just use get_shell_script() with string input
@@ -68,7 +68,7 @@ static func free_plugin_singletons():
 
 
 static func get_version():
-	return get_plugin_singleton(VERSION_SINGLETON_DOMAIN, 'version.gd')
+	return get_plugin_singleton(SINGLETON_VERSION_DOMAIN, 'version.gd')
 
 
 static func get_logger():
@@ -77,11 +77,11 @@ static func get_logger():
 	# also be done with groups.
 	# TODO: refactor logger into self contained script. Use groups api to
 	# manage all loggers across project.
-	return get_plugin_singleton(LOGGER_SINGLETON_DOMAIN, 'logger.gd')
+	return get_plugin_singleton(SINGLETON_LOGGER_DOMAIN, 'logger.gd')
 
 
 static func get_config():
-	return get_plugin_singleton(CONFIG_SINGLETON_DOMAIN, 'plugin_config.gd')
+	return get_plugin_singleton(SINGLETON_CONFIG_DOMAIN, 'plugin_config.gd')
 
 
 static func globalize_path(path):
