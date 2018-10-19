@@ -34,8 +34,9 @@ var _log
 
 
 func _enter_tree():
-	_log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN)
-	
+
+	_init_logger()
+
 	if not meets_software_requirements():
 		return
 	
@@ -52,6 +53,20 @@ func _exit_tree():
 # ------------------------------------------------------------------------------
 #                                      Methods
 # ------------------------------------------------------------------------------
+
+
+func _init_logger():
+	var log_env = stc.LOGGER_DOMAIN.replace('.', '_').to_upper() + '_LEVEL'
+	if OS.get_environment(log_env):
+		var levels = stc.get_logger().LEVELS
+		var level = OS.get_environment(log_env)
+		var idx = levels.find(level.to_upper())
+		if idx != -1:
+			stc.get_logger().set_default_output_level(idx)
+		else:
+			stc.get_logger().info('Invalid Logger Level: ' + level)
+			stc.get_logger().info('- Expected: ' + str(levels))
+	_log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN)
 
 
 func meets_software_requirements():

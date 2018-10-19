@@ -9,11 +9,13 @@
 	[ ] implement config versioning
 	[ ] new settings menu
 	[ ] add more configurability
-		[ ] open directory where generated xcode project is stored
+		[ ] copy or open directory where generated xcode project is stored
 		[ ] read export settings for ios and use it to prefill
+		[ ] deploy to ios with remote debug
 		[ ] set path to ios deploy tool
-		[ ] set log level, from env and in editor
-		[ ] set where to generate xcodeproj
+		[ ] set log level
+			[X] environment
+			[ ] menu
 		[ ] set custom plist values
 		[ ] set custom godot binary
 			- or lib. Whichever one godot uses
