@@ -241,7 +241,7 @@ var default_output_strategies = [STRATEGY_PRINT, STRATEGY_PRINT, STRATEGY_PRINT,
 var default_logfile_path = "user://com.indicainkwell.iosdeploy/iosdeploy.log" # % Globals.get("application/name") # Globals not available in v3
 var default_configfile_path = "user://com.indicainkwell.iosdeploy/iosdeploy.log.cfg" # % PLUGIN_NAME
 
-# e.g. "[main.INFO]: The young alpaca started growing a goatie."
+# e.g. "[PLUGIN_NAME.INFO]: The young alpaca started growing a goatie."
 var output_format = "[{MOD}.{LVL}]: {MSG}"
 
 # Specific to STRATEGY_MEMORY
@@ -262,7 +262,7 @@ var modules = {}
 ##  Functions  ##
 ##=============##
 
-func put(level, message, module = "main"):
+func put(level, message, module = PLUGIN_NAME):
 	"""Log a message in the given module with the given logging level."""
 	var module_ref = get_module(module)
 	var output_strategy = module_ref.get_output_strategy(level)
@@ -288,23 +288,23 @@ func put(level, message, module = "main"):
 # Helper functions for each level
 # -------------------------------
 
-func verbose(message, module = "main"):
+func verbose(message, module = PLUGIN_NAME):
 	"""Log a message in the given module with level VERBOSE."""
 	put(VERBOSE, message, module)
 
-func debug(message, module = "main"):
+func debug(message, module = PLUGIN_NAME):
 	"""Log a message in the given module with level DEBUG."""
 	put(DEBUG, message, module)
 
-func info(message, module = "main"):
+func info(message, module = PLUGIN_NAME):
 	"""Log a message in the given module with level INFO."""
 	put(INFO, message, module)
 
-func warn(message, module = "main"):
+func warn(message, module = PLUGIN_NAME):
 	"""Log a message in the given module with level WARN."""
 	put(WARN, message, module)
 
-func error(message, module = "main"):
+func error(message, module = PLUGIN_NAME):
 	"""Log a message in the given module with level ERROR."""
 	put(ERROR, message, module)
 
@@ -325,7 +325,7 @@ func add_module(name, output_level = default_output_level, \
 		modules[name] = Module.new(name, output_level, output_strategies, logfile)
 	return modules[name]
 
-func get_module(module = "main"):
+func get_module(module = PLUGIN_NAME):
 	"""Retrieve the given module if it exists; if not, it will be created."""
 	if not modules.has(module):
 		verbose("The requested module '%s' does not exist. It will be created with default values." \
@@ -635,7 +635,7 @@ func _initialize():
 	# Default logfile
 	add_logfile(default_logfile_path)
 	# Default modules
-	add_module('main') # needs to be instanced first
+	add_module(PLUGIN_NAME) # needs to be instanced first
 	memory_buffer.resize(max_memory_size)
 
 
