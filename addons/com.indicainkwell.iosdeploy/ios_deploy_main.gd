@@ -56,16 +56,26 @@ func _exit_tree():
 
 
 func _init_logger():
-	var log_env = stc.LOGGER_DOMAIN.replace('.', '_').to_upper() + '_LEVEL'
-	if OS.get_environment(log_env):
+	var log_env_var = stc.LOGGER_DOMAIN.replace('.', '_').to_upper()
+	print(log_env_var)
+	var log_level_env = log_env_var + '_LEVEL'
+	if OS.has_environment(log_level_env):
 		var levels = stc.get_logger().LEVELS
-		var level = OS.get_environment(log_env)
+		var level = OS.get_environment(log_level_env)
 		var idx = levels.find(level.to_upper())
 		if idx != -1:
 			stc.get_logger().set_default_output_level(idx)
 		else:
 			stc.get_logger().info('Invalid Logger Level: ' + level)
 			stc.get_logger().info('- Expected: ' + str(levels))
+
+	var log_file_env = log_env_var + '_FILE'
+	if OS.has_environment(log_file_env):
+		var file = OS.get_environment(log_file_env)
+		stc.get_logger().info('Redir logging to file: ' + file)
+		stc.get_logger().set_default_logfile_path(file)
+		stc.get_logger().set_default_output_strategy(stc.get_logger().STRATEGY_FILE)
+
 	_log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN)
 
 

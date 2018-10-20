@@ -70,3 +70,13 @@ If all goes well it will attempt to deploy it, but can fail for multiple reasons
       to `Settings > General > Device Management > Your account` and tap verify.
 2. More in todos.todo
 3. ...
+
+Control logging by exporting any of the following environment variables:
+
+    export COM_INDICAINKWELL_IOSDEPLOY_LOGGER_FILE=/path/to/my/logfile.txt
+    export COM_INDICAINKWELL_IOSDEPLOY_LOGGER_LEVEL=verbose
+
+Logger file can use `res://` and `user://` or be an absolute or relative path
+from the project.
+
+Logger levels are `verbose`, `debug`, `info`, `warn`, and `error`.
