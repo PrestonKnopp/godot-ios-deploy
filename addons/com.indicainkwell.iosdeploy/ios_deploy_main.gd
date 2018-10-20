@@ -57,7 +57,6 @@ func _exit_tree():
 
 func _init_logger():
 	var log_env_var = stc.LOGGER_DOMAIN.replace('.', '_').to_upper()
-	print(log_env_var)
 	var log_level_env = log_env_var + '_LEVEL'
 	if OS.has_environment(log_level_env):
 		var levels = stc.get_logger().LEVELS
