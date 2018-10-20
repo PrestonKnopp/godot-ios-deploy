@@ -10,7 +10,11 @@
 	[ ] new settings menu
 	[ ] add more configurability
 		[ ] copy or open directory where generated xcode project is stored
-		[ ] read export settings for ios and use it to prefill
+		[ ] read/write export settings for ios and use it to prefill
+			[ ] team id
+			[ ] provision id
+			[ ] app icon
+			[ ] app launch images
 		[ ] deploy to ios with remote debug
 		[ ] set path to ios deploy tool
 		[ ] set log level
