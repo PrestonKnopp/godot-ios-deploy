@@ -66,9 +66,6 @@ func get_possible_zip_paths():
 		return [home.plus_file('.godot/templates')\
 		       .plus_file(TEMPLATE_NAME.V2)]
 	else:
-		# NOTE: Different template name formats
-		#       - 3.0-stable/
-		#       - 3.0.2.stable/ <-- use this one
 		var tnames = [
 			'%s.%s.%s.%s' % [ v.get_major(), v.get_minor(),
 				v.get_patch(), v.get_status() ],
@@ -137,6 +134,16 @@ func get_destination_path(make_dir=false, make_template_file_dir=true):
 # ------------------------------------------------------------------------------
 
 
+func is_copy_version_valid():
+	"""
+	Check if config's version matches current version.
+	"""
+	# ios_export_template version was added in cfg_ver >= 1
+	var cfg_ver = stc.get_config().get_value('meta', 'version', -1)
+	var thisver = stc.get_config().get_value('ios_export_template', 'version', -1) 
+	return cfg_ver >= 1 and thisver == stc.IOS_EXPORT_TEMPLATE_VERSION
+
+
 func copy_exists():
 	"""
 	Check if copy used for ios-deploy exists.
@@ -148,7 +155,15 @@ func copy_remove():
 	"""
 	Remove copy of xcode template.
 	"""
-	return Directory.new().remove(get_destination_path())
+	# TODO: abstract this out
+	var d = Directory.new()
+	var trashed = OS.get_environment('HOME').plus_file('.Trash')
+	trashed = trashed.plus_file('iOSDeployOldXcodeTemplateCopy')
+	var i = 0
+	while d.dir_exists(trashed + str(i)):
+		i += 1
+	trashed += str(i)
+	return d.rename(get_destination_path(), trashed)
 
 
 func copy_install_async():
@@ -166,6 +181,9 @@ func copy_install_async():
 		_log.error('Godot iOS Xcode Template not installed.')
 		emit_signal('copy_install_failed', self, ERR_DOES_NOT_EXIST)
 
+
+func _wrap_up_copy_install():
+	stc.get_config().set_value('ios_export_template', 'version', stc.IOS_EXPORT_TEMPLATE_VERSION) 
 
 
 # ------------------------------------------------------------------------------
@@ -213,6 +231,7 @@ func _on_v2_unzip_finished(command, result):
 	var err = Directory.new().rename(unzip_dst, dst)
 	if err != OK:
 		_log.error('Error<%s> renaming ios export template from %s to s'%[ err, unzip_dst, dst ])
+	_wrap_up_copy_install()
 	emit_signal('copy_installed', self, result)
 
 
@@ -223,13 +242,14 @@ func _on_v3_unzip_finished(command, result):
 	var f = File.new()
 	var err
 
-	# rename libgodot.debug.a to godot_ios.a
-	var libpath = get_destination_path().plus_file('libgodot.iphone.debug.fat.a')
-	var dstpath = get_destination_path().plus_file('godot_ios.a')
-	err = d.rename(libpath, dstpath)
-	if err != OK:
-		_log.error('failed with code %s to rename %s to s'%[err,libpath,dstpath])
-	_log.info('Renamed %s to %s'%[libpath,dstpath])
+	# rename libgodot.*.a to default.template.libgodot.*.a
+	for build in ['debug', 'release']:
+		var libpath = get_destination_path().plus_file('libgodot.iphone.%s.fat.a' % build)
+		var dstpath = get_destination_path().plus_file(stc.DEFAULT_TEMPLATE_LIB_NAME_FMT % build)
+		err = d.rename(libpath, dstpath)
+		if err != OK:
+			_log.error('failed with code %s to rename %s to s'%[err,libpath,dstpath])
+		_log.info('Renamed %s to %s'%[libpath,dstpath])
 	
 	# rename data.pck to godot_ios.pck
 	var srcpck = get_destination_path().plus_file('data.pck')
@@ -310,4 +330,5 @@ func _on_v3_unzip_finished(command, result):
 		_log.error('failed with code %s to open %s for editing'%[f.get_error(),pbx])
 	_log.info('Edited %s'%pbx)
 
+	_wrap_up_copy_install()
 	emit_signal('copy_installed', self, result)

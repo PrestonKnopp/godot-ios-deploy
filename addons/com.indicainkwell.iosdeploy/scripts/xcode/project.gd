@@ -62,6 +62,7 @@ var debug_collisions = false
 var debug_navigation = false
 var custom_info = {}
 
+var _pbx_needs_updating = false
 var _needs_building = true
 var _iosdeploy = iOSDeploy.new()
 var _runningdeploys = 0
@@ -179,6 +180,9 @@ func _on_config_changed(config, section, key, from_value, to_value):
 	if section == 'xcode/project':
 		if key == 'remote_debug':
 			remote_debug = to_value
+		elif key == 'godot_bin_path':
+			_pbx_needs_updating = true
+			_log.debug('pbx needs updating')
 
 
 # ------------------------------------------------------------------------------
@@ -297,11 +301,16 @@ func update_pbx():
 	proj_target_attr_q.type = 'PBXProject'
 	proj_target_attr_q.keypath = 'attributes/TargetAttributes'
 
+	var godot_bin_file_ref_q = PBX.Query.new()
+	godot_bin_file_ref_q.type = 'PBXFileReference'
+	godot_bin_file_ref_q.keypath = 'name'
+
 	var res = pbx.find_objects([
 		root_pbxgroup_q,          # res[0]
 		resource_build_phase_q,   # res[1]
 		xc_build_configuration_q, # res[2]
 		proj_target_attr_q,       # res[3]
+		godot_bin_file_ref_q,     # res[4]
 	])
 
 	# add godot project folder to xcode project
@@ -341,7 +350,31 @@ func update_pbx():
 				target['SystemCapabilities'] = cap.to_dict()
 			_log.debug(target)
 	
+	# get path to custom or new godot binary
+	var godot_bin_path
+	if stc.get_version().is2():
+		godot_bin_path = 'godot_opt.iphone'
+	else:
+		var build = 'debug' if debug else 'release'
+		godot_bin_path = stc.DEFAULT_TEMPLATE_LIB_NAME_FMT % build
+	
+	var cfg_bin_path = stc.get_config().get_value('xcode/project', 'godot_bin_path', '')
+	if not cfg_bin_path.empty():
+		# cfg overrides godot_bin_path
+		godot_bin_path = cfg_bin_path
+	_log.debug('Using godot bin path ' + godot_bin_path)
+
+	# set path to custom or new godot binary
+	var godot_bin_file_ref_name = 'godot_opt.iphone' if stc.get_version().is2() else 'godot'
+	for file_ref in res[4]:
+		if file_ref['name'] == godot_bin_file_ref_name:
+			file_ref['path'] = godot_bin_path
+			_log.debug('Set godot bin path to ' + godot_bin_path)
+			break
+	
 	pbx.save_plist(get_pbx_path())
+	_pbx_needs_updating = false
+	_log.debug('pbx updated')
 	mark_needs_building()
 
 
@@ -377,6 +410,9 @@ func build():
 	assert(bundle_id != null)
 	assert(_path != null)
 	assert(name != null)
+
+	if _pbx_needs_updating:
+		update_pbx()
 
 	_xcodebuild.run_async(_build_xcodebuild_args(), self, '_on_xcodebuild_finished')
 

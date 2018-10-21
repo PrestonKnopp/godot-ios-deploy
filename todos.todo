@@ -9,14 +9,23 @@
 	[X] new settings menu
 	[ ] add more configurability
 		[ ] set custom plist values
-		[ ] set custom godot binary
-			- or lib. Whichever one godot uses
-			- in godot's export template it uses an archive
 		[ ] read/write export settings for ios and use it to prefill
 			[ ] team id
 			[ ] provision id
 			[ ] app icon
 			[ ] app launch images
+		[X] set custom godot binary
+			- v3 is an archive, v2 is executable
+			- active binary can be changed by setting the path (abs or rel) of the
+			  PBXFileReference with name 'godot' that points to the current binary
+				- this will work for both v2 and v3
+			[X] check to see if xcode autmatically copies PBXFileReference to bundle
+				- yes
+			[X] rename to default.template.libgodot.*.fat.a
+				- linked libraries names cannot start with an 'l'?
+			[X] when updating pbx use override godot bin path with config value
+			[X] when config changed make sure to update pbx
+			[X] regenerate template from old versions as this requires new format
 		[X] set path to ios deploy tool
 		[X] deploy with some godot settings
 			[X] remote debug

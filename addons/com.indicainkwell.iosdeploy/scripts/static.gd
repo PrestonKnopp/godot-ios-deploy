@@ -19,7 +19,8 @@ const GDSCRIPTS = ADDON_PREFIX + '/scripts'
 const GDSCRIPTS_2 = GDSCRIPTS  + '/_v2'
 const GDSCRIPTS_3 = GDSCRIPTS  + '/_v3'
 
-const CONFIG_VERSION = 0
+const CONFIG_VERSION = 1
+const IOS_EXPORT_TEMPLATE_VERSION = 1
 
 const SINGLETON_DOMAIN_CONTAINER = PLUGIN_DOMAIN + '.singletons'
 const SINGLETON_VERSION_DOMAIN = PLUGIN_DOMAIN + '.version.singleton'
@@ -27,6 +28,8 @@ const SINGLETON_LOGGER_DOMAIN = LOGGER_DOMAIN + '.singleton'
 const SINGLETON_CONFIG_DOMAIN = PLUGIN_DOMAIN + '.config.singleton'
 
 const DEFAULT_IOSDEPLOY_TOOL_PATH = '/usr/local/bin/ios-deploy'
+# %s is for build i.e. debug, release
+const DEFAULT_TEMPLATE_LIB_NAME_FMT = 'default.template.libgodot.%s.a'
 
 
 # Get rid of this and just use get_shell_script() with string input

@@ -79,6 +79,18 @@ func make_project_async():
 		template.disconnect('copy_installed', self, '_on_template_copy_installed')
 	template.connect('copy_installed', self, '_on_template_copy_installed', [], CONNECT_ONESHOT)
 
+	# Remove outdated template copy
+	if template.copy_exists() and not template.is_copy_version_valid():
+		var err = template.copy_remove()
+		var dst = template.get_destination_path()
+		if err != OK:
+			stc.get_logger().error(
+				'Error<%s> Failed to remove old template copy %s' % [
+					err, dst
+				])
+		else:
+			stc.get_logger().info('Removed old template copy %s ' % [dst])
+	
 	if template.copy_exists():
 		_made_project(template, null)
 	else:

@@ -88,6 +88,7 @@ func _init_xcode_project():
 	"""
 	_xcode.project.connect('built', self, '_on_xcode_project_built')
 	_xcode.project.connect('deployed', self, '_on_device_deployed')
+	_xcode.project.update()
 	_log.debug('Xcode Project App Path: ' + _xcode.project.get_app_path())
 
 
