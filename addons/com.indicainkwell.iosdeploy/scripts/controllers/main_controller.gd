@@ -131,6 +131,27 @@ func log_errors(errors, with_message=''):
 	_log.error('%s\n%s' % [with_message, error_str])
 
 
+func _get_ip_addr():
+	var addrs = IP.get_local_addresses()
+	for addr in addrs:
+		# skip loopback and ipv6, editor doesn't seem to support ipv6
+		if addr == '127.0.0.1' or\
+		   addr.find('.') == -1:
+			   continue
+		return addr
+	if stc.get_version().is2():
+		return EditorSettings.call('get', 'network/debug_host')
+	else:
+		return EditorSettings.call('get_setting', 'network/debug/remote_host')
+
+
+func _get_port():
+	if stc.get_version().is2():
+		return EditorSettings.call('get', 'network/debug_port')
+	else:
+		return EditorSettings.call('get_setting', 'network/debug/remote_port')
+
+
 # -- Xcode
 
 
@@ -324,6 +345,15 @@ func _on_xcode_project_built(xcode_project, result, errors):
 		view.update_build_progress(1.0, 'Failed', true)
 	elif xcode_project.get_devices().size() > 0:
 		view.update_build_progress(0.5, 'Deploying %s/%s'%[1, xcode_project.get_devices().size()])
+		# can't find a better place to set these debug flags
+		if xcode_project.remote_debug:
+			xcode_project.remote_addr = _get_ip_addr()
+			xcode_project.remote_port = _get_port()
+			_log.debug('Remote Debug Deploy: %s:%s' %
+					[xcode_project.remote_addr,
+					xcode_project.remote_port])
+		xcode_project.debug_collisions = get_tree().is_debugging_collisions_hint()
+		xcode_project.debug_navigation = get_tree().is_debugging_navigation_hint()
 		xcode_project.deploy()
 	else:
 		emit_signal('finished_pipeline', self)

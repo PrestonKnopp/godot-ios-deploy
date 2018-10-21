@@ -55,6 +55,11 @@ var provision
 var automanaged = false
 
 var debug = true
+var remote_debug = false
+var remote_addr = null
+var remote_port = null
+var debug_collisions = false
+var debug_navigation = false
 var custom_info = {}
 
 var _needs_building = true
@@ -122,11 +127,13 @@ func _init_from_config():
 	"""
 	
 	var cfg = stc.get_config()
+	cfg.connect('changed', self, '_on_config_changed')
 
 	automanaged = cfg.get_value('xcode/project', 'automanaged', automanaged)
 	bundle_id = cfg.get_value('xcode/project', 'bundle_id', bundle_id)
 	custom_info = cfg.get_value('xcode/project', 'custom_info', custom_info)
 	debug = cfg.get_value('xcode/project', 'debug', debug)
+	remote_debug = cfg.get_value('deploy', 'remote_debug', remote_debug)
 	name = cfg.get_value('xcode/project', 'name', name)
 
 	provision = Provision.new().FromDict(
@@ -164,6 +171,14 @@ func update_config():
 
 	cfg.save()
 
+
+# -- Reacting (config)
+
+
+func _on_config_changed(config, section, key, from_value, to_value):
+	if section == 'xcode/project':
+		if key == 'remote_debug':
+			remote_debug = to_value
 
 
 # ------------------------------------------------------------------------------
@@ -440,6 +455,17 @@ func deploy():
 	# TODO: shell.gd command should be able to kill running command.
 	# TODO: add option to install or just launch
 	_iosdeploy.bundle = get_app_path()
+	_iosdeploy.app_args.clear()
+	var v2 = stc.get_version().is2()
+	if remote_debug:
+		assert(remote_addr != null)
+		assert(remote_port != null)
+		_iosdeploy.app_args.append('-rdebug' if v2 else '--remote-debug')
+		_iosdeploy.app_args.append('%s:%s' % [remote_addr, remote_port])
+	if debug_collisions:
+		_iosdeploy.app_args.append('-debugcol' if v2 else '--debug-collisions')
+	if debug_navigation:
+		_iosdeploy.app_args.append('-debugnav' if v2 else '--debug-navigation')
 	_runningdeploys = get_devices().size()
 	for device in get_devices():
 		_iosdeploy.install_and_launch_on(device.id)

@@ -8,10 +8,6 @@
 	[ ] implement config versioning
 	[X] new settings menu
 	[ ] add more configurability
-		[ ] deploy with some godot settings
-			[ ] remote debug
-			[ ] debug collision
-			[ ] debug navigation
 		[ ] set path to ios deploy tool
 		[ ] set custom plist values
 		[ ] set custom godot binary
@@ -22,6 +18,10 @@
 			[ ] provision id
 			[ ] app icon
 			[ ] app launch images
+		[X] deploy with some godot settings
+			[X] remote debug
+			[X] debug collision
+			[X] debug navigation
 		[X] set log level
 			[X] environment
 			[X] menu
