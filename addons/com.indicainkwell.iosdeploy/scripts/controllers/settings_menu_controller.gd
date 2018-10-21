@@ -36,7 +36,7 @@ func _on_pressed(view, press_section):
 func _on_about_to_show():
 	var v = get_view()
 	v.remote_debug = stc.get_config().get_value('xcode/project', 'remote_debug', false)
-	v.ios_deploy_path = stc.get_config().get_value('deploy', 'ios_deploy_tool_path', stc.DEFAULT_IOSDEPLOY_TOOL_PATH)
+	v.ios_deploy_tool_path = stc.get_config().get_value('deploy', 'ios_deploy_tool_path', stc.DEFAULT_IOSDEPLOY_TOOL_PATH)
 	v.godot_bin_path = stc.get_config().get_value('deploy', 'godot_bin_path', '')
 	v.log_level = stc.get_config().get_value('meta', 'log_level', stc.get_logger().get_default_output_level())
 	v.log_file = stc.get_config().get_value('meta', 'log_file', '')
@@ -45,7 +45,7 @@ func _on_about_to_show():
 func _on_hide():
 	var v = get_view()
 	stc.get_config().set_value('xcode/project', 'remote_debug', v.remote_debug)
-	stc.get_config().set_value('deploy', 'ios_deploy_tool_path', v.ios_deploy_path)
+	stc.get_config().set_value('deploy', 'ios_deploy_tool_path', v.ios_deploy_tool_path)
 	stc.get_config().set_value('deploy', 'godot_bin_path', v.godot_bin_path)
 	stc.get_config().set_value('meta', 'log_level', v.log_level)
 	stc.get_config().set_value('meta', 'log_file', v.log_file)
