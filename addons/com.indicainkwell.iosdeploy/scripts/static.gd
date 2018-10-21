@@ -26,6 +26,8 @@ const SINGLETON_VERSION_DOMAIN = PLUGIN_DOMAIN + '.version.singleton'
 const SINGLETON_LOGGER_DOMAIN = LOGGER_DOMAIN + '.singleton'
 const SINGLETON_CONFIG_DOMAIN = PLUGIN_DOMAIN + '.config.singleton'
 
+const DEFAULT_IOSDEPLOY_TOOL_PATH = '/usr/local/bin/ios-deploy'
+
 
 # Get rid of this and just use get_shell_script() with string input
 const shell = {

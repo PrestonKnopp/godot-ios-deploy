@@ -1,41 +1,34 @@
-[gd_scene load_steps=12 format=1]
+[gd_scene load_steps=11 format=1]
 
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/onboarding_flow.gd" type="Script" id=1]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/control_stack.gd" type="Script" id=2]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/_v2/title_box.tscn" type="PackedScene" id=3]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Light.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/img/Upload Icon.png" type="Texture" id=5]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/overlay_drawer.gd" type="Script" id=6]
 
 [sub_resource type="DynamicFont" id=1]
 
-font/size = 25
+font/size = 16
 font/use_mipmaps = false
 font/use_filter = true
-font/font = ExtResource( 3 )
+font/font = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=2]
 
-font/size = 12
+font/size = 16
 font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 4 )
 
 [sub_resource type="DynamicFont" id=3]
 
-font/size = 16
+font/size = 12
 font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 4 )
 
-[sub_resource type="DynamicFont" id=4]
-
-font/size = 16
-font/use_mipmaps = false
-font/use_filter = true
-font/font = ExtResource( 4 )
-
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=4]
 
 script/source = "extends Node
 
@@ -90,87 +83,10 @@ size_flags/vertical = 2
 margin/left = 10.0
 margin/top = 10.0
 margin/right = 362.0
-margin/bottom = 169.0
+margin/bottom = 219.0
 alignment = 0
 
-[node name="title_box" type="VBoxContainer" parent="control_stack/select_provision"]
-
-editor/display_folded = true
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 352.0
-margin/bottom = 46.0
-custom_constants/separation = 0
-alignment = 0
-
-[node name="title" type="HBoxContainer" parent="control_stack/select_provision/title_box"]
-
-editor/display_folded = true
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 3
-size_flags/vertical = 3
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 352.0
-margin/bottom = 31.0
-alignment = 1
-
-[node name="Label" type="Label" parent="control_stack/select_provision/title_box/title"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 61.0
-margin/top = 0.0
-margin/right = 175.0
-margin/bottom = 31.0
-custom_fonts/font = SubResource( 1 )
-text = "IOSDEPLOY"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="Label_1" type="Label" parent="control_stack/select_provision/title_box/title"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 179.0
-margin/top = 0.0
-margin/right = 290.0
-margin/bottom = 31.0
-custom_fonts/font = SubResource( 1 )
-custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
-text = "PROVISION"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="subtitle" type="Label" parent="control_stack/select_provision/title_box"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 0.0
-margin/top = 31.0
-margin/right = 352.0
-margin/bottom = 46.0
-custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
-text = "SELECT PROVISIONING PROFILE"
-align = 1
-valign = 1
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
+[node name="title_box" parent="control_stack/select_provision" instance=ExtResource( 3 )]
 
 [node name="HSeparator" type="HSeparator" parent="control_stack/select_provision"]
 
@@ -191,10 +107,10 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 1
 margin/left = 0.0
-margin/top = 97.0
+margin/top = 122.0
 margin/right = 352.0
-margin/bottom = 122.0
-custom_fonts/font = SubResource( 3 )
+margin/bottom = 147.0
+custom_fonts/font = SubResource( 1 )
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -251,7 +167,7 @@ margin/left = 228.0
 margin/top = 0.0
 margin/right = 249.0
 margin/bottom = 19.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 1 )
 text = "OR"
 percent_visible = 1.0
 lines_skipped = 0
@@ -344,7 +260,7 @@ margin/left = 0.0
 margin/top = 57.0
 margin/right = 147.0
 margin/bottom = 98.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 2 )
 text = "Drag & Drop
 provision profile here"
 align = 1
@@ -365,7 +281,7 @@ margin/left = 0.0
 margin/top = 21.0
 margin/right = 0.0
 margin/bottom = 1.0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 2 )
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -380,9 +296,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 149.0
+margin/top = 199.0
 margin/right = 352.0
-margin/bottom = 159.0
+margin/bottom = 209.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="control_stack/select_provision"]
 
@@ -409,7 +325,7 @@ margin/left = 0.0
 margin/top = 0.0
 margin/right = 352.0
 margin/bottom = 15.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = SubResource( 3 )
 custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
 text = "Don't have a Provisioning Profile?"
 percent_visible = 1.0
@@ -427,7 +343,7 @@ margin/left = 0.0
 margin/top = 15.0
 margin/right = 352.0
 margin/bottom = 42.0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = SubResource( 1 )
 toggle_mode = true
 enabled_focus_mode = 2
 shortcut = null
@@ -437,7 +353,7 @@ align = 0
 
 [node name="PreferredSize" type="Node" parent="control_stack/select_provision"]
 
-script/script = SubResource( 5 )
+script/script = SubResource( 4 )
 size = Vector2( 320, 150 )
 
 [node name="select_team" type="VBoxContainer" parent="control_stack"]
@@ -451,87 +367,10 @@ size_flags/vertical = 2
 margin/left = 10.0
 margin/top = 10.0
 margin/right = 362.0
-margin/bottom = 169.0
+margin/bottom = 219.0
 alignment = 0
 
-[node name="title_box" type="VBoxContainer" parent="control_stack/select_team"]
-
-editor/display_folded = true
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 480.0
-margin/bottom = 46.0
-custom_constants/separation = 0
-alignment = 0
-
-[node name="title" type="HBoxContainer" parent="control_stack/select_team/title_box"]
-
-editor/display_folded = true
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 3
-size_flags/vertical = 3
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 480.0
-margin/bottom = 31.0
-alignment = 1
-
-[node name="Label" type="Label" parent="control_stack/select_team/title_box/title"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 152.0
-margin/top = 0.0
-margin/right = 266.0
-margin/bottom = 31.0
-custom_fonts/font = SubResource( 1 )
-text = "IOSDEPLOY"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="Label_1" type="Label" parent="control_stack/select_team/title_box/title"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 270.0
-margin/top = 0.0
-margin/right = 328.0
-margin/bottom = 31.0
-custom_fonts/font = SubResource( 1 )
-custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
-text = "TEAM"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="subtitle" type="Label" parent="control_stack/select_team/title_box"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 0.0
-margin/top = 31.0
-margin/right = 480.0
-margin/bottom = 46.0
-custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
-text = "SELECT PROVISIONING TEAM"
-align = 1
-valign = 1
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
+[node name="title_box" parent="control_stack/select_team" instance=ExtResource( 3 )]
 
 [node name="HSeparator" type="HSeparator" parent="control_stack/select_team"]
 
@@ -541,7 +380,7 @@ size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 50.0
-margin/right = 480.0
+margin/right = 352.0
 margin/bottom = 53.0
 
 [node name="team_optbutt" type="OptionButton" parent="control_stack/select_team"]
@@ -551,9 +390,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 1
 margin/left = 0.0
-margin/top = 243.0
-margin/right = 480.0
-margin/bottom = 263.0
+margin/top = 98.0
+margin/right = 352.0
+margin/bottom = 118.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -565,7 +404,7 @@ items = [ "Select Team", null, true, -1, null ]
 
 [node name="PreferredSize" type="Node" parent="control_stack/select_team"]
 
-script/script = SubResource( 5 )
+script/script = SubResource( 4 )
 size = Vector2( 320, 150 )
 
 [node name="select_bundle" type="VBoxContainer" parent="control_stack"]
@@ -579,87 +418,10 @@ size_flags/vertical = 2
 margin/left = 10.0
 margin/top = 10.0
 margin/right = 362.0
-margin/bottom = 169.0
+margin/bottom = 219.0
 alignment = 0
 
-[node name="title_box" type="VBoxContainer" parent="control_stack/select_bundle"]
-
-editor/display_folded = true
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 2
-size_flags/vertical = 2
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 352.0
-margin/bottom = 46.0
-custom_constants/separation = 0
-alignment = 0
-
-[node name="title" type="HBoxContainer" parent="control_stack/select_bundle/title_box"]
-
-editor/display_folded = true
-focus/ignore_mouse = false
-focus/stop_mouse = false
-size_flags/horizontal = 3
-size_flags/vertical = 3
-margin/left = 0.0
-margin/top = 0.0
-margin/right = 352.0
-margin/bottom = 31.0
-alignment = 1
-
-[node name="Label" type="Label" parent="control_stack/select_bundle/title_box/title"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 76.0
-margin/top = 0.0
-margin/right = 190.0
-margin/bottom = 31.0
-custom_fonts/font = SubResource( 1 )
-text = "IOSDEPLOY"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="Label_1" type="Label" parent="control_stack/select_bundle/title_box/title"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 194.0
-margin/top = 0.0
-margin/right = 275.0
-margin/bottom = 31.0
-custom_fonts/font = SubResource( 1 )
-custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
-text = "BUNDLE"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="subtitle" type="Label" parent="control_stack/select_bundle/title_box"]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 0.0
-margin/top = 31.0
-margin/right = 352.0
-margin/bottom = 46.0
-custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
-text = "SET BUNDLE INFORMATION"
-align = 1
-valign = 1
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
+[node name="title_box" parent="control_stack/select_bundle" instance=ExtResource( 3 )]
 
 [node name="HSeparator" type="HSeparator" parent="control_stack/select_bundle"]
 
@@ -694,7 +456,7 @@ size_flags/vertical = 3
 margin/left = 0.0
 margin/top = 71.0
 margin/right = 352.0
-margin/bottom = 113.0
+margin/bottom = 138.0
 alignment = 0
 
 [node name="Label" type="Label" parent="control_stack/select_bundle/VBoxContainer"]
@@ -730,14 +492,15 @@ caret/caret_blink_speed = 0.65
 
 [node name="VBoxContainer_1" type="VBoxContainer" parent="control_stack/select_bundle"]
 
+editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 3
 margin/left = 0.0
-margin/top = 117.0
+margin/top = 142.0
 margin/right = 352.0
-margin/bottom = 159.0
+margin/bottom = 209.0
 alignment = 0
 
 [node name="Label_1" type="Label" parent="control_stack/select_bundle/VBoxContainer_1"]
@@ -773,7 +536,7 @@ caret/caret_blink_speed = 0.65
 
 [node name="PreferredSize" type="Node" parent="control_stack/select_bundle"]
 
-script/script = SubResource( 5 )
+script/script = SubResource( 4 )
 size = Vector2( 320, 175 )
 
 [node name="Tween" type="Tween" parent="."]

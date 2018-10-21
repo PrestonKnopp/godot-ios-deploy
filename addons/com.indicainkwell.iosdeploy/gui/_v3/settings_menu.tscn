@@ -1,0 +1,706 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/settings_menu.gd" type="Script" id=1]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/_v3/title_box.tscn" type="PackedScene" id=2]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/_v3/body_font.tres" type="DynamicFont" id=3]
+
+[node name="settings_menu" type="WindowDialog" index="0"]
+
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -301.5
+margin_top = -188.0
+margin_right = 301.5
+margin_bottom = 188.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+popup_exclusive = false
+window_title = ""
+resizable = false
+script = ExtResource( 1 )
+_sections_unfolded = [ "Theme" ]
+
+[node name="MarginContainer" type="MarginContainer" parent="." index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+_sections_unfolded = [ "custom_constants" ]
+
+[node name="General" type="VBoxContainer" parent="MarginContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 593.0
+margin_bottom = 366.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 0
+
+[node name="title_box" parent="MarginContainer/General" index="0" instance=ExtResource( 2 )]
+
+margin_right = 583.0
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/General" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 50.0
+margin_right = 583.0
+margin_bottom = 60.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_constants/separation = 10
+
+[node name="open_onboarding_flow_butt" type="Button" parent="MarginContainer/General" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 64.0
+margin_right = 583.0
+margin_bottom = 89.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+hint_tooltip = "Setup provisioning profile, team, app bundle, and app display name. "
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Open Onboarding Flow"
+flat = false
+align = 1
+_sections_unfolded = [ "Hint" ]
+
+[node name="xcodeproj_box" type="HBoxContainer" parent="MarginContainer/General" index="3"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 93.0
+margin_right = 583.0
+margin_bottom = 118.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+
+[node name="open_xcproj_butt" type="Button" parent="MarginContainer/General/xcodeproj_box" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 289.0
+margin_bottom = 25.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Open Xcode Project"
+flat = false
+align = 1
+
+[node name="copy_xcproj_butt" type="Button" parent="MarginContainer/General/xcodeproj_box" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 293.0
+margin_right = 583.0
+margin_bottom = 25.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Copy Xcode Project Path"
+flat = false
+align = 1
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/General" index="4"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 122.0
+margin_right = 583.0
+margin_bottom = 132.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_constants/separation = 10
+
+[node name="remote_debug_butt" type="CheckButton" parent="MarginContainer/General" index="5"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 136.0
+margin_right = 583.0
+margin_bottom = 176.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+hint_tooltip = "Make sure to turn it on in Debug > Deploy with remote debug"
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+toggle_mode = true
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Deploy with remote debug"
+flat = false
+align = 0
+_sections_unfolded = [ "Hint" ]
+
+[node name="HSeparator3" type="HSeparator" parent="MarginContainer/General" index="6"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 180.0
+margin_right = 583.0
+margin_bottom = 190.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_constants/separation = 10
+
+[node name="log_level_box" type="HBoxContainer" parent="MarginContainer/General" index="7"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 194.0
+margin_right = 583.0
+margin_bottom = 219.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+
+[node name="Label" type="Label" parent="MarginContainer/General/log_level_box" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 3.0
+margin_right = 130.0
+margin_bottom = 22.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+custom_fonts/font = ExtResource( 3 )
+text = "Set Logging Level: "
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="log_level_opt" type="OptionButton" parent="MarginContainer/General/log_level_box" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 134.0
+margin_right = 583.0
+margin_bottom = 25.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+toggle_mode = false
+action_mode = 0
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "VERBOSE"
+flat = false
+align = 0
+items = [ "VERBOSE", null, false, -1, null, "DEBUG", null, false, -1, null, "INFO", null, false, -1, null, "WARN", null, false, -1, null, "ERROR", null, false, -1, null ]
+selected = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="log_file_box" type="HBoxContainer" parent="MarginContainer/General" index="8"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 223.0
+margin_right = 583.0
+margin_bottom = 252.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+
+[node name="Label" type="Label" parent="MarginContainer/General/log_file_box" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 5.0
+margin_right = 119.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+custom_fonts/font = ExtResource( 3 )
+text = "Set Logging File: "
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="logfile_path" type="LineEdit" parent="MarginContainer/General/log_file_box" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 123.0
+margin_right = 496.0
+margin_bottom = 29.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+focus_mode = 2
+context_menu_enabled = false
+placeholder_text = "path/to/logfile"
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+_sections_unfolded = [ "Placeholder", "Size Flags" ]
+
+[node name="select_file_butt" type="Button" parent="MarginContainer/General/log_file_box" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 500.0
+margin_right = 583.0
+margin_bottom = 29.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Select File"
+flat = false
+align = 1
+
+[node name="FileDialog" type="FileDialog" parent="MarginContainer/General/log_file_box/select_file_butt" index="0"]
+
+visible = false
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -942.0
+margin_top = -124.0
+margin_right = -745.0
+margin_bottom = -18.0
+rect_min_size = Vector2( 200, 70 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+popup_exclusive = false
+window_title = "Open a File"
+resizable = false
+dialog_hide_on_ok = false
+mode_overrides_title = true
+mode = 0
+access = 2
+filters = PoolStringArray(  )
+show_hidden_files = false
+current_dir = "/Users/prestonknopp/Repositories/godot-ios-deploy"
+current_file = ""
+current_path = "/Users/prestonknopp/Repositories/godot-ios-deploy/"
+
+[node name="HSeparator4" type="HSeparator" parent="MarginContainer/General" index="9"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 256.0
+margin_right = 583.0
+margin_bottom = 266.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_constants/separation = 10
+
+[node name="iosdeploy_tool" type="HBoxContainer" parent="MarginContainer/General" index="10"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 270.0
+margin_right = 583.0
+margin_bottom = 299.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+
+[node name="Label" type="Label" parent="MarginContainer/General/iosdeploy_tool" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 5.0
+margin_right = 142.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+custom_fonts/font = ExtResource( 3 )
+text = "Set ios-deploy path: "
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="iosdeploy_tool_path" type="LineEdit" parent="MarginContainer/General/iosdeploy_tool" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 146.0
+margin_right = 496.0
+margin_bottom = 29.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+text = "/usr/local/bin/ios-deploy"
+focus_mode = 2
+context_menu_enabled = false
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="select_file_butt" type="Button" parent="MarginContainer/General/iosdeploy_tool" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 500.0
+margin_right = 583.0
+margin_bottom = 29.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Select File"
+flat = false
+align = 1
+
+[node name="FileDialog" type="FileDialog" parent="MarginContainer/General/iosdeploy_tool/select_file_butt" index="0"]
+
+visible = false
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -942.0
+margin_top = -124.0
+margin_right = -745.0
+margin_bottom = -18.0
+rect_min_size = Vector2( 200, 70 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+popup_exclusive = false
+window_title = "Open a File"
+resizable = false
+dialog_hide_on_ok = false
+mode_overrides_title = true
+mode = 0
+access = 2
+filters = PoolStringArray(  )
+show_hidden_files = false
+current_dir = "/Users/prestonknopp/Repositories/godot-ios-deploy"
+current_file = ""
+current_path = "/Users/prestonknopp/Repositories/godot-ios-deploy/"
+
+[node name="custom_godot_bin" type="HBoxContainer" parent="MarginContainer/General" index="11"]
+
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 303.0
+margin_right = 583.0
+margin_bottom = 332.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+alignment = 0
+
+[node name="Label" type="Label" parent="MarginContainer/General/custom_godot_bin" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 5.0
+margin_right = 179.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 4
+custom_fonts/font = ExtResource( 3 )
+text = "Set custom godot binary: "
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="godot_bin_path" type="LineEdit" parent="MarginContainer/General/custom_godot_bin" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 183.0
+margin_right = 496.0
+margin_bottom = 29.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 1
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+focus_mode = 2
+context_menu_enabled = false
+placeholder_text = "/path/to/binary"
+placeholder_alpha = 0.6
+caret_blink = false
+caret_blink_speed = 0.65
+caret_position = 0
+_sections_unfolded = [ "Placeholder" ]
+
+[node name="select_file_butt" type="Button" parent="MarginContainer/General/custom_godot_bin" index="2"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 500.0
+margin_right = 583.0
+margin_bottom = 29.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Select File"
+flat = false
+align = 1
+
+[node name="FileDialog" type="FileDialog" parent="MarginContainer/General/custom_godot_bin/select_file_butt" index="0"]
+
+visible = false
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -942.0
+margin_top = -124.0
+margin_right = -745.0
+margin_bottom = -18.0
+rect_min_size = Vector2( 200, 70 )
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+popup_exclusive = false
+window_title = "Open a File"
+resizable = false
+dialog_hide_on_ok = false
+mode_overrides_title = true
+mode = 0
+access = 2
+filters = PoolStringArray(  )
+show_hidden_files = false
+current_dir = "/Users/prestonknopp/Repositories/godot-ios-deploy"
+current_file = ""
+current_path = "/Users/prestonknopp/Repositories/godot-ios-deploy/"
+
+[connection signal="pressed" from="MarginContainer/General/open_onboarding_flow_butt" to="." method="_on_open_onboarding_flow_butt_pressed"]
+
+[connection signal="pressed" from="MarginContainer/General/xcodeproj_box/open_xcproj_butt" to="." method="_on_open_xcproj_butt_pressed"]
+
+[connection signal="pressed" from="MarginContainer/General/xcodeproj_box/copy_xcproj_butt" to="." method="_on_copy_xcproj_butt_pressed"]
+
+[connection signal="pressed" from="MarginContainer/General/log_file_box/select_file_butt" to="MarginContainer/General/log_file_box/select_file_butt/FileDialog" method="popup_centered"]
+
+[connection signal="file_selected" from="MarginContainer/General/log_file_box/select_file_butt/FileDialog" to="MarginContainer/General/log_file_box/logfile_path" method="set_text"]
+
+[connection signal="pressed" from="MarginContainer/General/iosdeploy_tool/select_file_butt" to="MarginContainer/General/iosdeploy_tool/select_file_butt/FileDialog" method="popup_centered"]
+
+[connection signal="file_selected" from="MarginContainer/General/iosdeploy_tool/select_file_butt/FileDialog" to="MarginContainer/General/iosdeploy_tool/iosdeploy_tool_path" method="set_text"]
+
+[connection signal="pressed" from="MarginContainer/General/custom_godot_bin/select_file_butt" to="MarginContainer/General/custom_godot_bin/select_file_butt/FileDialog" method="popup_centered"]
+
+[connection signal="file_selected" from="MarginContainer/General/custom_godot_bin/select_file_butt/FileDialog" to="MarginContainer/General/custom_godot_bin/godot_bin_path" method="set_text"]
+
+

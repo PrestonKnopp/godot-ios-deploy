@@ -1,0 +1,511 @@
+[gd_scene load_steps=3 format=1]
+
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/settings_menu.gd" type="Script" id=1]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/_v2/title_box.tscn" type="PackedScene" id=2]
+
+[node name="settings_menu" type="WindowDialog"]
+
+anchor/left = 3
+anchor/top = 3
+anchor/right = 3
+anchor/bottom = 3
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 260.0
+margin/top = 170.0
+margin/right = -260.0
+margin/bottom = -170.0
+popup/exclusive = false
+window/title = ""
+script/script = ExtResource( 1 )
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+
+anchor/right = 1
+anchor/bottom = 1
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 0.0
+margin/bottom = 0.0
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="General" type="VBoxContainer" parent="MarginContainer"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 3
+size_flags/vertical = 3
+margin/left = 10.0
+margin/top = 10.0
+margin/right = 510.0
+margin/bottom = 330.0
+alignment = 0
+
+[node name="title_box" parent="MarginContainer/General" instance=ExtResource( 2 )]
+
+margin/right = 500.0
+
+[node name="title" parent="MarginContainer/General/title_box"]
+
+margin/right = 500.0
+
+[node name="Label" parent="MarginContainer/General/title_box/title"]
+
+margin/left = 141.0
+margin/right = 255.0
+
+[node name="Label_1" parent="MarginContainer/General/title_box/title"]
+
+margin/left = 259.0
+margin/right = 359.0
+text = "SETTINGS"
+
+[node name="subtitle" parent="MarginContainer/General/title_box"]
+
+margin/right = 500.0
+text = "CONFIGURE IOSDEPLOY"
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/General"]
+
+rect/min_size = Vector2( 0, 10 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 50.0
+margin/right = 500.0
+margin/bottom = 60.0
+custom_constants/separation = 10
+
+[node name="open_onboarding_flow_butt" type="Button" parent="MarginContainer/General"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 64.0
+margin/right = 500.0
+margin/bottom = 84.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Open Onboarding Flow"
+flat = false
+
+[node name="xcodeproj_box" type="HBoxContainer" parent="MarginContainer/General"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 88.0
+margin/right = 500.0
+margin/bottom = 108.0
+alignment = 0
+
+[node name="open_xcproj_butt" type="Button" parent="MarginContainer/General/xcodeproj_box"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 248.0
+margin/bottom = 20.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Open Xcode Project"
+flat = false
+
+[node name="copy_xcproj_butt" type="Button" parent="MarginContainer/General/xcodeproj_box"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 252.0
+margin/top = 0.0
+margin/right = 500.0
+margin/bottom = 20.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Copy Xcode Project Path"
+flat = false
+
+[node name="HSeparator1" type="HSeparator" parent="MarginContainer/General"]
+
+rect/min_size = Vector2( 0, 10 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 112.0
+margin/right = 500.0
+margin/bottom = 122.0
+custom_constants/separation = 10
+
+[node name="remote_debug_butt" type="CheckButton" parent="MarginContainer/General"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 126.0
+margin/right = 500.0
+margin/bottom = 148.0
+toggle_mode = true
+enabled_focus_mode = 2
+shortcut = null
+text = "Deploy with remote debug"
+flat = false
+align = 0
+
+[node name="HSeparator2" type="HSeparator" parent="MarginContainer/General"]
+
+rect/min_size = Vector2( 0, 10 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 152.0
+margin/right = 500.0
+margin/bottom = 162.0
+custom_constants/separation = 10
+
+[node name="log_level_box" type="HBoxContainer" parent="MarginContainer/General"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 166.0
+margin/right = 500.0
+margin/bottom = 186.0
+alignment = 0
+
+[node name="Label" type="Label" parent="MarginContainer/General/log_level_box"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 3.0
+margin/right = 118.0
+margin/bottom = 17.0
+text = "Set Logging Level: "
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="log_level_opt" type="OptionButton" parent="MarginContainer/General/log_level_box"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 122.0
+margin/top = 0.0
+margin/right = 500.0
+margin/bottom = 20.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "VERBOSE"
+flat = false
+align = 0
+selected = 0
+items = [ "VERBOSE", null, false, -1, null, "DEBUG", null, false, -1, null, "INFO", null, false, -1, null, "WARN", null, false, -1, null, "ERROR", null, false, -1, null ]
+
+[node name="log_file_box" type="HBoxContainer" parent="MarginContainer/General"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 190.0
+margin/right = 500.0
+margin/bottom = 214.0
+alignment = 0
+
+[node name="Label" type="Label" parent="MarginContainer/General/log_file_box"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 5.0
+margin/right = 107.0
+margin/bottom = 19.0
+text = "Set Logging File: "
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="logfile_path" type="LineEdit" parent="MarginContainer/General/log_file_box"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 111.0
+margin/top = 0.0
+margin/right = 418.0
+margin/bottom = 24.0
+placeholder/text = "path/to/logfile"
+placeholder/alpha = 0.6
+focus_mode = 2
+caret/caret_blink = false
+caret/caret_blink_speed = 0.65
+
+[node name="select_file_butt" type="Button" parent="MarginContainer/General/log_file_box"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 422.0
+margin/top = 0.0
+margin/right = 500.0
+margin/bottom = 24.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Select File"
+flat = false
+
+[node name="FileDialog" type="FileDialog" parent="MarginContainer/General/log_file_box/select_file_butt"]
+
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 215.0
+margin/bottom = 197.0
+popup/exclusive = false
+window/title = "Open a File"
+dialog/hide_on_ok = false
+mode = 0
+access = 2
+filters = StringArray(  )
+show_hidden_files = false
+
+[node name="HSeparator3" type="HSeparator" parent="MarginContainer/General"]
+
+rect/min_size = Vector2( 0, 10 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 218.0
+margin/right = 500.0
+margin/bottom = 228.0
+custom_constants/separation = 10
+
+[node name="iosdeploy_tool" type="HBoxContainer" parent="MarginContainer/General"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 232.0
+margin/right = 500.0
+margin/bottom = 256.0
+alignment = 0
+
+[node name="Label" type="Label" parent="MarginContainer/General/iosdeploy_tool"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 5.0
+margin/right = 131.0
+margin/bottom = 19.0
+text = "Set ios-deploy path: "
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="iosdeploy_tool_path" type="LineEdit" parent="MarginContainer/General/iosdeploy_tool"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 135.0
+margin/top = 0.0
+margin/right = 418.0
+margin/bottom = 24.0
+placeholder/text = "/usr/local/bin/ios-deploy"
+placeholder/alpha = 0.6
+focus_mode = 2
+caret/caret_blink = false
+caret/caret_blink_speed = 0.65
+
+[node name="select_file_butt" type="Button" parent="MarginContainer/General/iosdeploy_tool"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 422.0
+margin/top = 0.0
+margin/right = 500.0
+margin/bottom = 24.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Select File"
+flat = false
+
+[node name="FileDialog" type="FileDialog" parent="MarginContainer/General/iosdeploy_tool/select_file_butt"]
+
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 215.0
+margin/bottom = 197.0
+popup/exclusive = false
+window/title = "Open a File"
+dialog/hide_on_ok = false
+mode = 0
+access = 2
+filters = StringArray(  )
+show_hidden_files = false
+
+[node name="custom_godot_bin" type="HBoxContainer" parent="MarginContainer/General"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 260.0
+margin/right = 500.0
+margin/bottom = 284.0
+alignment = 0
+
+[node name="Label" type="Label" parent="MarginContainer/General/custom_godot_bin"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 5.0
+margin/right = 163.0
+margin/bottom = 19.0
+text = "Set custom godot binary: "
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="godot_bin_path" type="LineEdit" parent="MarginContainer/General/custom_godot_bin"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 167.0
+margin/top = 0.0
+margin/right = 418.0
+margin/bottom = 24.0
+placeholder/text = "/path/to/binary"
+placeholder/alpha = 0.6
+focus_mode = 2
+caret/caret_blink = false
+caret/caret_blink_speed = 0.65
+
+[node name="select_file_butt" type="Button" parent="MarginContainer/General/custom_godot_bin"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 422.0
+margin/top = 0.0
+margin/right = 500.0
+margin/bottom = 24.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Select File"
+flat = false
+
+[node name="FileDialog" type="FileDialog" parent="MarginContainer/General/custom_godot_bin/select_file_butt"]
+
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 215.0
+margin/bottom = 197.0
+popup/exclusive = false
+window/title = "Open a File"
+dialog/hide_on_ok = false
+mode = 0
+access = 2
+filters = StringArray(  )
+show_hidden_files = false
+
+[connection signal="pressed" from="MarginContainer/General/open_onboarding_flow_butt" to="." method="_on_open_onboarding_flow_butt_pressed"]
+
+[connection signal="pressed" from="MarginContainer/General/xcodeproj_box/open_xcproj_butt" to="." method="_on_open_xcproj_butt_pressed"]
+
+[connection signal="pressed" from="MarginContainer/General/xcodeproj_box/copy_xcproj_butt" to="." method="_on_copy_xcproj_butt_pressed"]
+
+[connection signal="pressed" from="MarginContainer/General/log_file_box/select_file_butt" to="MarginContainer/General/log_file_box/select_file_butt/FileDialog" method="popup_centered"]
+
+[connection signal="file_selected" from="MarginContainer/General/log_file_box/select_file_butt/FileDialog" to="MarginContainer/General/log_file_box/logfile_path" method="set_text"]
+
+[connection signal="pressed" from="MarginContainer/General/iosdeploy_tool/select_file_butt" to="MarginContainer/General/iosdeploy_tool/select_file_butt/FileDialog" method="popup_centered"]
+
+[connection signal="file_selected" from="MarginContainer/General/iosdeploy_tool/select_file_butt/FileDialog" to="MarginContainer/General/iosdeploy_tool/iosdeploy_tool_path" method="set_text"]
+
+[connection signal="pressed" from="MarginContainer/General/custom_godot_bin/select_file_butt" to="MarginContainer/General/custom_godot_bin/select_file_butt/FileDialog" method="popup_centered"]
+
+[connection signal="file_selected" from="MarginContainer/General/custom_godot_bin/select_file_butt/FileDialog" to="MarginContainer/General/custom_godot_bin/godot_bin_path" method="set_text"]
+
+
+[editable path="MarginContainer/General/title_box"]

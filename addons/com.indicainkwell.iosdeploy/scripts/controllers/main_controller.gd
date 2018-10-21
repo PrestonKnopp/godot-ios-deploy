@@ -18,6 +18,7 @@ signal finished_pipeline(this)
 
 var Xcode = stc.get_gdscript('xcode.gd')
 var OnboardFlCtl = stc.get_gdscript('controllers/onboarding_flow_controller.gd')
+var SettingMenuCtl = stc.get_gdscript('controllers/settings_menu_controller.gd')
 var ProjSettings = stc.get_gdscript('project_settings.gd')
 
 
@@ -27,7 +28,6 @@ var ProjSettings = stc.get_gdscript('project_settings.gd')
 
 
 var OneClickButtonScene = stc.get_scene('one_click_deploy_button.tscn')
-var SettingsMenuScene = stc.get_scene('deploy_settings_menu.tscn')
 
 
 # ------------------------------------------------------------------------------
@@ -40,9 +40,7 @@ var _xcode = Xcode.new()
 
 var _settings = ProjSettings.new()
 var _onboarding_flow_controller = OnboardFlCtl.new()
-
-# TODO: refactor into controller
-# var _settings_menu = SettingsMenuScene.instance()
+var _settings_menu_controller = SettingMenuCtl.new()
 
 
 # ------------------------------------------------------------------------------
@@ -59,12 +57,18 @@ func _init():
 	view.connect('devices_list_edited', self, '_on_view_devices_list_edited')
 
 	_init_onboarding_flow_controller()
+	_init_settings_menu_controller()
 	_init_xcode()
 
 
 func _init_onboarding_flow_controller():
 	_onboarding_flow_controller.set_xcode(_xcode)
 	add_child(_onboarding_flow_controller)
+
+
+func _init_settings_menu_controller():
+	_settings_menu_controller.set_xcode(_xcode)
+	add_child(_settings_menu_controller)
 
 
 func _init_xcode():
@@ -266,7 +270,7 @@ func _on_view_presenting_hover_menu(oneclickbutton):
 func _on_view_settings_button_pressed(oneclickbutton):
 	_log.debug('OneClickButton: Settings Button Pressed')
 	if _xcode.is_project_ready():
-		get_menu().popup_centered()
+		_settings_menu_controller.view.popup_centered()
 
 
 func _on_view_devices_list_edited(oneclickbutton):

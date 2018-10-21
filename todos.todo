@@ -5,16 +5,11 @@
 
 [ ] Config
 	[ ] make plist.gd readwrite
-	[ ] mv config loading to plugin main
 	[ ] implement config versioning
-	[ ] new settings menu
+	[X] new settings menu
 	[ ] add more configurability
-		[ ] copy or open directory where generated xcode project is stored
-		[ ] read/write export settings for ios and use it to prefill
-			[ ] team id
-			[ ] provision id
-			[ ] app icon
-			[ ] app launch images
+		[X] copy or open directory where generated xcode project is stored
+			- check if project exists and recreate if needed
 		[ ] deploy to ios with remote debug
 		[ ] set path to ios deploy tool
 		[ ] set log level
@@ -24,6 +19,11 @@
 		[ ] set custom godot binary
 			- or lib. Whichever one godot uses
 			- in godot's export template it uses an archive
+		[ ] read/write export settings for ios and use it to prefill
+			[ ] team id
+			[ ] provision id
+			[ ] app icon
+			[ ] app launch images
 [ ] plan out crossplatform
 	[ ] abstract ios-deploy behind an interface to support libimobiledevice
 [ ] properly fill in xcodeproj so user can open and edit it if needed
