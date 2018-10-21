@@ -50,8 +50,8 @@ var ignore_wifi_devices = false
 
 
 var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.ios-deploy')
-var _iosdeploy = stc.get_gdscript('shell.gd').new().make_command('/usr/local/bin/ios-deploy')
 var _error_capturer = ErrorCapturer.new()
+var _iosdeploy
 
 var _detect_devices_thread_id = -1
 
@@ -71,10 +71,26 @@ func _init():
 		message = 2
 	})
 
+	var cfg = stc.get_config()
+	cfg.connect('changed', self, '_on_config_changed')
+	var tool_path = cfg.get_value('deploy', 'ios_deploy_tool_path',
+			stc.DEFAULT_IOSDEPLOY_TOOL_PATH)
+	_set_tool_path(tool_path)
+
 
 # ------------------------------------------------------------------------------
 #                                      Methods
 # ------------------------------------------------------------------------------
+
+
+func _set_tool_path(tool_path):
+	# TODO: handle if iosdeploy is running when tool is set
+	if _iosdeploy != null and _iosdeploy.running():
+		OS.alert('Cant set ios deploy tool while running. ' +
+			 'Try again after task has finished.')
+		return
+	var shell = stc.get_gdscript('shell.gd').new()
+	_iosdeploy = shell.make_command(tool_path)
 
 
 func detect_devices(async=true):
@@ -141,6 +157,16 @@ func uninstall():
 # ------------------------------------------------------------------------------
 #                                     Callbacks
 # ------------------------------------------------------------------------------
+
+
+func _on_config_changed(config, section, key, from_value, to_value):
+	if section == 'deploy' and key == 'ios_deploy_tool_path':
+		if from_value == to_value:
+			return
+		elif to_value == '':
+			_set_tool_path(stc.DEFAULT_IOSDEPLOY_TOOL_PATH)
+		else:
+			_set_tool_path(to_value)
 
 
 func _deploy_finished(command, result, device_id):

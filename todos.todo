@@ -8,7 +8,6 @@
 	[ ] implement config versioning
 	[X] new settings menu
 	[ ] add more configurability
-		[ ] set path to ios deploy tool
 		[ ] set custom plist values
 		[ ] set custom godot binary
 			- or lib. Whichever one godot uses
@@ -18,6 +17,7 @@
 			[ ] provision id
 			[ ] app icon
 			[ ] app launch images
+		[X] set path to ios deploy tool
 		[X] deploy with some godot settings
 			[X] remote debug
 			[X] debug collision

@@ -51,11 +51,28 @@ class Command:
 	var _current_thread_id = 0
 	var _thread_mutex = Mutex.new()
 
-	func running(thread_id):
+	func _running_any():
+		"""
+		Check if running anything.
+		"""
+		var running = false
+		_thread_mutex.lock()
+		for thread_id in _thread_map:
+			if running(thread_id):
+				running = true
+				break
+		_thread_mutex.unlock()
+		return running
+
+	func running(thread_id=null):
 		"""
 		Check for running threaded instance of this command.
-		@param thread_id:string the id returned by run_async
+		@param thread_id:int? the id returned by run_async
+		  if thread_id is null, check if any running
 		"""
+		if thread_id == null:
+			return _running_any()
+
 		if not _thread_map.has(thread_id):
 			return false
 
