@@ -39,8 +39,10 @@ func _enter_tree():
 
 	if not meets_software_requirements():
 		return
-	
+
 	_log.verbose('Meets software requirements')
+
+	stc.get_config().connect('changed', self, '_on_config_changed')
 	
 	main_controller = MainController.new()
 	add_child(main_controller)
@@ -56,6 +58,16 @@ func _exit_tree():
 
 
 func _init_logger():
+
+	# Check config for initial logger level
+	var ll = stc.get_config().get_value('meta', 'log_level', stc.get_logger().get_default_output_level())
+	var lf = stc.get_config().get_value('meta', 'log_file', '')
+	stc.get_logger().set_default_output_level(ll)
+	if lf != '':
+		stc.get_logger().set_default_logfile_path(lf)
+		stc.get_logger().set_default_output_strategy(stc.get_logger().STRATEGY_FILE)
+
+	# env overrides config
 	var log_env_var = stc.LOGGER_DOMAIN.replace('.', '_').to_upper()
 	var log_level_env = log_env_var + '_LEVEL'
 	if OS.has_environment(log_level_env):
@@ -74,8 +86,22 @@ func _init_logger():
 		stc.get_logger().info('Redir logging to file: ' + file)
 		stc.get_logger().set_default_logfile_path(file)
 		stc.get_logger().set_default_output_strategy(stc.get_logger().STRATEGY_FILE)
-
+	
 	_log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN)
+
+
+func _on_config_changed(config, section, key, from_value, to_value):
+	if section == 'meta':
+		if key == 'log_level':
+			for module in stc.get_logger().get_modules().values():
+				module.set_output_level(to_value)
+		elif key == 'log_file':
+			for module in stc.get_logger().get_modules().values():
+				if to_value == '':
+					module.set_common_output_strategy(stc.get_logger().STRATEGY_PRINT)
+				else:
+					module.set_logfile(to_value)
+					module.set_common_output_strategy(stc.get_logger().STRATEGY_FILE)
 
 
 func meets_software_requirements():

@@ -8,13 +8,11 @@
 	[ ] implement config versioning
 	[X] new settings menu
 	[ ] add more configurability
-		[X] copy or open directory where generated xcode project is stored
-			- check if project exists and recreate if needed
-		[ ] deploy to ios with remote debug
+		[ ] deploy with some godot settings
+			[ ] remote debug
+			[ ] debug collision
+			[ ] debug navigation
 		[ ] set path to ios deploy tool
-		[ ] set log level
-			[X] environment
-			[ ] menu
 		[ ] set custom plist values
 		[ ] set custom godot binary
 			- or lib. Whichever one godot uses
@@ -24,6 +22,11 @@
 			[ ] provision id
 			[ ] app icon
 			[ ] app launch images
+		[X] set log level
+			[X] environment
+			[X] menu
+		[X] copy or open directory where generated xcode project is stored
+			- check if project exists and recreate if needed
 [ ] plan out crossplatform
 	[ ] abstract ios-deploy behind an interface to support libimobiledevice
 [ ] properly fill in xcodeproj so user can open and edit it if needed
