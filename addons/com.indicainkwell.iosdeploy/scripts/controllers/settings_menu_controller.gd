@@ -44,9 +44,9 @@ func _on_about_to_show():
 
 func _on_hide():
 	var v = get_view()
+	stc.get_config().set_value('meta', 'log_level', v.log_level)
+	stc.get_config().set_value('meta', 'log_file', v.log_file)
 	stc.get_config().set_value('xcode/project', 'remote_debug', v.remote_debug)
 	stc.get_config().set_value('deploy', 'ios_deploy_tool_path', v.ios_deploy_tool_path)
 	stc.get_config().set_value('deploy', 'godot_bin_path', v.godot_bin_path)
-	stc.get_config().set_value('meta', 'log_level', v.log_level)
-	stc.get_config().set_value('meta', 'log_file', v.log_file)
 	stc.get_config().save()
