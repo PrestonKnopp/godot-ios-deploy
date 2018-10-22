@@ -62,7 +62,8 @@ var debug_collisions = false
 var debug_navigation = false
 var custom_info = {}
 
-var _pbx_needs_updating = false
+# always update pbx on first build
+var _pbx_needs_updating = true
 var _needs_building = true
 var _iosdeploy = iOSDeploy.new()
 var _runningdeploys = 0
