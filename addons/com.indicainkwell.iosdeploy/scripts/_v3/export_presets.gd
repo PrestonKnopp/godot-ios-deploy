@@ -12,7 +12,7 @@ func _make_runnable_ios_preset_structure(presets):
 
 	# section names
 
-	var id = _find_next_section_id()
+	var id = _find_next_section_id(presets)
 	var preset = 'preset.' + id
 	var preset_options = preset + '.options'
 
@@ -82,7 +82,9 @@ func _make_runnable_ios_preset_structure(presets):
 
 
 func _find_next_section_id(presets):
-	var last_section = presets.get_sections().back()
+	var sections = presets.get_sections()
+	var size = sections.size()
+	var last_section = sections[size-1] if size>0 else null
 	if last_section == null:
 		return '0'
 	var parts = last_section.split('.')
@@ -91,8 +93,7 @@ func _find_next_section_id(presets):
 	# screw it, go for it
 	return '0'
 
-
-func fill():
+func _init_presets():
 	var presets = ConfigFile.new()
 	var err = presets.load('res://export_presets.cfg')
 	if err != OK:
@@ -103,29 +104,39 @@ func fill():
 	if opts_sect == null:
 		_make_runnable_ios_preset_structure(presets)
 		opts_sect = _find_runnable_ios_preset_options_section(presets)
+	
+	return {presets = presets, section = opts_sect}
+
+
+func _wrap_up(presets):
+	presets.save('res://export_presets.cfg')
+
+
+func fill():
+	var res = _init_presets()
 
 	var cfg = stc.get_config()
 	_fill(
-		presets, cfg,
-		opts_sect, 'application/app_store_team_id',
+		res.presets, cfg,
+		res.section, 'application/app_store_team_id',
 		'xcode/project', 'team',
 		true
 	)
 	_fill(
-		presets, cfg,
-		opts_sect, 'application/provisioning_profile_uuid_debug',
+		res.presets, cfg,
+		res.section, 'application/provisioning_profile_uuid_debug',
 		'xcode/project', 'provision',
 		true
 	)
 	_fill(
-		presets, cfg,
-		opts_sect, 'application/name',
+		res.presets, cfg,
+		res.section, 'application/name',
 		'xcode/project', 'name',
 		false
 	)
-	presets.save('res://export_presets.cfg')
 
-	
+	_wrap_up(res.presets)
+
 
 func _find_runnable_ios_preset_options_section(presets):
 	for section in presets.get_sections():
