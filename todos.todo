@@ -4,16 +4,21 @@
 
 
 [ ] Config
-	[ ] make plist.gd readwrite
-	[ ] implement config versioning
+	[X] implement config versioning
 	[X] new settings menu
 	[ ] add more configurability
 		[ ] set custom plist values
-		[ ] read/write export settings for ios and use it to prefill
-			[ ] team id
-			[ ] provision id
-			[ ] app icon
-			[ ] app launch images
+			[ ] make plist.gd readwrite
+		[X] read/write export settings for ios and use it to prefill
+			- v3 only
+			[X] team id
+				- xcode/project/team.id : application/app_store_team_id
+			[X] provision id
+				- xcode/project/provision.id : application/provisioning_profile_uuid_debug
+			[ ] xcassets
+				- Figure out how to add assets
+				[ ] app icon
+				[ ] app launch images
 		[X] set custom godot binary
 			- v3 is an archive, v2 is executable
 			- active binary can be changed by setting the path (abs or rel) of the

@@ -31,6 +31,9 @@ func _on_pressed(view, press_section):
 	elif press_section == view.XCODE_PROJ_OPEN:
 		OS.shell_open('file://' + _xcode.project.get_path())
 		_log.debug('opened xcodeproj folder with fs')
+	elif press_section == view.XCODE_PROJ_FILL_EXPORT:
+		stc.get_gdscript('export_presets.gd').new().fill()
+		_log.info('Filled export presets with current iosdeploy settings')
 
 
 func _on_about_to_show():

@@ -53,7 +53,7 @@ anchor_bottom = 0.0
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 593.0
-margin_bottom = 366.0
+margin_bottom = 375.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -83,7 +83,7 @@ size_flags_horizontal = 1
 size_flags_vertical = 1
 custom_constants/separation = 10
 
-[node name="open_onboarding_flow_butt" type="Button" parent="MarginContainer/General" index="2"]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/General" index="2"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -94,11 +94,28 @@ margin_right = 583.0
 margin_bottom = 89.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+alignment = 0
+_sections_unfolded = [ "Size Flags" ]
+
+[node name="open_onboarding_flow_butt" type="Button" parent="MarginContainer/General/HBoxContainer" index="0"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 289.0
+margin_bottom = 25.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
 hint_tooltip = "Setup provisioning profile, team, app bundle, and app display name. "
 focus_mode = 2
 mouse_filter = 0
 mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
+size_flags_horizontal = 3
 size_flags_vertical = 1
 custom_fonts/font = ExtResource( 3 )
 toggle_mode = false
@@ -108,7 +125,34 @@ group = null
 text = "Open Onboarding Flow"
 flat = false
 align = 1
-_sections_unfolded = [ "Hint" ]
+_sections_unfolded = [ "Hint", "Size Flags" ]
+
+[node name="fill_godot_export_presets" type="Button" parent="MarginContainer/General/HBoxContainer" index="1"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 293.0
+margin_right = 583.0
+margin_bottom = 25.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+hint_tooltip = "Setup provisioning profile, team, app bundle, and app display name. "
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+custom_fonts/font = ExtResource( 3 )
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+text = "Fill Godot Export Presets"
+flat = false
+align = 1
+_sections_unfolded = [ "Hint", "Size Flags" ]
 
 [node name="xcodeproj_box" type="HBoxContainer" parent="MarginContainer/General" index="3"]
 
@@ -685,7 +729,9 @@ current_dir = "/Users/prestonknopp/Repositories/godot-ios-deploy"
 current_file = ""
 current_path = "/Users/prestonknopp/Repositories/godot-ios-deploy/"
 
-[connection signal="pressed" from="MarginContainer/General/open_onboarding_flow_butt" to="." method="_on_open_onboarding_flow_butt_pressed"]
+[connection signal="pressed" from="MarginContainer/General/HBoxContainer/open_onboarding_flow_butt" to="." method="_on_open_onboarding_flow_butt_pressed"]
+
+[connection signal="pressed" from="MarginContainer/General/HBoxContainer/fill_godot_export_presets" to="." method="_on_fill_godot_export_presets_pressed"]
 
 [connection signal="pressed" from="MarginContainer/General/xcodeproj_box/open_xcproj_butt" to="." method="_on_open_xcproj_butt_pressed"]
 

@@ -20,7 +20,8 @@ enum SECTION {
 enum PRESS_SECTION {
 	ONBOARDING_FLOW_OPEN,
 	XCODE_PROJ_COPY,
-	XCODE_PROJ_OPEN
+	XCODE_PROJ_OPEN,
+	XCODE_PROJ_FILL_EXPORT
 }
 
 
@@ -104,3 +105,8 @@ func _on_open_xcproj_butt_pressed():
 
 func _on_copy_xcproj_butt_pressed():
 	emit_signal('pressed', self, XCODE_PROJ_COPY)
+
+
+func _on_fill_godot_export_presets_pressed():
+	emit_signal('pressed', self, XCODE_PROJ_FILL_EXPORT)
+
