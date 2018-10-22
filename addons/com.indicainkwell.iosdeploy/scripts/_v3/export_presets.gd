@@ -102,6 +102,7 @@ func fill():
 	var opts_sect = _find_runnable_ios_preset_options_section(presets)
 	if opts_sect == null:
 		_make_runnable_ios_preset_structure(presets)
+		opts_sect = _find_runnable_ios_preset_options_section(presets)
 
 	var cfg = stc.get_config()
 	_fill(
