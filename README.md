@@ -17,6 +17,8 @@ hearing about ways to improve workflow, usability, and QoL.
 6. Builds and signs project
 7. Deploy to multiple ios devices in parallel
 8. Onboarding flow for easy project setup
+9. Set custom godot binary
+10. Deploy with remote debug, debug collisions, and debug navigation
 
 ## Prerequisites
 
@@ -57,9 +59,28 @@ will
 Hovering over the button will show a popup with
 
 1. The progress of the build and deploy.
-2. A settings button to open up the onboarding flow menu.
+2. A settings button to open up the settings menu.
 3. A checkmark the tells you if the project is valid and setup.
 4. **Device selection**, use this to choose what devices to deploy to.
+
+The settings menu allows you to
+
+* Deploy with remote debug
+* Open onboarding flow
+* Open or copy path to generated xcode project
+* Set custom path to ios-deploy tool
+* Set custom godot binary
+* Fill in ios export presets
+	- requires restarting godot
+* Set Logger file and level
+
+### Godot Debug Features
+
+Enable remote debug, debug collisions, and debug navigation through Godot > Debug.
+
+See [here](https://docs.godotengine.org/en/3.0/tutorials/debug/overview_of_debugging_tools.html?highlight=remote%20debug).
+
+Remote debug is untested with multiple devices. Most likely will not work.
 
 ## Troubleshooting
 
@@ -80,3 +101,5 @@ Logger file can use `res://` and `user://` or be an absolute or relative path
 from the project.
 
 Logger levels are `verbose`, `debug`, `info`, `warn`, and `error`.
+
+You can also set it in the settings menu.
