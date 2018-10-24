@@ -138,10 +138,8 @@ func is_copy_version_valid():
 	"""
 	Check if config's version matches current version.
 	"""
-	# ios_export_template version was added in cfg_ver >= 1
-	var cfg_ver = stc.get_config().get_value('meta', 'version', -1)
-	var thisver = stc.get_config().get_value('ios_export_template', 'version', -1) 
-	return cfg_ver >= 1 and thisver == stc.IOS_EXPORT_TEMPLATE_VERSION
+	# ios_export_template changed in cfg ver == 1
+	return stc.CONFIG_VERSION >= 1 and not stc.get_config().version_differed_on_startup()
 
 
 func copy_exists():
@@ -180,10 +178,6 @@ func copy_install_async():
 	else:
 		_log.error('Godot iOS Xcode Template not installed.')
 		emit_signal('copy_install_failed', self, ERR_DOES_NOT_EXIST)
-
-
-func _wrap_up_copy_install():
-	stc.get_config().set_value('ios_export_template', 'version', stc.IOS_EXPORT_TEMPLATE_VERSION) 
 
 
 # ------------------------------------------------------------------------------
@@ -231,7 +225,6 @@ func _on_v2_unzip_finished(command, result):
 	var err = Directory.new().rename(unzip_dst, dst)
 	if err != OK:
 		_log.error('Error<%s> renaming ios export template from %s to s'%[ err, unzip_dst, dst ])
-	_wrap_up_copy_install()
 	emit_signal('copy_installed', self, result)
 
 
@@ -330,5 +323,4 @@ func _on_v3_unzip_finished(command, result):
 		_log.error('failed with code %s to open %s for editing'%[f.get_error(),pbx])
 	_log.info('Edited %s'%pbx)
 
-	_wrap_up_copy_install()
 	emit_signal('copy_installed', self, result)
