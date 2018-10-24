@@ -3,7 +3,15 @@
 # ------------------------------------------------------------------------------
 
 
-[ ] Config
+[-] plan out crossplatform
+	[ ] abstract ios-deploy behind an interface to support libimobiledevice
+[ ] properly fill in xcodeproj so user can open and edit it if needed
+[ ] better build status using errors and tips to fix
+[ ] properly destroy threads before exiting
+[ ] what to do when:
+	[ ] theres no provisioning profiles
+	[ ] theres no teams
+[X] Config
 	[X] update readme
 	[X] test
 		- seems to work for now
@@ -50,14 +58,6 @@
 			[X] menu
 		[X] copy or open directory where generated xcode project is stored
 			- check if project exists and recreate if needed
-[ ] plan out crossplatform
-	[ ] abstract ios-deploy behind an interface to support libimobiledevice
-[ ] properly fill in xcodeproj so user can open and edit it if needed
-[ ] better build status using errors and tips to fix
-[ ] properly destroy threads before exiting
-[ ] what to do when:
-	[ ] theres no provisioning profiles
-	[ ] theres no teams
 [X] make async
 	[X] detect_devices()
 	[X] finders
