@@ -49,6 +49,7 @@ func _enter_tree():
 
 
 func _exit_tree():
+	stc.get_config().save()
 	stc.free_plugin_singletons()
 
 
