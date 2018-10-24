@@ -4,8 +4,9 @@
 
 
 [ ] Config
-	[ ] update readme
-	[ ] test
+	[X] update readme
+	[X] test
+		- seems to work for now
 	[X] implement config versioning
 	[X] new settings menu
 	[X] add more configurability
