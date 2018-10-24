@@ -4,6 +4,8 @@
 
 
 [ ] Config
+	[ ] update readme
+	[ ] test
 	[X] implement config versioning
 	[X] new settings menu
 	[X] add more configurability
@@ -16,12 +18,12 @@
 				- xcode/project/team.id : application/app_store_team_id
 			[X] provision id
 				- xcode/project/provision.id : application/provisioning_profile_uuid_debug
-			[d] xcassets
+			[*] xcassets
 				- easier just to let user config this in xcode, for now
 				- Figure out how to add assets
 					- apple developer site has all the info
-				[d] app icon
-				[d] app launch images
+				[*] app icon
+				[*] app launch images
 		[X] set custom godot binary
 			- v3 is an archive, v2 is executable
 			- active binary can be changed by setting the path (abs or rel) of the
@@ -36,7 +38,10 @@
 			[X] regenerate template from old versions as this requires new format
 		[X] set path to ios deploy tool
 		[X] deploy with some godot settings
-			[X] remote debug
+			- Set these using editor project metadata. This won't work for v2.
+			  v2 would need a button and a config entry.
+			[*] remote debug
+				- @see main_controller._on_xcode_project_built()
 			[X] debug collision
 			[X] debug navigation
 		[X] set log level

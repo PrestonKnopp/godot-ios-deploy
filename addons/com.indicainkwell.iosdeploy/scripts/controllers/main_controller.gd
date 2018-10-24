@@ -20,6 +20,7 @@ var Xcode = stc.get_gdscript('xcode.gd')
 var OnboardFlCtl = stc.get_gdscript('controllers/onboarding_flow_controller.gd')
 var SettingMenuCtl = stc.get_gdscript('controllers/settings_menu_controller.gd')
 var ProjSettings = stc.get_gdscript('project_settings.gd')
+var EditorDebugSettings = stc.get_gdscript('editor_debug_settings.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -39,6 +40,7 @@ var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.main-contro
 var _xcode = Xcode.new()
 
 var _settings = ProjSettings.new()
+var _editor_debug_settings = null # set after entered tree
 var _onboarding_flow_controller = OnboardFlCtl.new()
 var _settings_menu_controller = SettingMenuCtl.new()
 
@@ -101,6 +103,8 @@ func _enter_tree():
 		get_plugin().CONTAINER_TOOLBAR,
 		view
 	)
+	var es = get_plugin().get_editor_settings()
+	_editor_debug_settings = EditorDebugSettings.new(es)
 
 
 func _exit_tree():
@@ -346,14 +350,18 @@ func _on_xcode_project_built(xcode_project, result, errors):
 	elif xcode_project.get_devices().size() > 0:
 		view.update_build_progress(0.5, 'Deploying %s/%s'%[1, xcode_project.get_devices().size()])
 		# can't find a better place to set these debug flags
+		# remote_debug doesn't just work like this. Godot editor needs
+		# to know about it but I don't think that functionality is
+		# exposed.
+		xcode_project.remote_debug = false #_editor_debug_settings.remote_debug
 		if xcode_project.remote_debug:
 			xcode_project.remote_addr = _get_ip_addr()
 			xcode_project.remote_port = _get_port()
 			_log.debug('Remote Debug Deploy: %s:%s' %
 					[xcode_project.remote_addr,
 					xcode_project.remote_port])
-		xcode_project.debug_collisions = get_tree().is_debugging_collisions_hint()
-		xcode_project.debug_navigation = get_tree().is_debugging_navigation_hint()
+		xcode_project.debug_collisions = _editor_debug_settings.debug_collisions
+		xcode_project.debug_navigation = _editor_debug_settings.debug_navigation
 		xcode_project.deploy()
 	else:
 		emit_signal('finished_pipeline', self)
