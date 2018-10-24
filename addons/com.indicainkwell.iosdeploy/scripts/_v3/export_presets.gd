@@ -77,7 +77,7 @@ func _make_runnable_ios_preset_structure(presets):
 	}
 
 	for key in preset_option_vars:
-		presets.set_value(preset, key, preset_option_vars[key])
+		presets.set_value(preset_options, key, preset_option_vars[key])
 
 
 func _find_next_section_id(presets):
