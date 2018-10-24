@@ -18,67 +18,66 @@ func _make_runnable_ios_preset_structure(presets):
 
 	# preset
 	
-	var preset_vars = [
-		{'name' : "iOS"},
-		{'platform' : "iOS"},
-		{'runnable' : true},
-		{'custom_features' : ""},
-		{'export_filter' : "all_resources"},
-		{'include_filter' : ""},
-		{'exclude_filter' : ""},
-		{'patch_list' : PoolStringConverter.convert_array([])},
-	]
-	for v in preset_vars:
-		for key in v:
-			presets.set_value(preset, key, v[key])
+	var preset_vars = {
+		'name' : "iOS",
+		'platform' : "iOS",
+		'runnable' : true,
+		'custom_features' : "",
+		'export_filter' : "all_resources",
+		'include_filter' : "",
+		'exclude_filter' : "",
+		'patch_list' : PoolStringConverter.convert_array([]),
+	}
+	for key in preset_vars:
+		presets.set_value(preset, key, preset_vars[key])
 
 	# options
 
-	var preset_option_vars = [
-		{'custom_package/debug' : ""},
-		{'custom_package/release' : ""},
-		{'application/app_store_team_id' : ""},
-		{'application/provisioning_profile_uuid_debug' : ""},
-		{'application/code_sign_identity_debug' : "iPhone Developer"},
-		{'application/export_method_debug' : 1},
-		{'application/provisioning_profile_uuid_release' : ""},
-		{'application/code_sign_identity_release' : "iPhone Distribution"},
-		{'application/export_method_release' : 0},
-		{'application/name' : ""},
-		{'application/info' : "Made with Godot Engine"},
-		{'application/identifier' : "org.godotengine.iosgame"},
-		{'application/signature' : "????"},
-		{'application/short_version' : "1.0"},
-		{'application/version' : "1.0"},
-		{'application/copyright' : ""},
-		{'required_icons/iphone_120x120' : ""},
-		{'required_icons/ipad_76x76' : ""},
-		{'required_icons/app_store_1024x1024' : ""},
-		{'optional_icons/iphone_180x180' : ""},
-		{'optional_icons/ipad_152x152' : ""},
-		{'optional_icons/ipad_167x167' : ""},
-		{'optional_icons/spotlight_40x40' : ""},
-		{'optional_icons/spotlight_80x80' : ""},
-		{'landscape_launch_screens/iphone_2436x1125' : ""},
-		{'landscape_launch_screens/iphone_2208x1242' : ""},
-		{'landscape_launch_screens/ipad_1024x768' : ""},
-		{'landscape_launch_screens/ipad_2048x1536' : ""},
-		{'portrait_launch_screens/iphone_640x960' : ""},
-		{'portrait_launch_screens/iphone_640x1136' : ""},
-		{'portrait_launch_screens/iphone_750x1334' : ""},
-		{'portrait_launch_screens/iphone_1125x2436' : ""},
-		{'portrait_launch_screens/ipad_768x1024' : ""},
-		{'portrait_launch_screens/ipad_1536x2048' : ""},
-		{'portrait_launch_screens/iphone_1242x2208' : ""},
-		{'texture_format/s3tc' : false},
-		{'texture_format/etc' : false},
-		{'texture_format/etc2' : true},
-		{'architectures/armv7' : true},
-		{'architectures/arm64' : true},
-	]
-	for v in preset_option_vars:
-		for key in v:
-			presets.set_value(preset_options, key, v[key])
+	var preset_option_vars = {
+		'custom_package/debug' : "",
+		'custom_package/release' : "",
+		'application/app_store_team_id' : "",
+		'application/provisioning_profile_uuid_debug' : "",
+		'application/code_sign_identity_debug' : "iPhone Developer",
+		'application/export_method_debug' : 1,
+		'application/provisioning_profile_uuid_release' : "",
+		'application/code_sign_identity_release' : "iPhone Distribution",
+		'application/export_method_release' : 0,
+		'application/name' : "",
+		'application/info' : "Made with Godot Engine",
+		'application/identifier' : "org.godotengine.iosgame",
+		'application/signature' : "????",
+		'application/short_version' : "1.0",
+		'application/version' : "1.0",
+		'application/copyright' : "",
+		'required_icons/iphone_120x120' : "",
+		'required_icons/ipad_76x76' : "",
+		'required_icons/app_store_1024x1024' : "",
+		'optional_icons/iphone_180x180' : "",
+		'optional_icons/ipad_152x152' : "",
+		'optional_icons/ipad_167x167' : "",
+		'optional_icons/spotlight_40x40' : "",
+		'optional_icons/spotlight_80x80' : "",
+		'landscape_launch_screens/iphone_2436x1125' : "",
+		'landscape_launch_screens/iphone_2208x1242' : "",
+		'landscape_launch_screens/ipad_1024x768' : "",
+		'landscape_launch_screens/ipad_2048x1536' : "",
+		'portrait_launch_screens/iphone_640x960' : "",
+		'portrait_launch_screens/iphone_640x1136' : "",
+		'portrait_launch_screens/iphone_750x1334' : "",
+		'portrait_launch_screens/iphone_1125x2436' : "",
+		'portrait_launch_screens/ipad_768x1024' : "",
+		'portrait_launch_screens/ipad_1536x2048' : "",
+		'portrait_launch_screens/iphone_1242x2208' : "",
+		'texture_format/s3tc' : false,
+		'texture_format/etc' : false,
+		'texture_format/etc2' : true,
+		'architectures/armv7' : true,
+		'architectures/arm64' : true,
+	}
+
+	for key in preset_option_vars:
+		presets.set_value(preset, key, preset_option_vars[key])
 
 
 func _find_next_section_id(presets):
