@@ -140,16 +140,16 @@ func _get_ip_addr():
 			   continue
 		return addr
 	if stc.get_version().is2():
-		return EditorSettings.call('get', 'network/debug_host')
+		return get_plugin().get_editor_settings().call('get', 'network/debug_host')
 	else:
-		return EditorSettings.call('get_setting', 'network/debug/remote_host')
+		return get_plugin().get_editor_settings().call('get_setting', 'network/debug/remote_host')
 
 
 func _get_port():
 	if stc.get_version().is2():
-		return EditorSettings.call('get', 'network/debug_port')
+		return get_plugin().get_editor_settings().call('get', 'network/debug_port')
 	else:
-		return EditorSettings.call('get_setting', 'network/debug/remote_port')
+		return get_plugin().get_editor_settings().call('get_setting', 'network/debug/remote_port')
 
 
 # -- Xcode

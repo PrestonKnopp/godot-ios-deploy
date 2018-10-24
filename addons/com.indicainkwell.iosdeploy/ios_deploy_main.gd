@@ -135,3 +135,11 @@ func add_menu(menu):
 		call('get_base_control').add_child(menu)
 	else:
 		get_editor_interface().get_base_control().add_child(menu)
+
+
+func get_editor_settings():
+	if has_method('get_editor_interface'):
+		return call('get_editor_interface')\
+		      .call('get_editor_settings')
+	else:
+		return .get_editor_settings()
