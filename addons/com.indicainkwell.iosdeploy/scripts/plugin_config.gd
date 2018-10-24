@@ -29,6 +29,8 @@ class _N:
 
 var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.config')
 var _config = ConfigFile.new()
+var _version_differed = false
+var _dirty = false
 
 
 # ------------------------------------------------------------------------------
@@ -42,11 +44,11 @@ func _init():
 	
 	var cfg_version = _config.get_value('meta', 'version', -1)
 	if cfg_version != stc.CONFIG_VERSION:
-		# TODO: implement config versioning
+		_version_differed = true
 		_log.verbose('Differing config version. Update cfg here.')
 		_log.verbose('Changing config version from %s to %s' %
 				[str(cfg_version), stc.CONFIG_VERSION])
-		_config.set_value('meta', 'version', stc.CONFIG_VERSION)
+		set_value('meta', 'version', stc.CONFIG_VERSION)
 
 
 # ------------------------------------------------------------------------------
@@ -54,11 +56,17 @@ func _init():
 # ------------------------------------------------------------------------------
 
 
+func version_differed_on_startup():
+	return _version_differed
+
+
 func set_value(section, key, value):
 	var old_value = get_value(section, key)
 	_config.set_value(section, key, value)
 	_log.verbose('Set: %s/%s = %s' % [section, key, value])
-	emit_signal('changed', self, section, key, old_value, value)
+	if old_value != value:
+		_dirty = true
+		emit_signal('changed', self, section, key, old_value, value)
 
 
 func get_value(section, key, default=_N):
@@ -81,7 +89,13 @@ func has_section_key(section, key):
 
 
 func save():
-	_log.info('saving')
+	if not _dirty:
+		_log.verbose('config clean, skipping save')
+		return
+	_log.verbose('saving')
 	var err = _config.save(stc.get_data_path('config.cfg'))
-	if err != OK:
+	if err == OK:
+		_dirty = false
+	else:
 		_log.error('Error<%s>: unable to save config' % err)
+
