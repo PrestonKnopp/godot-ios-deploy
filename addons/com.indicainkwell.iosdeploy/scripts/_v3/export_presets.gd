@@ -76,7 +76,7 @@ func _make_runnable_ios_preset_structure(presets):
 		{'architectures/armv7' : true},
 		{'architectures/arm64' : true},
 	]
-	for v in preset_vars:
+	for v in preset_option_vars:
 		for key in v:
 			presets.set_value(preset_options, key, v[key])
 
