@@ -109,13 +109,13 @@ func _request_provisions_and_teams():
 
 
 func _on_xcode_finder_result(finder, type, objects):
-	if _requesting.count <= 0 or not type in [finder.TEAM, finder.PROVISION]:
+	if _requesting.count <= 0 or not type in [finder.Type.TEAM, finder.Type.PROVISION]:
 		return
 	
-	if type == finder.TEAM:
+	if type == finder.Type.TEAM:
 		_teams_cache = objects
 		_requesting.results_mask |= _TEAM
-	elif type == finder.PROVISION:
+	elif type == finder.Type.PROVISION:
 		_provisions_cache = objects
 		_requesting.results_mask |= _PROVISION
 	

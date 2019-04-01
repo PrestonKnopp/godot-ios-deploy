@@ -51,10 +51,10 @@ var _device_finder = DeviceFinder.new()
 
 
 func _init():
-	_team_finder.connect('result', self, '_on_finder_result', [TEAM])
-	_device_finder.connect('result', self, '_on_finder_result', [DEVICE])
+	_team_finder.connect('result', self, '_on_finder_result', [Type.TEAM])
+	_device_finder.connect('result', self, '_on_finder_result', [Type.DEVICE])
 	_provision_finder.connect('result', self, '_on_finder_result',
-			[PROVISION])
+			[Type.PROVISION])
 
 
 # ------------------------------------------------------------------------------

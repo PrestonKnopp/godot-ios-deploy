@@ -35,19 +35,19 @@ var godot_bin_path       setget set_godot_bin_path,       get_godot_bin_path
 
 # -- Inputs Setters
 
-func set_remote_debug(v):         set_section_value(REMOTE_DEBUG, v)
-func set_log_level(v):            set_section_value(LOG_LEVEL, v)
-func set_log_file(v):             set_section_value(LOG_FILE, v)
-func set_ios_deploy_tool_path(v): set_section_value(IOSDEPLOY_TOOL, v)
-func set_godot_bin_path(v):       set_section_value(GODOT_BIN, v)
+func set_remote_debug(v):         set_section_value(SECTION.REMOTE_DEBUG, v)
+func set_log_level(v):            set_section_value(SECTION.LOG_LEVEL, v)
+func set_log_file(v):             set_section_value(SECTION.LOG_FILE, v)
+func set_ios_deploy_tool_path(v): set_section_value(SECTION.IOSDEPLOY_TOOL, v)
+func set_godot_bin_path(v):       set_section_value(SECTION.GODOT_BIN, v)
 
 # -- Inputs Getters
 
-func get_remote_debug():         return get_section_value(REMOTE_DEBUG)
-func get_log_level():            return get_section_value(LOG_LEVEL)
-func get_log_file():             return get_section_value(LOG_FILE)
-func get_ios_deploy_tool_path(): return get_section_value(IOSDEPLOY_TOOL)
-func get_godot_bin_path():       return get_section_value(GODOT_BIN)
+func get_remote_debug():         return get_section_value(SECTION.REMOTE_DEBUG)
+func get_log_level():            return get_section_value(SECTION.LOG_LEVEL)
+func get_log_file():             return get_section_value(SECTION.LOG_FILE)
+func get_ios_deploy_tool_path(): return get_section_value(SECTION.IOSDEPLOY_TOOL)
+func get_godot_bin_path():       return get_section_value(SECTION.GODOT_BIN)
 
 
 func get_section_value(section):
@@ -56,11 +56,11 @@ func get_section_value(section):
 	@return Any?
 	"""
 	var section_control = get_section_control(section)
-	if section == REMOTE_DEBUG:
+	if section == SECTION.REMOTE_DEBUG:
 		return section_control.is_pressed()
-	elif section == LOG_LEVEL:
+	elif section == SECTION.LOG_LEVEL:
 		return section_control.get_selected()
-	elif section in [IOSDEPLOY_TOOL, GODOT_BIN, LOG_FILE]:
+	elif section in [SECTION.IOSDEPLOY_TOOL, SECTION.GODOT_BIN, SECTION.LOG_FILE]:
 		return section_control.get_text()
 
 
@@ -69,11 +69,11 @@ func set_section_value(section, value):
 	Set the `section`'s control value.
 	"""
 	var section_control = get_section_control(section)
-	if section == REMOTE_DEBUG:
+	if section == SECTION.REMOTE_DEBUG:
 		return section_control.set_pressed(value)
-	elif section == LOG_LEVEL:
+	elif section == SECTION.LOG_LEVEL:
 		return section_control.select(value)
-	elif section in [IOSDEPLOY_TOOL, GODOT_BIN, LOG_FILE]:
+	elif section in [SECTION.IOSDEPLOY_TOOL, SECTION.GODOT_BIN, SECTION.LOG_FILE]:
 		return section_control.set_text(value)
 
 
@@ -82,31 +82,31 @@ func get_section_control(section):
 	Get the `section`'s control.
 	@return Control
 	"""
-	assert(section >= REMOTE_DEBUG and section <= GODOT_BIN)
-	if section == REMOTE_DEBUG:
+	assert(section >= SECTION.REMOTE_DEBUG and section <= SECTION.GODOT_BIN)
+	if section == SECTION.REMOTE_DEBUG:
 		return find_node('remote_debug_butt')
-	elif section == LOG_LEVEL:
+	elif section == SECTION.LOG_LEVEL:
 		return find_node('log_level_opt')
-	elif section == LOG_FILE:
+	elif section == SECTION.LOG_FILE:
 		return find_node('logfile_path')
-	elif section == IOSDEPLOY_TOOL:
+	elif section == SECTION.IOSDEPLOY_TOOL:
 		return find_node('iosdeploy_tool_path')
-	elif section == GODOT_BIN:
+	elif section == SECTION.GODOT_BIN:
 		return find_node('godot_bin_path')
 
 
 func _on_open_onboarding_flow_butt_pressed():
-	emit_signal('pressed', self, ONBOARDING_FLOW_OPEN)
+	emit_signal('pressed', self, PRESS_SECTION.ONBOARDING_FLOW_OPEN)
 
 
 func _on_open_xcproj_butt_pressed():
-	emit_signal('pressed', self, XCODE_PROJ_OPEN)
+	emit_signal('pressed', self, PRESS_SECTION.XCODE_PROJ_OPEN)
 
 
 func _on_copy_xcproj_butt_pressed():
-	emit_signal('pressed', self, XCODE_PROJ_COPY)
+	emit_signal('pressed', self, PRESS_SECTION.XCODE_PROJ_COPY)
 
 
 func _on_fill_godot_export_presets_pressed():
-	emit_signal('pressed', self, XCODE_PROJ_FILL_EXPORT)
+	emit_signal('pressed', self, PRESS_SECTION.XCODE_PROJ_FILL_EXPORT)
 

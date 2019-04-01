@@ -327,12 +327,12 @@ func _on_xcode_made_project(xcode, result, project):
 
 
 func _on_xcode_finder_result(finder, type, objects):
-	if type == finder.DEVICE:
+	if type == finder.Type.DEVICE:
 		get_view().devices_list_populate(objects)
 		get_view().devices_list_set_active(_xcode.project.get_devices())
-	elif type == finder.TEAM:
+	elif type == finder.Type.TEAM:
 		pass
-	elif type == finder.PROVISION:
+	elif type == finder.Type.PROVISION:
 		pass
 
 

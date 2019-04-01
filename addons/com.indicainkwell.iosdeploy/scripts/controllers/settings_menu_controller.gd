@@ -22,16 +22,16 @@ func set_xcode(xcode):
 
 
 func _on_pressed(view, press_section):
-	if press_section == view.ONBOARDING_FLOW_OPEN:
+	if press_section == view.PRESS_SECTION.ONBOARDING_FLOW_OPEN:
 		get_parent().get_menu().popup_centered()
 		_log.debug('opened onboarding flow')
-	elif press_section == view.XCODE_PROJ_COPY:
+	elif press_section == view.PRESS_SECTION.XCODE_PROJ_COPY:
 		OS.set_clipboard(_xcode.project.get_xcodeproj_path())
 		_log.debug('copied xcodeproj path to clipboard')
-	elif press_section == view.XCODE_PROJ_OPEN:
+	elif press_section == view.PRESS_SECTION.XCODE_PROJ_OPEN:
 		OS.shell_open('file://' + _xcode.project.get_path())
 		_log.debug('opened xcodeproj folder with fs')
-	elif press_section == view.XCODE_PROJ_FILL_EXPORT:
+	elif press_section == view.PRESS_SECTION.XCODE_PROJ_FILL_EXPORT:
 		stc.get_gdscript('export_presets.gd').new().fill()
 		_log.info('Filled export presets with current iosdeploy settings')
 
