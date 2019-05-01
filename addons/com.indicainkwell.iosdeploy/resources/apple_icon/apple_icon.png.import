@@ -3,20 +3,21 @@
 importer="texture"
 type="StreamTexture"
 path="res://.import/apple_icon.png-b7c517fa4138bc1bb096da2a2ecd1cfe.stex"
+metadata={
+"vram_texture": false
+}
 
 [deps]
 
 source_file="res://addons/com.indicainkwell.iosdeploy/resources/apple_icon/apple_icon.png"
-source_md5="384853962b1945b97c47ac10963a9f0c"
-
 dest_files=[ "res://.import/apple_icon.png-b7c517fa4138bc1bb096da2a2ecd1cfe.stex" ]
-dest_md5="4f6702416c716e2b530b2156808e0a1e"
 
 [params]
 
 compress/mode=0
 compress/lossy_quality=0.7
 compress/hdr_mode=0
+compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
 flags/filter=true
@@ -26,6 +27,7 @@ flags/srgb=2
 process/fix_alpha_border=true
 process/premult_alpha=false
 process/HDR_as_SRGB=false
+process/invert_color=false
 stream=false
 size_limit=0
 detect_3d=true

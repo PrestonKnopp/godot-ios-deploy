@@ -3,7 +3,7 @@ extends Object
 
 
 const PLUGIN_DOMAIN = 'com.indicainkwell.iosdeploy'
-const LOGGER_DOMAIN = 'ios-deploy'
+const LOGGER_DOMAIN = PLUGIN_DOMAIN + '.logger'
 
 const PLUGIN_DATA_PATH = 'user://' + PLUGIN_DOMAIN
 
@@ -19,7 +19,16 @@ const GDSCRIPTS = ADDON_PREFIX + '/scripts'
 const GDSCRIPTS_2 = GDSCRIPTS  + '/_v2'
 const GDSCRIPTS_3 = GDSCRIPTS  + '/_v3'
 
-const CONFIG_VERSION = 0
+const CONFIG_VERSION = 1
+
+const SINGLETON_DOMAIN_CONTAINER = PLUGIN_DOMAIN + '.singletons'
+const SINGLETON_VERSION_DOMAIN = PLUGIN_DOMAIN + '.version.singleton'
+const SINGLETON_LOGGER_DOMAIN = LOGGER_DOMAIN + '.singleton'
+const SINGLETON_CONFIG_DOMAIN = PLUGIN_DOMAIN + '.config.singleton'
+
+const DEFAULT_IOSDEPLOY_TOOL_PATH = '/usr/local/bin/ios-deploy'
+# %s is for build i.e. debug, release
+const DEFAULT_TEMPLATE_LIB_NAME_FMT = 'default.template.libgodot.%s.a'
 
 
 # Get rid of this and just use get_shell_script() with string input
@@ -39,28 +48,44 @@ static func isa(obj, type):
 	return get_gdscript('isa.gd').test(obj, type)
 
 
+static func get_plugin_singleton(domain, script_path):
+	# - What? This creates a singleton by setting metadata on an instance of
+	# an already global and readily accessible godot object.
+	# - Why project_settings.gd? Godot v2 Globals and Godot v3
+	# ProjectSettings are global objects that allow metadata.
+	var project_settings = get_gdscript('project_settings.gd')
+	if not project_settings.has_metadata(SINGLETON_DOMAIN_CONTAINER):
+		project_settings.set_metadata(SINGLETON_DOMAIN_CONTAINER, {})
+
+	var domains = project_settings.get_metadata(SINGLETON_DOMAIN_CONTAINER)
+	if not domains.has(domain):
+		domains[domain] = get_gdscript(script_path).new()
+	return domains[domain]
+
+
+static func free_plugin_singletons():
+	var project_settings = get_gdscript('project_settings.gd')
+	if project_settings.has_metadata(SINGLETON_DOMAIN_CONTAINER):
+		var domains = project_settings.get_metadata(SINGLETON_DOMAIN_CONTAINER)
+		for domain in domains:
+			domains[domain].free()
+
+
 static func get_version():
-	# can't use get_gdscript here because
-	# it's recursive
-	var path
-	if OS.has_method('get_engine_version'):
-		path = GDSCRIPTS_2
-	else:
-		path = GDSCRIPTS_3
-	
-	return load(path.plus_file('version.gd')).new()
+	return get_plugin_singleton(SINGLETON_VERSION_DOMAIN, 'version.gd')
 
 
 static func get_logger():
-	var main_loop = get_gdscript('main_loop_getter.gd').new().get_main_loop()
-	var nodes = main_loop.get_nodes_in_group(PLUGIN_DOMAIN)
-	if nodes.size() != 1:
-		print('ERROR GETTINGs LOGGER WITH #%s IN GROUP %s'%[nodes.size(),PLUGIN_DOMAIN])
-		return null
-	if nodes[0].get_name() != LOGGER_DOMAIN:
-		print('ERROR GETTING LOGGER NODE %s IN GROUP %s, GOT %s INSTEAD'%[LOGGER_DOMAIN,PLUGIN_DOMAIN,nodes[0].get_name()])
-		return null
-	return nodes[0]
+	# - Why? A single logger can have all subloggers associated. And their
+	# output levels can be managed easier. Just now realizing this could
+	# also be done with groups.
+	# TODO: refactor logger into self contained script. Use groups api to
+	# manage all loggers across project.
+	return get_plugin_singleton(SINGLETON_LOGGER_DOMAIN, 'logger.gd')
+
+
+static func get_config():
+	return get_plugin_singleton(SINGLETON_CONFIG_DOMAIN, 'plugin_config.gd')
 
 
 static func globalize_path(path):
@@ -104,17 +129,21 @@ static func get_shell_script(shell_script):
 	return SHELL_SCRIPTS.plus_file(shell_script)
 
 
+static func get_versioned_scripts_path():
+	var path
+	if OS.has_method('get_engine_version'):
+		path = GDSCRIPTS_2
+	else:
+		path = GDSCRIPTS_3
+	return path
+
+
 static func get_gdscript(gdscript):
-
-	var f = GDSCRIPTS.plus_file(gdscript)
-
-	if get_version().is2():
-		var v2f = GDSCRIPTS_2.plus_file(gdscript)
-		if File.new().file_exists(v2f):
-			f = v2f
-	elif get_version().is3():
-		var v3f = GDSCRIPTS_3.plus_file(gdscript)
-		if File.new().file_exists(v3f):
-			f = v3f
+	var f
+	var vf = get_versioned_scripts_path().plus_file(gdscript)
+	if File.new().file_exists(vf):
+		f = vf
+	else:
+		f = GDSCRIPTS.plus_file(gdscript)
 
 	return load(f)

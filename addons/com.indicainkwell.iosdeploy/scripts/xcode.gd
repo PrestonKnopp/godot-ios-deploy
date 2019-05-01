@@ -30,6 +30,7 @@ var iOSExportTemplate = stc.get_gdscript('xcode/ios_export_template.gd')
 var Team = stc.get_gdscript('xcode/team.gd')
 var Provision = stc.get_gdscript('xcode/provision.gd')
 var Device = stc.get_gdscript('xcode/device.gd')
+var Finder = stc.get_gdscript('xcode/finders/finder_umbrella.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -49,7 +50,7 @@ func get_template():
 	return template
 
 
-var finder = stc.get_gdscript('xcode/finders/finder.gd') setget ,get_finder
+var finder = Finder.new() setget ,get_finder
 func get_finder(): return finder
 
 
@@ -66,7 +67,7 @@ func is_project_ready():
 	return project != null
 
 
-func make_project_async(bundle_id=null, display_name=null):
+func make_project_async():
 	"""
 	Async make xcode project.
 
@@ -76,19 +77,29 @@ func make_project_async(bundle_id=null, display_name=null):
 	var template = get_template()
 	if template.is_connected('copy_installed', self, '_on_template_copy_installed'):
 		template.disconnect('copy_installed', self, '_on_template_copy_installed')
-	template.connect('copy_installed', self, '_on_template_copy_installed', [bundle_id, display_name], CONNECT_ONESHOT)
+	template.connect('copy_installed', self, '_on_template_copy_installed', [], CONNECT_ONESHOT)
 
+	# Remove outdated template copy
+	if template.copy_exists() and not template.is_copy_version_valid():
+		var err = template.copy_remove()
+		var dst = template.get_destination_path()
+		if err != OK:
+			stc.get_logger().error(
+				'Error<%s> Failed to remove old template copy %s' % [
+					err, dst
+				])
+		else:
+			stc.get_logger().info('Removed old template copy %s ' % [dst])
+	
 	if template.copy_exists():
-		_made_project(template, null, bundle_id, display_name)
+		_made_project(template, null)
 	else:
 		template.copy_install_async()
 
 
 
-func _made_project(template, result, bundle_id, display_name):
+func _made_project(template, result):
 	project = Project.new()
-	project.bundle_id = bundle_id
-	project.name = display_name
 	project.open(template.get_destination_path())
 
 	emit_signal('made_project', self, result, project)
@@ -99,6 +110,6 @@ func _made_project(template, result, bundle_id, display_name):
 # ------------------------------------------------------------------------------
 
 
-func _on_template_copy_installed(template, result, bundle_id, display_name):
+func _on_template_copy_installed(template, result):
 	# TODO: For now, assume copy succeeded if this callback has been called.
-	_made_project(template, result, bundle_id, display_name)
+	_made_project(template, result)

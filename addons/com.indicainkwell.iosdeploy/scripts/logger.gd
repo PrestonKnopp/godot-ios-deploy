@@ -241,7 +241,7 @@ var default_output_strategies = [STRATEGY_PRINT, STRATEGY_PRINT, STRATEGY_PRINT,
 var default_logfile_path = "user://com.indicainkwell.iosdeploy/iosdeploy.log" # % Globals.get("application/name") # Globals not available in v3
 var default_configfile_path = "user://com.indicainkwell.iosdeploy/iosdeploy.log.cfg" # % PLUGIN_NAME
 
-# e.g. "[main.INFO]: The young alpaca started growing a goatie."
+# e.g. "[PLUGIN_NAME.INFO]: The young alpaca started growing a goatie."
 var output_format = "[{MOD}.{LVL}]: {MSG}"
 
 # Specific to STRATEGY_MEMORY
@@ -262,7 +262,7 @@ var modules = {}
 ##  Functions  ##
 ##=============##
 
-func put(level, message, module = "main"):
+func put(level, message, module = PLUGIN_NAME):
 	"""Log a message in the given module with the given logging level."""
 	var module_ref = get_module(module)
 	var output_strategy = module_ref.get_output_strategy(level)
@@ -288,23 +288,23 @@ func put(level, message, module = "main"):
 # Helper functions for each level
 # -------------------------------
 
-func verbose(message, module = "main"):
+func verbose(message, module = PLUGIN_NAME):
 	"""Log a message in the given module with level VERBOSE."""
 	put(VERBOSE, message, module)
 
-func debug(message, module = "main"):
+func debug(message, module = PLUGIN_NAME):
 	"""Log a message in the given module with level DEBUG."""
 	put(DEBUG, message, module)
 
-func info(message, module = "main"):
+func info(message, module = PLUGIN_NAME):
 	"""Log a message in the given module with level INFO."""
 	put(INFO, message, module)
 
-func warn(message, module = "main"):
+func warn(message, module = PLUGIN_NAME):
 	"""Log a message in the given module with level WARN."""
 	put(WARN, message, module)
 
-func error(message, module = "main"):
+func error(message, module = PLUGIN_NAME):
 	"""Log a message in the given module with level ERROR."""
 	put(ERROR, message, module)
 
@@ -325,7 +325,7 @@ func add_module(name, output_level = default_output_level, \
 		modules[name] = Module.new(name, output_level, output_strategies, logfile)
 	return modules[name]
 
-func get_module(module = "main"):
+func get_module(module = PLUGIN_NAME):
 	"""Retrieve the given module if it exists; if not, it will be created."""
 	if not modules.has(module):
 		verbose("The requested module '%s' does not exist. It will be created with default values." \
@@ -379,7 +379,7 @@ func add_logfile(logfile_path = default_logfile_path):
 func get_logfile(logfile_path):
 	"""Retrieve the given logfile if it exists, otherwise returns null."""
 	if not logfiles.has(logfile_path):
-		warn("The requested logfile pointing to '%s' does not exist.", logfile_path, PLUGIN_NAME)
+		warn("The requested logfile pointing to '%s' does not exist." % logfile_path, PLUGIN_NAME)
 		return null
 	else:
 		return logfiles[logfile_path]
@@ -405,7 +405,7 @@ func set_default_output_strategy(output_strategy_mask, level = -1):
 				% [output_strategy_mask], PLUGIN_NAME)
 	else:
 		if not level in range(0, LEVELS.size()):
-			error("The level must be comprised between 0 and %d." % LEVELS.size() - 1, PLUGIN_NAME)
+			error("The level must be comprised between 0 and %d." % (LEVELS.size() - 1), PLUGIN_NAME)
 			return
 		default_output_strategies[level] = output_strategy_mask
 		info("The default output strategy mask was set to '%d' for the '%s' level." \
@@ -424,7 +424,7 @@ func set_default_output_level(level):
 	be discarded.
 	"""
 	if not level in range(0, LEVELS.size()):
-		error("The level must be comprised between 0 and %d." % LEVELS.size() - 1, PLUGIN_NAME)
+		error("The level must be comprised between 0 and %d." % (LEVELS.size() - 1), PLUGIN_NAME)
 		return
 	default_output_level = level
 	info("The default output level was set to '%s'." % LEVELS[level], PLUGIN_NAME)
@@ -635,7 +635,7 @@ func _initialize():
 	# Default logfile
 	add_logfile(default_logfile_path)
 	# Default modules
-	add_module('main') # needs to be instanced first
+	add_module(PLUGIN_NAME) # needs to be instanced first
 	memory_buffer.resize(max_memory_size)
 
 
@@ -646,9 +646,6 @@ func _exit_tree():
 # ------------------------------------------------------------------------------
 #                               IndicaInkwell Extras
 # ------------------------------------------------------------------------------
-
-
-const stc = preload('static.gd')
 
 
 func make_module_logger(module):

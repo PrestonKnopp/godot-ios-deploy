@@ -61,7 +61,10 @@ func _ready():
 # ------------------------------------------------------------------------------
 
 
-var screen setget ,get_screen
+var screen setget ,get_current_screen
+func get_current_screen():
+	return get_screen()
+
 func get_screen(idx=-1):
 	"""
 	Get current screen by passing -1 or nothing.

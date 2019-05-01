@@ -1,5 +1,5 @@
 # team_finder.gd
-extends 'finder.gd'
+extends 'Finder.gd'
 
 
 # ------------------------------------------------------------------------------
@@ -11,18 +11,37 @@ var Team = stc.get_gdscript('xcode/team.gd')
 
 
 # ------------------------------------------------------------------------------
+#                                     Variables
+# ------------------------------------------------------------------------------
+
+
+var _listteamsjson_thread_id = -1
+
+
+# ------------------------------------------------------------------------------
 #                                     Overrides
 # ------------------------------------------------------------------------------
 
 
-func find():
-	var res = _sh.run(stc.get_shell_script(stc.shell.listteamsjson))
-	if res.code != 0:
-		_log.error('failed to convert teams to json')
-		_log.error('\t%s'%res.output)
-		return []
+func begin_find():
+	if _sh.running(_listteamsjson_thread_id):
+		# no need to run again
+		return
+	_listteamsjson_thread_id = _sh.run_async(
+		[stc.get_shell_script(stc.shell.listteamsjson)],
+		self,
+		'_on_listteamsjson_finished'
+	)
 
-	_json.parse(res.output[0])
+
+func _on_listteamsjson_finished(command, result):
+	if result.code != 0:
+		_log.error('failed to convert teams to json')
+		_log.error('\t'+result.output)
+		_finished([])
+		return
+
+	_json.parse(result.output[0])
 	if _json.get_result().error != OK:
 		_log.error('Failed to parse team json')
 		_log.error('\t'+str(_json.get_result().error)+' :: '+_json.get_result().error_string)
@@ -46,4 +65,5 @@ func find():
 				if is_free == '0':
 					team.is_free_account = false
 
-	return teams
+	_listteamsjson_thread_id = -1
+	_finished(teams)

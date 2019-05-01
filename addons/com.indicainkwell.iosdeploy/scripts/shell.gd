@@ -2,7 +2,13 @@
 extends Reference
 
 
+const stc = preload('static.gd')
+
+
 const ERROR_FILE_FMT = 'com.indicainkwell.iosdeploy.shell.error.%s.txt'
+
+
+var PoolStringConverter = stc.get_gdscript('pool_string_converter.gd')
 
 
 class Result:
@@ -45,11 +51,28 @@ class Command:
 	var _current_thread_id = 0
 	var _thread_mutex = Mutex.new()
 
-	func running(thread_id):
+	func _running_any():
+		"""
+		Check if running anything.
+		"""
+		var running = false
+		_thread_mutex.lock()
+		for thread_id in _thread_map:
+			if running(thread_id):
+				running = true
+				break
+		_thread_mutex.unlock()
+		return running
+
+	func running(thread_id=null):
 		"""
 		Check for running threaded instance of this command.
-		@param thread_id:string the id returned by run_async
+		@param thread_id:int? the id returned by run_async
+		  if thread_id is null, check if any running
 		"""
+		if thread_id == null:
+			return _running_any()
+
 		if not _thread_map.has(thread_id):
 			return false
 
@@ -149,10 +172,10 @@ func get_file_contents(file_path):
 
 func execute(cmd, args=[], error_file_name='default'):
 	var errfpath = get_error_file_path(ERROR_FILE_FMT % error_file_name)
-	var built_args = _build_execute_args(
+	var built_args = PoolStringConverter.convert_array(_build_execute_args(
 		cmd, args,
 		errfpath
-	)
+	))
 	var last_nl_idx = -1
 
 	var res = Result.new()

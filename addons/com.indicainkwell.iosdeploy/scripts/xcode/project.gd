@@ -55,10 +55,15 @@ var provision
 var automanaged = false
 
 var debug = true
+var remote_debug = false
+var remote_addr = null
+var remote_port = null
+var debug_collisions = false
+var debug_navigation = false
 var custom_info = {}
 
-var _config
-
+# always update pbx on first build
+var _pbx_needs_updating = true
 var _needs_building = true
 var _iosdeploy = iOSDeploy.new()
 var _runningdeploys = 0
@@ -90,6 +95,8 @@ func _init():
 		message = 2
 	})
 
+	_init_from_config()
+
 
 # ------------------------------------------------------------------------------
 #                                      Methods
@@ -116,26 +123,27 @@ func needs_building():
 # ------------------------------------------------------------------------------
 
 
-func set_config(cfg):
+func _init_from_config():
 	"""
-	Set the config to use for future reading and writing.
+	Init values from global config
 	"""
-	_config = cfg
+	
+	var cfg = stc.get_config()
+	cfg.connect('changed', self, '_on_config_changed')
 
-	# TODO: get rid of null not being a default value by creating a subclass
-	# of Config to handle our general config use case
-	automanaged = _config.get_value('xcode/project', 'automanaged', automanaged)
-	bundle_id = _config.get_value('xcode/project', 'bundle_id', bundle_id)
-	custom_info = _config.get_value('xcode/project', 'custom_info', custom_info)
-	debug = _config.get_value('xcode/project', 'debug', debug)
-	name = _config.get_value('xcode/project', 'name', name)
+	automanaged = cfg.get_value('xcode/project', 'automanaged', automanaged)
+	bundle_id = cfg.get_value('xcode/project', 'bundle_id', bundle_id)
+	custom_info = cfg.get_value('xcode/project', 'custom_info', custom_info)
+	debug = cfg.get_value('xcode/project', 'debug', debug)
+	remote_debug = cfg.get_value('deploy', 'remote_debug', remote_debug)
+	name = cfg.get_value('xcode/project', 'name', name)
 
 	provision = Provision.new().FromDict(
-		_config.get_value('xcode/project', 'provision', provision)
+		cfg.get_value('xcode/project', 'provision', provision)
 	)
-	team = Team.new().FromDict(_config.get_value('xcode/project', 'team', team))
+	team = Team.new().FromDict(cfg.get_value('xcode/project', 'team', team))
 
-	var saved_device_dicts = _config.get_value('xcode/project', 'devices', [])
+	var saved_device_dicts = cfg.get_value('xcode/project', 'devices', [])
 	if saved_device_dicts.size() != 0:
 		_devices.clear()
 		for dev in saved_device_dicts:
@@ -147,25 +155,35 @@ func set_config(cfg):
 
 func update_config():
 	"""
-	Update config with self's properties.
+	Update global config with self's properties.
 	"""
-	_config.set_value('xcode/project', 'automanaged', automanaged)
-	_config.set_value('xcode/project', 'bundle_id', bundle_id)
-	_config.set_value('xcode/project', 'name', name)
-	_config.set_value('xcode/project', 'provision', Provision.new().ToDict(provision))
-	_config.set_value('xcode/project', 'team', Team.new().ToDict(team))
+	
+	var cfg = stc.get_config()
+
+	cfg.set_value('xcode/project', 'automanaged', automanaged)
+	cfg.set_value('xcode/project', 'bundle_id', bundle_id)
+	cfg.set_value('xcode/project', 'name', name)
+	cfg.set_value('xcode/project', 'provision', Provision.new().ToDict(provision))
+	cfg.set_value('xcode/project', 'team', Team.new().ToDict(team))
 
 	var savable_devices_fmt = []
 	for device in _devices:
 		savable_devices_fmt.append(Device.new().ToDict(device))
-	_config.set_value('xcode/project', 'devices', savable_devices_fmt)
+	cfg.set_value('xcode/project', 'devices', savable_devices_fmt)
 
-	# TODO: abstract this save out, self should not know about the path to
-	# config.cfg
-	if _config.save(stc.get_data_path('config.cfg')) != OK:
-		stc.get_logger().info('unable to save config')
+	cfg.save()
 
 
+# -- Reacting (config)
+
+
+func _on_config_changed(config, section, key, from_value, to_value):
+	if section == 'xcode/project':
+		if key == 'remote_debug':
+			remote_debug = to_value
+		elif key == 'godot_bin_path':
+			_pbx_needs_updating = true
+			_log.debug('pbx needs updating')
 
 
 # ------------------------------------------------------------------------------
@@ -284,11 +302,16 @@ func update_pbx():
 	proj_target_attr_q.type = 'PBXProject'
 	proj_target_attr_q.keypath = 'attributes/TargetAttributes'
 
+	var godot_bin_file_ref_q = PBX.Query.new()
+	godot_bin_file_ref_q.type = 'PBXFileReference'
+	godot_bin_file_ref_q.keypath = 'name'
+
 	var res = pbx.find_objects([
 		root_pbxgroup_q,          # res[0]
 		resource_build_phase_q,   # res[1]
 		xc_build_configuration_q, # res[2]
 		proj_target_attr_q,       # res[3]
+		godot_bin_file_ref_q,     # res[4]
 	])
 
 	# add godot project folder to xcode project
@@ -328,7 +351,31 @@ func update_pbx():
 				target['SystemCapabilities'] = cap.to_dict()
 			_log.debug(target)
 	
+	# get path to custom or new godot binary
+	var godot_bin_path
+	if stc.get_version().is2():
+		godot_bin_path = 'godot_opt.iphone'
+	else:
+		var build = 'debug' if debug else 'release'
+		godot_bin_path = stc.DEFAULT_TEMPLATE_LIB_NAME_FMT % build
+	
+	var cfg_bin_path = stc.get_config().get_value('xcode/project', 'godot_bin_path', '')
+	if not cfg_bin_path.empty():
+		# cfg overrides godot_bin_path
+		godot_bin_path = cfg_bin_path
+	_log.debug('Using godot bin path ' + godot_bin_path)
+
+	# set path to custom or new godot binary
+	var godot_bin_file_ref_name = 'godot_opt.iphone' if stc.get_version().is2() else 'godot'
+	for file_ref in res[4]:
+		if file_ref['name'] == godot_bin_file_ref_name:
+			file_ref['path'] = godot_bin_path
+			_log.debug('Set godot bin path to ' + godot_bin_path)
+			break
+	
 	pbx.save_plist(get_pbx_path())
+	_pbx_needs_updating = false
+	_log.debug('pbx updated')
 	mark_needs_building()
 
 
@@ -364,6 +411,9 @@ func build():
 	assert(bundle_id != null)
 	assert(_path != null)
 	assert(name != null)
+
+	if _pbx_needs_updating:
+		update_pbx()
 
 	_xcodebuild.run_async(_build_xcodebuild_args(), self, '_on_xcodebuild_finished')
 
@@ -442,6 +492,17 @@ func deploy():
 	# TODO: shell.gd command should be able to kill running command.
 	# TODO: add option to install or just launch
 	_iosdeploy.bundle = get_app_path()
+	_iosdeploy.app_args.clear()
+	var v2 = stc.get_version().is2()
+	if remote_debug:
+		assert(remote_addr != null)
+		assert(remote_port != null)
+		_iosdeploy.app_args.append('-rdebug' if v2 else '--remote-debug')
+		_iosdeploy.app_args.append('%s:%s' % [remote_addr, remote_port])
+	if debug_collisions:
+		_iosdeploy.app_args.append('-debugcol' if v2 else '--debug-collisions')
+	if debug_navigation:
+		_iosdeploy.app_args.append('-debugnav' if v2 else '--debug-navigation')
 	_runningdeploys = get_devices().size()
 	for device in get_devices():
 		_iosdeploy.install_and_launch_on(device.id)

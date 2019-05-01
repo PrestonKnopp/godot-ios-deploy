@@ -11,6 +11,7 @@ extends Reference
 
 
 signal deployed(this, result, errors, device_id)
+signal device_detection_finished(this, result)
 
 
 # ------------------------------------------------------------------------------
@@ -49,8 +50,10 @@ var ignore_wifi_devices = false
 
 
 var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.ios-deploy')
-var _iosdeploy = stc.get_gdscript('shell.gd').new().make_command('/usr/local/bin/ios-deploy')
 var _error_capturer = ErrorCapturer.new()
+var _iosdeploy
+
+var _detect_devices_thread_id = -1
 
 
 # ------------------------------------------------------------------------------
@@ -68,13 +71,29 @@ func _init():
 		message = 2
 	})
 
+	var cfg = stc.get_config()
+	cfg.connect('changed', self, '_on_config_changed')
+	var tool_path = cfg.get_value('deploy', 'ios_deploy_tool_path',
+			stc.DEFAULT_IOSDEPLOY_TOOL_PATH)
+	_set_tool_path(tool_path)
+
 
 # ------------------------------------------------------------------------------
 #                                      Methods
 # ------------------------------------------------------------------------------
 
 
-func detect_devices():
+func _set_tool_path(tool_path):
+	# TODO: handle if iosdeploy is running when tool is set
+	if _iosdeploy != null and _iosdeploy.running():
+		OS.alert('Cant set ios deploy tool while running. ' +
+			 'Try again after task has finished.')
+		return
+	var shell = stc.get_gdscript('shell.gd').new()
+	_iosdeploy = shell.make_command(tool_path)
+
+
+func detect_devices(async=true):
 	"""
 	This should be used only by device_finder.gd. Cause it does the
 	parsing. This will probably change later.
@@ -83,9 +102,19 @@ func detect_devices():
 	if ignore_wifi_devices:
 		args.append('--no-wifi')
 	_log.debug('Detect Devices Command: '+str(args))
-	var res = _iosdeploy.run(args)
-	_log.debug('Detect Devices Output: '+str(res.output))
-	return res.output[0].split('\n', false)
+
+	if async:
+		if _iosdeploy.running(_detect_devices_thread_id):
+			# No need to run it again
+			return
+
+		_detect_devices_thread_id = _iosdeploy.run_async(
+			args,
+			self,
+			'_detect_devices_finished'
+		)
+	else:
+		return _iosdeploy.run(args)
 
 
 func install_and_launch_on(device_id, async=true):
@@ -130,9 +159,25 @@ func uninstall():
 # ------------------------------------------------------------------------------
 
 
+func _on_config_changed(config, section, key, from_value, to_value):
+	if section == 'deploy' and key == 'ios_deploy_tool_path':
+		if from_value == to_value:
+			return
+		elif to_value == '':
+			_set_tool_path(stc.DEFAULT_IOSDEPLOY_TOOL_PATH)
+		else:
+			_set_tool_path(to_value)
+
+
 func _deploy_finished(command, result, device_id):
 	var errors = _error_capturer.capture_from(result.output)
 	emit_signal('deployed', self, result, errors, device_id)
+
+
+func _detect_devices_finished(command, result):
+	_log.debug('Detect Devices Output: '+str(result.output))
+	_detect_devices_thread_id = -1
+	emit_signal('device_detection_finished', self, result)
 
 
 # ------------------------------------------------------------------------------

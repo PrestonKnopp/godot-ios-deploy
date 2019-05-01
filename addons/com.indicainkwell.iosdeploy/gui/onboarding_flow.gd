@@ -97,19 +97,19 @@ var bundle_id    setget set_bundle_id,    get_bundle_id
 
 # -- Inputs Setters
 
-func set_provision(v):    set_section_value(PROVISION, v)
-func set_automanaged(v):  set_section_value(AUTOMANAGE, v)
-func set_team(v):         set_section_value(TEAM, v)
-func set_display_name(v): set_section_value(DISPLAY_NAME, v)
-func set_bundle_id(v):    set_section_value(BUNDLE_ID, v)
+func set_provision(v):    set_section_value(SECTION.PROVISION, v)
+func set_automanaged(v):  set_section_value(SECTION.AUTOMANAGE, v)
+func set_team(v):         set_section_value(SECTION.TEAM, v)
+func set_display_name(v): set_section_value(SECTION.DISPLAY_NAME, v)
+func set_bundle_id(v):    set_section_value(SECTION.BUNDLE_ID, v)
 
 # -- Inputs Getters
 
-func get_provision():    return get_section_value(PROVISION)
-func get_automanaged():  return get_section_value(AUTOMANAGE)
-func get_team():         return get_section_value(TEAM)
-func get_display_name(): return get_section_value(DISPLAY_NAME)
-func get_bundle_id():    return get_section_value(BUNDLE_ID)
+func get_provision():    return get_section_value(SECTION.PROVISION)
+func get_automanaged():  return get_section_value(SECTION.AUTOMANAGE)
+func get_team():         return get_section_value(SECTION.TEAM)
+func get_display_name(): return get_section_value(SECTION.DISPLAY_NAME)
+func get_bundle_id():    return get_section_value(SECTION.BUNDLE_ID)
 
 
 # ------------------------------------------------------------------------------
@@ -122,7 +122,7 @@ func populate_option_section(section, values=[]):
 	Populate option section with multiple values. The rest of the sections
 	can be populated with their respective setter.
 	"""
-	assert(section in [TEAM, PROVISION])
+	assert(section in [SECTION.TEAM, SECTION.PROVISION])
 	var optbutt = get_section_control(section)
 	optbutt.clear()
 	for i in range(values.size()):
@@ -154,11 +154,11 @@ func get_section_value(section):
 	@return Any?
 	"""
 	var section_control = get_section_control(section)
-	if section in [PROVISION, TEAM]:
+	if section in [SECTION.PROVISION, SECTION.TEAM]:
 		return section_control.get_selected_metadata()
-	elif section == AUTOMANAGE:
+	elif section == SECTION.AUTOMANAGE:
 		return section_control.is_pressed()
-	elif section in [DISPLAY_NAME, BUNDLE_ID]:
+	elif section in [SECTION.DISPLAY_NAME, SECTION.BUNDLE_ID]:
 		return section_control.get_text()
 
 
@@ -167,16 +167,16 @@ func set_section_value(section, value):
 	Set the `section`'s control value.
 	"""
 	var section_control = get_section_control(section)
-	if section in [PROVISION, TEAM]:
+	if section in [SECTION.PROVISION, SECTION.TEAM]:
 		for i in range(section_control.get_item_count()):
 			var meta = section_control.get_item_metadata(i)
 			if meta != null and meta.equals(value):
 				section_control.select(i)
 				return
 		assert(false) # invalid input given
-	elif section == AUTOMANAGE:
+	elif section == SECTION.AUTOMANAGE:
 		section_control.set_pressed(value)
-	elif section in [DISPLAY_NAME, BUNDLE_ID]:
+	elif section in [SECTION.DISPLAY_NAME, SECTION.BUNDLE_ID]:
 		section_control.set_text(value)
 
 
@@ -185,16 +185,16 @@ func get_section_control(section):
 	Get the `section`'s control.
 	@return Control
 	"""
-	assert(section >= PROVISION and section <= BUNDLE_ID)
-	if section == PROVISION:
+	assert(section >= SECTION.PROVISION and section <= SECTION.BUNDLE_ID)
+	if section == SECTION.PROVISION:
 		return get_node('control_stack/select_provision/profile_optbutt')
-	elif section == AUTOMANAGE:
+	elif section == SECTION.AUTOMANAGE:
 		return get_node('control_stack/select_provision/VBoxContainer/automanage_checkbutt')
-	elif section == TEAM:
+	elif section == SECTION.TEAM:
 		return get_node('control_stack/select_team/team_optbutt')
-	elif section == DISPLAY_NAME:
+	elif section == SECTION.DISPLAY_NAME:
 		return get_node('control_stack/select_bundle/VBoxContainer/display_name_lineedit')
-	elif section == BUNDLE_ID:
+	elif section == SECTION.BUNDLE_ID:
 		return get_node('control_stack/select_bundle/VBoxContainer_1/bundle_id_lineedit')
 
 
@@ -204,11 +204,11 @@ func get_screen_sections(screen):
 	@return [
 	"""
 	if screen.index == 0:
-		return [PROVISION, AUTOMANAGE]
+		return [SECTION.PROVISION, SECTION.AUTOMANAGE]
 	elif screen.index == 1:
-		return [TEAM]
+		return [SECTION.TEAM]
 	elif screen.index == 2:
-		return [DISPLAY_NAME, BUNDLE_ID]
+		return [SECTION.DISPLAY_NAME, SECTION.BUNDLE_ID]
 	else:
 		return []
 
@@ -260,7 +260,7 @@ func resize_for(screen):
 # ------------------------------------------------------------------------------
 
 
-func _request_validation(section, value):
+func request_validation(section, value):
 	emit_signal('validate', self, section, value)
 	get_next_button().set_disabled(not is_screen_valid())
 
@@ -318,7 +318,7 @@ func _on_control_stack_screen_entering( this, from_screen, screen ):
 	for section in screen_sections:
 		emit_signal('populate', self, section)
 	for section in screen_sections:
-		_request_validation(section, get_section_value(section))
+		request_validation(section, get_section_value(section))
 
 	get_back_button().set_disabled(screen.index == 0)
 	if screen.index + 1 >= this.get_screen_count():
@@ -337,22 +337,22 @@ func _on_control_stack_draw():
 func _on_profile_optbutt_item_selected( ID ):
 	var optbutt = get_node('control_stack/select_provision/profile_optbutt')
 	var meta = optbutt.get_selected_metadata()
-	_request_validation(PROVISION, meta)
+	request_validation(SECTION.PROVISION, meta)
 
 
 func _on_automanage_checkbutt_toggled( pressed ):
-	_request_validation(AUTOMANAGE, pressed)
+	request_validation(SECTION.AUTOMANAGE, pressed)
 
 
 func _on_team_optbutt_item_selected( ID ):
 	var optbutt = get_node('control_stack/select_team/team_optbutt')
 	var meta = optbutt.get_selected_metadata()
-	_request_validation(TEAM, meta)
+	request_validation(SECTION.TEAM, meta)
 
 
 func _on_display_name_lineedit_text_changed( text ):
-	_request_validation(DISPLAY_NAME, text)
+	request_validation(SECTION.DISPLAY_NAME, text)
 
 
 func _on_bundle_id_lineedit_text_changed( text ):
-	_request_validation(BUNDLE_ID, text)
+	request_validation(SECTION.BUNDLE_ID, text)

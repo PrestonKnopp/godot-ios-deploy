@@ -20,8 +20,8 @@ enum Connection {
 var id
 var name
 var type_info
-var type = Unknown
-var connection = USB
+var type = Type.Unknown
+var connection = Connection.USB
 
 
 func to_dict():

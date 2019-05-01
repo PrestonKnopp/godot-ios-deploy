@@ -1,41 +1,16 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/onboarding_flow.gd" type="Script" id=1]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/control_stack.gd" type="Script" id=2]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=3]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Light.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/_v3/title_box.tscn" type="PackedScene" id=3]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/_v3/body_font.tres" type="DynamicFont" id=4]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/img/Upload Icon.png" type="Texture" id=5]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/overlay_drawer.gd" type="Script" id=6]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/_v3/subtitle_font.tres" type="DynamicFont" id=6]
+[ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/overlay_drawer.gd" type="Script" id=7]
 
-[sub_resource type="DynamicFont" id=1]
 
-size = 25
-use_mipmaps = false
-use_filter = true
-font_data = ExtResource( 3 )
 
-[sub_resource type="DynamicFont" id=2]
-
-size = 12
-use_mipmaps = false
-use_filter = true
-font_data = ExtResource( 4 )
-
-[sub_resource type="DynamicFont" id=3]
-
-size = 16
-use_mipmaps = false
-use_filter = true
-font_data = ExtResource( 4 )
-
-[sub_resource type="DynamicFont" id=4]
-
-size = 16
-use_mipmaps = false
-use_filter = true
-font_data = ExtResource( 4 )
-
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=1]
 
 script/source = "extends Node
 
@@ -101,7 +76,7 @@ anchor_bottom = 0.0
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 446.0
-margin_bottom = 123.0
+margin_bottom = 240.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -111,109 +86,7 @@ size_flags_vertical = 1
 alignment = 0
 _sections_unfolded = [ "Rect" ]
 
-[node name="title_box" type="VBoxContainer" parent="control_stack/select_provision" index="0"]
-
-editor/display_folded = true
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 436.0
-margin_bottom = 46.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 1
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 1
-custom_constants/separation = 0
-alignment = 0
-_sections_unfolded = [ "Size Flags" ]
-
-[node name="title" type="HBoxContainer" parent="control_stack/select_provision/title_box" index="0"]
-
-editor/display_folded = true
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 436.0
-margin_bottom = 31.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 1
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-alignment = 1
-_sections_unfolded = [ "Size Flags" ]
-
-[node name="Label" type="Label" parent="control_stack/select_provision/title_box/title" index="0"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 103.0
-margin_right = 217.0
-margin_bottom = 31.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 0
-custom_fonts/font = SubResource( 1 )
-text = "IOSDEPLOY"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="Label_1" type="Label" parent="control_stack/select_provision/title_box/title" index="1"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 221.0
-margin_right = 332.0
-margin_bottom = 31.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 0
-custom_fonts/font = SubResource( 1 )
-custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
-text = "PROVISION"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="subtitle" type="Label" parent="control_stack/select_provision/title_box" index="1"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 31.0
-margin_right = 436.0
-margin_bottom = 46.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 0
-custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
-text = "SELECT PROVISIONING PROFILE"
-align = 1
-valign = 1
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
+[node name="title_box" parent="control_stack/select_provision" index="0" instance=ExtResource( 3 )]
 
 [node name="HSeparator" type="HSeparator" parent="control_stack/select_provision" index="1"]
 
@@ -249,7 +122,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = ExtResource( 4 )
 toggle_mode = false
 action_mode = 0
 enabled_focus_mode = 2
@@ -326,7 +199,7 @@ mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 0
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = ExtResource( 4 )
 text = "OR"
 percent_visible = 1.0
 lines_skipped = 0
@@ -445,7 +318,7 @@ mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 0
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = ExtResource( 4 )
 text = "Drag & Drop
 provision profile here"
 align = 1
@@ -468,7 +341,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 2
 size_flags_vertical = 2
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = ExtResource( 4 )
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -530,7 +403,7 @@ mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = ExtResource( 6 )
 custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
 text = "Don't have a Provisioning Profile?"
 percent_visible = 1.0
@@ -554,7 +427,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-custom_fonts/font = SubResource( 3 )
+custom_fonts/font = ExtResource( 4 )
 toggle_mode = true
 enabled_focus_mode = 2
 shortcut = null
@@ -566,7 +439,7 @@ _sections_unfolded = [ "Size Flags" ]
 
 [node name="PreferredSize" type="Node" parent="control_stack/select_provision" index="7"]
 
-script = SubResource( 5 )
+script = SubResource( 1 )
 size = Vector2( 436, 130 )
 
 [node name="select_team" type="VBoxContainer" parent="control_stack" index="1"]
@@ -580,7 +453,7 @@ anchor_bottom = 0.0
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 446.0
-margin_bottom = 123.0
+margin_bottom = 240.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -590,111 +463,7 @@ size_flags_vertical = 1
 alignment = 0
 _sections_unfolded = [ "Rect", "Size Flags" ]
 
-[node name="title_box" type="VBoxContainer" parent="control_stack/select_team" index="0"]
-
-editor/display_folded = true
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 436.0
-margin_bottom = 46.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 1
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 1
-custom_constants/separation = 0
-alignment = 0
-_sections_unfolded = [ "Size Flags" ]
-
-[node name="title" type="HBoxContainer" parent="control_stack/select_team/title_box" index="0"]
-
-editor/display_folded = true
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 436.0
-margin_bottom = 31.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 1
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-alignment = 1
-_sections_unfolded = [ "Size Flags" ]
-
-[node name="Label" type="Label" parent="control_stack/select_team/title_box/title" index="0"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 130.0
-margin_right = 244.0
-margin_bottom = 31.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 0
-custom_fonts/font = SubResource( 1 )
-text = "IOSDEPLOY"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-_sections_unfolded = [ "Size Flags" ]
-
-[node name="Label_1" type="Label" parent="control_stack/select_team/title_box/title" index="1"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 248.0
-margin_right = 306.0
-margin_bottom = 31.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 0
-custom_fonts/font = SubResource( 1 )
-custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
-text = "TEAM"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="subtitle" type="Label" parent="control_stack/select_team/title_box" index="1"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 31.0
-margin_right = 436.0
-margin_bottom = 46.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 0
-custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
-text = "SELECT PROVISIONING TEAM"
-align = 1
-valign = 1
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-_sections_unfolded = [ "Size Flags" ]
+[node name="title_box" parent="control_stack/select_team" index="0" instance=ExtResource( 3 )]
 
 [node name="HSeparator" type="HSeparator" parent="control_stack/select_team" index="1"]
 
@@ -719,9 +488,9 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 75.0
+margin_top = 73.0
 margin_right = 436.0
-margin_bottom = 95.0
+margin_bottom = 98.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -729,6 +498,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 6
+custom_fonts/font = ExtResource( 4 )
 toggle_mode = false
 action_mode = 0
 enabled_focus_mode = 2
@@ -743,7 +513,7 @@ _sections_unfolded = [ "Size Flags" ]
 
 [node name="PreferredSize" type="Node" parent="control_stack/select_team" index="3"]
 
-script = SubResource( 5 )
+script = SubResource( 1 )
 size = Vector2( 436, 130 )
 
 [node name="select_bundle" type="VBoxContainer" parent="control_stack" index="2"]
@@ -757,7 +527,7 @@ anchor_bottom = 0.0
 margin_left = 10.0
 margin_top = 10.0
 margin_right = 446.0
-margin_bottom = 170.0
+margin_bottom = 240.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -767,110 +537,7 @@ size_flags_vertical = 1
 alignment = 0
 _sections_unfolded = [ "Rect", "Size Flags" ]
 
-[node name="title_box" type="VBoxContainer" parent="control_stack/select_bundle" index="0"]
-
-editor/display_folded = true
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 436.0
-margin_bottom = 46.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 1
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 3
-size_flags_vertical = 1
-custom_constants/separation = 0
-alignment = 0
-_sections_unfolded = [ "Size Flags" ]
-
-[node name="title" type="HBoxContainer" parent="control_stack/select_bundle/title_box" index="0"]
-
-editor/display_folded = true
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 436.0
-margin_bottom = 31.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 1
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-alignment = 1
-_sections_unfolded = [ "Size Flags" ]
-
-[node name="Label" type="Label" parent="control_stack/select_bundle/title_box/title" index="0"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 118.0
-margin_right = 232.0
-margin_bottom = 31.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 0
-custom_fonts/font = SubResource( 1 )
-text = "IOSDEPLOY"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="Label_1" type="Label" parent="control_stack/select_bundle/title_box/title" index="1"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 236.0
-margin_right = 317.0
-margin_bottom = 31.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 0
-custom_fonts/font = SubResource( 1 )
-custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
-text = "BUNDLE"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="subtitle" type="Label" parent="control_stack/select_bundle/title_box" index="1"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 31.0
-margin_right = 436.0
-margin_bottom = 46.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 0
-custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
-text = "SET BUNDLE INFORMATION"
-align = 1
-valign = 1
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-_sections_unfolded = [ "Size Flags" ]
+[node name="title_box" parent="control_stack/select_bundle" index="0" instance=ExtResource( 3 )]
 
 [node name="HSeparator" type="HSeparator" parent="control_stack/select_bundle" index="1"]
 
@@ -916,7 +583,7 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 72.0
 margin_right = 436.0
-margin_bottom = 137.0
+margin_bottom = 149.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -933,13 +600,14 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 436.0
-margin_bottom = 14.0
+margin_bottom = 19.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
+custom_fonts/font = ExtResource( 4 )
 text = "App Display Name"
 percent_visible = 1.0
 lines_skipped = 0
@@ -952,9 +620,9 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 18.0
+margin_top = 23.0
 margin_right = 436.0
-margin_bottom = 42.0
+margin_bottom = 52.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -962,6 +630,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 1
 size_flags_horizontal = 1
 size_flags_vertical = 1
+custom_fonts/font = ExtResource( 4 )
 text = "My Awesome Game"
 focus_mode = 2
 context_menu_enabled = true
@@ -978,9 +647,9 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 141.0
+margin_top = 153.0
 margin_right = 436.0
-margin_bottom = 207.0
+margin_bottom = 230.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
@@ -997,13 +666,14 @@ anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 436.0
-margin_bottom = 14.0
+margin_bottom = 19.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
+custom_fonts/font = ExtResource( 4 )
 text = "App Bundle Identifier"
 percent_visible = 1.0
 lines_skipped = 0
@@ -1016,9 +686,9 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 18.0
+margin_top = 23.0
 margin_right = 436.0
-margin_bottom = 42.0
+margin_bottom = 52.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -1026,6 +696,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 1
 size_flags_horizontal = 1
 size_flags_vertical = 1
+custom_fonts/font = ExtResource( 4 )
 text = "com.me.myawesomegame"
 focus_mode = 2
 context_menu_enabled = true
@@ -1037,7 +708,7 @@ _sections_unfolded = [ "Size Flags" ]
 
 [node name="PreferredSize" type="Node" parent="control_stack/select_bundle" index="5"]
 
-script = SubResource( 5 )
+script = SubResource( 1 )
 size = Vector2( 436, 207 )
 
 [node name="Tween" type="Tween" parent="." index="4"]
@@ -1051,7 +722,7 @@ playback/speed = 1.0
 
 [node name="overlay_drawer" type="Node" parent="." index="5"]
 
-script = ExtResource( 6 )
+script = ExtResource( 7 )
 
 [connection signal="about_to_show" from="." to="control_stack" method="_on_about_to_show"]
 

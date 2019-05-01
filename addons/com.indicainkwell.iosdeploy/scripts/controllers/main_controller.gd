@@ -18,7 +18,9 @@ signal finished_pipeline(this)
 
 var Xcode = stc.get_gdscript('xcode.gd')
 var OnboardFlCtl = stc.get_gdscript('controllers/onboarding_flow_controller.gd')
+var SettingMenuCtl = stc.get_gdscript('controllers/settings_menu_controller.gd')
 var ProjSettings = stc.get_gdscript('project_settings.gd')
+var EditorDebugSettings = stc.get_gdscript('editor_debug_settings.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -27,7 +29,6 @@ var ProjSettings = stc.get_gdscript('project_settings.gd')
 
 
 var OneClickButtonScene = stc.get_scene('one_click_deploy_button.tscn')
-var SettingsMenuScene = stc.get_scene('deploy_settings_menu.tscn')
 
 
 # ------------------------------------------------------------------------------
@@ -38,12 +39,10 @@ var SettingsMenuScene = stc.get_scene('deploy_settings_menu.tscn')
 var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.main-controller')
 var _xcode = Xcode.new()
 
-var _config = ConfigFile.new()
 var _settings = ProjSettings.new()
+var _editor_debug_settings = null # set after entered tree
 var _onboarding_flow_controller = OnboardFlCtl.new()
-
-# TODO: refactor into controller
-# var _settings_menu = SettingsMenuScene.instance()
+var _settings_menu_controller = SettingMenuCtl.new()
 
 
 # ------------------------------------------------------------------------------
@@ -59,23 +58,9 @@ func _init():
 	view.connect('settings_button_pressed', self, '_on_view_settings_button_pressed')
 	view.connect('devices_list_edited', self, '_on_view_devices_list_edited')
 
-	_init_config()
 	_init_onboarding_flow_controller()
+	_init_settings_menu_controller()
 	_init_xcode()
-
-
-func _init_config():
-	# TODO: mv config loading and stuff to plugin
-	if _config.load(stc.get_data_path('config.cfg')) != OK:
-		_log.info('unable to load config')
-	
-	var cfg_version = _config.get_value('meta', 'version', -1)
-	if cfg_version != stc.CONFIG_VERSION:
-		# TODO: implement config versioning
-		_log.verbose('Differing config version. Update cfg here.')
-	_log.verbose('Changing config version from %s to %s' % [str(cfg_version), stc.CONFIG_VERSION])
-	_config.set_value('meta', 'version', stc.CONFIG_VERSION)
-
 
 
 func _init_onboarding_flow_controller():
@@ -83,17 +68,26 @@ func _init_onboarding_flow_controller():
 	add_child(_onboarding_flow_controller)
 
 
+func _init_settings_menu_controller():
+	_settings_menu_controller.set_xcode(_xcode)
+	add_child(_settings_menu_controller)
+
+
 func _init_xcode():
+	_init_xcode_finder()
 	_xcode.template.connect('copy_install_failed', self, '_on_xcode_template_copy_install_failed')
 	_xcode.connect('made_project', self, '_on_xcode_made_project')
 	_xcode.make_project_async()
+
+
+func _init_xcode_finder():
+	_xcode.finder.connect('result', self, '_on_xcode_finder_result')
 
 
 func _init_xcode_project():
 	"""
 	Only call after _xcode.make_project_async() successfully completes.
 	"""
-	_xcode.project.set_config(_config)
 	_xcode.project.connect('built', self, '_on_xcode_project_built')
 	_xcode.project.connect('deployed', self, '_on_device_deployed')
 	_log.debug('Xcode Project App Path: ' + _xcode.project.get_app_path())
@@ -109,6 +103,8 @@ func _enter_tree():
 		get_plugin().CONTAINER_TOOLBAR,
 		view
 	)
+	var es = get_plugin().get_editor_settings()
+	_editor_debug_settings = EditorDebugSettings.new(es)
 
 
 func _exit_tree():
@@ -139,11 +135,32 @@ func log_errors(errors, with_message=''):
 	_log.error('%s\n%s' % [with_message, error_str])
 
 
+func _get_ip_addr():
+	var addrs = IP.get_local_addresses()
+	for addr in addrs:
+		# skip loopback and ipv6, editor doesn't seem to support ipv6
+		if addr == '127.0.0.1' or\
+		   addr.find('.') == -1:
+			   continue
+		return addr
+	if stc.get_version().is2():
+		return get_plugin().get_editor_settings().call('get', 'network/debug_host')
+	else:
+		return get_plugin().get_editor_settings().call('get_setting', 'network/debug/remote_host')
+
+
+func _get_port():
+	if stc.get_version().is2():
+		return get_plugin().get_editor_settings().call('get', 'network/debug_port')
+	else:
+		return get_plugin().get_editor_settings().call('get_setting', 'network/debug/remote_port')
+
+
 # -- Xcode
 
 
 func check_xcode_make_project(oneclickbutton=null):
-	if _xcode.template.exists():
+	if _xcode.template.get_existing_zip_path() != null:
 		_log.debug('Xcode template installed after init. Attempting to make project...')
 		view.disconnect('presenting_hover_menu', self, 'check_xcode_make_project')
 		_xcode.make_project_async()
@@ -256,120 +273,6 @@ func filter_provisions(provisions):
 # ------------------------------------------------------------------------------
 
 
-# -- SettingsMenu
-
-
-func _on_request_populate(menu):
-	menu.populate_devices(_xcode.finder.find_devices())
-	menu.populate_provisions(filter_provisions(_xcode.finder.find_provisions()))
-	menu.populate_teams(_xcode.finder.find_teams())
-
-
-func _on_request_fill(menu):
-	menu.fill_devices_group(_xcode.project.get_devices())
-	menu.fill_bundle_group(
-		_xcode.project.name,
-		_xcode.project.bundle_id
-	)
-	menu.fill_identity_group(
-		_xcode.project.team,
-		_xcode.project.automanaged,
-		_xcode.project.provision
-	)
-
-
-func _on_edited_team(menu, new_team):
-	if new_team == null:
-		_xcode.project.team = null
-		return
-
-	# assert(new_team extends _xcode.Team)
-	if _xcode.project.team != null and\
-	   _xcode.project.team.id == new_team.id and\
-	   _xcode.project.team.name == new_team.name:
-		   return
-
-	# make sure to set new team
-	_xcode.project.team = new_team
-
-	if _xcode.project.provision == null:
-		return
-
-	# Notify menu if provision is invalid due to new team
-
-	if _xcode.project.provision.team_ids.has(new_team.id):
-		menu.validate_provision()
-		menu.validate_team()
-	else:
-		# provision is invalid as it does not support team
-		menu.invalidate_provision()
-
-
-func _on_edited_provision(menu, new_provision):
-	if new_provision == null:
-		_xcode.project.provision = null
-		if not _xcode.project.automanaged:
-			menu.invalidate_provision()
-		return
-
-	# assert(new_provision extends _xcode.Provision)
-	if _xcode.project.provision != null and _xcode.project.provision.id == new_provision.id:
-		return
-
-	# make sure to set new provision
-	_xcode.project.provision = new_provision
-
-	# Notify menu if teams and bundleid are invalid due to new provision
-
-	if _xcode.project.team != null:
-		if new_provision.team_ids.has(_xcode.project.team.id):
-			menu.validate_team()
-		else:
-			# team is invalid as it is not supported by provision
-			menu.invalidate_team()
-
-	# Check bundleid
-
-	if _xcode.project.bundle_id == null or _xcode.project.bundle_id.empty():
-		return
-
-	if valid_bundleid(_xcode.project.bundle_id, new_provision):
-		menu.validate_bundle_id()
-	else:
-		_xcode.project.bundle_id = new_provision.bundle_id
-		# if bundle_id is a wildcard, invalidate so user
-		# will edit
-		if _xcode.project.bundle_id.find('*') > -1:
-			menu.invalidate_bundle_id()
-		_on_request_fill(menu)
-
-	menu.validate_provision()
-
-
-func _on_edited_bundle_id(menu, new_bundle_id):
-	_xcode.project.bundle_id = new_bundle_id
-	if _xcode.project.provision == null:
-		return
-	if valid_bundleid(new_bundle_id, _xcode.project.provision):
-		menu.validate_bundle_id()
-	else:
-		menu.invalidate_bundle_id()
-
-
-func _on_finished_editing(menu):
-	var bundle = menu.get_bundle_group()
-	_xcode.project.bundle_id = bundle.id
-	_xcode.project.name = bundle.display
-
-	var identity = menu.get_identity_group()
-	_xcode.project.team = identity.team
-	_xcode.project.provision = identity.provision
-	_xcode.project.automanaged = identity.automanaged
-	_xcode.project.set_devices(menu.get_active_devices())
-
-	_xcode.project.update()
-
-
 # -- OneClickButton (view)
 
 
@@ -385,15 +288,14 @@ func _on_view_pressed():
 func _on_view_presenting_hover_menu(oneclickbutton):
 	_log.debug('OneClickButton: Presenting Hover Menu')
 	if _xcode.is_project_ready():
+		_xcode.finder.begin_find_devices()
 		oneclickbutton.set_project_valid(valid_xcode_project())
-		oneclickbutton.devices_list_populate(_xcode.finder.find_devices())
-		oneclickbutton.devices_list_set_active(_xcode.project.get_devices())
 
 
 func _on_view_settings_button_pressed(oneclickbutton):
 	_log.debug('OneClickButton: Settings Button Pressed')
 	if _xcode.is_project_ready():
-		get_menu().popup_centered()
+		_settings_menu_controller.view.popup_centered()
 
 
 func _on_view_devices_list_edited(oneclickbutton):
@@ -415,11 +317,23 @@ func _on_xcode_template_copy_install_failed(template, error):
 		view.connect('presenting_hover_menu', self, 'check_xcode_make_project')
 
 
-
 func _on_xcode_made_project(xcode, result, project):
 	_log.debug('Xcode: Made Xcode Project')
 	_init_xcode_project()
 	view.set_disabled(false)
+
+
+# -- Finder
+
+
+func _on_xcode_finder_result(finder, type, objects):
+	if type == finder.Type.DEVICE:
+		get_view().devices_list_populate(objects)
+		get_view().devices_list_set_active(_xcode.project.get_devices())
+	elif type == finder.Type.TEAM:
+		pass
+	elif type == finder.Type.PROVISION:
+		pass
 
 
 # -- Project
@@ -435,6 +349,19 @@ func _on_xcode_project_built(xcode_project, result, errors):
 		view.update_build_progress(1.0, 'Failed', true)
 	elif xcode_project.get_devices().size() > 0:
 		view.update_build_progress(0.5, 'Deploying %s/%s'%[1, xcode_project.get_devices().size()])
+		# can't find a better place to set these debug flags
+		# remote_debug doesn't just work like this. Godot editor needs
+		# to know about it but I don't think that functionality is
+		# exposed.
+		xcode_project.remote_debug = false #_editor_debug_settings.remote_debug
+		if xcode_project.remote_debug:
+			xcode_project.remote_addr = _get_ip_addr()
+			xcode_project.remote_port = _get_port()
+			_log.debug('Remote Debug Deploy: %s:%s' %
+					[xcode_project.remote_addr,
+					xcode_project.remote_port])
+		xcode_project.debug_collisions = _editor_debug_settings.debug_collisions
+		xcode_project.debug_navigation = _editor_debug_settings.debug_navigation
 		xcode_project.deploy()
 	else:
 		emit_signal('finished_pipeline', self)

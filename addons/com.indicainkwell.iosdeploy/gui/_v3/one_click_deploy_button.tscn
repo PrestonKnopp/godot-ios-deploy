@@ -4,8 +4,7 @@
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/one_click_deploy_button.gd" type="Script" id=2]
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/gui/_v3/devices_group.tscn" type="PackedScene" id=3]
 
-[node name="one_click_deploy_button" type="ToolButton" index="0"]
-
+[node name="one_click_deploy_button" type="ToolButton"]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -28,9 +27,7 @@ flat = true
 align = 1
 script = ExtResource( 2 )
 
-[node name="hover_panel" type="PopupPanel" parent="." index="0"]
-
-editor/display_folded = true
+[node name="hover_panel" type="PopupPanel" parent="."]
 visible = false
 anchor_left = 0.0
 anchor_top = 0.0
@@ -49,28 +46,41 @@ size_flags_vertical = 2
 popup_exclusive = false
 _sections_unfolded = [ "Rect" ]
 
-[node name="HBoxContainer" type="HBoxContainer" parent="hover_panel" index="0"]
-
-editor/display_folded = true
+[node name="VBoxContainer" type="VBoxContainer" parent="hover_panel"]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 1.0
-anchor_bottom = 0.0
-margin_left = 5.0
-margin_top = 5.0
-margin_right = -5.0
-margin_bottom = 29.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 4.0
+margin_right = -4.0
+margin_bottom = -4.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 1
 mouse_default_cursor_shape = 0
-size_flags_horizontal = 2
-size_flags_vertical = 2
+size_flags_horizontal = 1
+size_flags_vertical = 1
 alignment = 0
-_sections_unfolded = [ "Margin", "Mouse" ]
 
-[node name="project_valid" type="CheckBox" parent="hover_panel/HBoxContainer" index="0"]
+[node name="HBoxContainer" type="HBoxContainer" parent="hover_panel/VBoxContainer"]
+editor/display_folded = true
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 234.0
+margin_bottom = 24.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 1
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+alignment = 0
+_sections_unfolded = [ "Margin", "Mouse", "Size Flags" ]
 
+[node name="project_valid" type="CheckBox" parent="hover_panel/VBoxContainer/HBoxContainer"]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -93,14 +103,13 @@ flat = false
 align = 0
 _sections_unfolded = [ "Mouse" ]
 
-[node name="spacer" type="Control" parent="hover_panel/HBoxContainer" index="1"]
-
+[node name="spacer" type="Control" parent="hover_panel/VBoxContainer/HBoxContainer"]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 112.0
-margin_right = 157.0
+margin_right = 167.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
@@ -109,14 +118,13 @@ size_flags_horizontal = 3
 size_flags_vertical = 2
 _sections_unfolded = [ "Mouse" ]
 
-[node name="settings_button" type="Button" parent="hover_panel/HBoxContainer" index="2"]
-
+[node name="settings_button" type="Button" parent="hover_panel/VBoxContainer/HBoxContainer"]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 161.0
-margin_right = 224.0
+margin_left = 171.0
+margin_right = 234.0
 margin_bottom = 24.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
@@ -133,82 +141,38 @@ flat = true
 align = 1
 _sections_unfolded = [ "Mouse", "Size Flags" ]
 
-[node name="devices_group" parent="hover_panel" index="1" instance=ExtResource( 3 )]
+[node name="devices_group" parent="hover_panel/VBoxContainer" instance=ExtResource( 3 )]
+editor/display_folded = false
+margin_top = 28.0
+margin_right = 234.0
+margin_bottom = 140.0
+size_flags_horizontal = 3
 
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 2.0
-margin_top = 35.0
-margin_right = -4.0
-margin_bottom = -53.0
-
-[node name="Label" parent="hover_panel/devices_group" index="0"]
-
-margin_right = 228.0
-margin_bottom = 14.0
-text = "Deploy Devices"
-_sections_unfolded = [ "Size Flags", "custom_fonts" ]
-
-[node name="devices_list" parent="hover_panel/devices_group" index="1"]
-
-margin_top = 18.0
-margin_right = 228.0
-margin_bottom = 88.0
-
-[node name="build_progress_bar" type="ProgressBar" parent="hover_panel" index="2"]
-
+[node name="HBoxContainer2" type="HBoxContainer" parent="hover_panel/VBoxContainer"]
 editor/display_folded = true
 anchor_left = 0.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = 5.0
-margin_top = -21.0
-margin_right = -5.0
-margin_bottom = -5.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 2
-size_flags_vertical = 0
-min_value = 0.0
-max_value = 100.0
-step = 1.0
-page = 0.0
-value = 0.0
-exp_edit = false
-rounded = false
-percent_visible = true
-_sections_unfolded = [ "Margin" ]
-
-[node name="HBoxContainer" type="HBoxContainer" parent="hover_panel/build_progress_bar" index="0"]
-
-anchor_left = 0.0
 anchor_top = 0.0
-anchor_right = 1.0
+anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 1.0
-margin_top = -26.0
-margin_right = 1.0
-margin_bottom = -7.0
+margin_top = 144.0
+margin_right = 234.0
+margin_bottom = 158.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
 mouse_default_cursor_shape = 0
-size_flags_horizontal = 2
-size_flags_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
 alignment = 0
-_sections_unfolded = [ "Mouse" ]
+_sections_unfolded = [ "Size Flags" ]
 
-[node name="Label" type="Label" parent="hover_panel/build_progress_bar/HBoxContainer" index="0"]
-
+[node name="Label" type="Label" parent="hover_panel/VBoxContainer/HBoxContainer2"]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 80.0
-margin_bottom = 19.0
+margin_bottom = 14.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
@@ -222,15 +186,14 @@ lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "Mouse", "Size Flags" ]
 
-[node name="build_status" type="Label" parent="hover_panel/build_progress_bar/HBoxContainer" index="1"]
-
+[node name="build_status" type="Label" parent="hover_panel/VBoxContainer/HBoxContainer2"]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_left = 84.0
-margin_right = 224.0
-margin_bottom = 19.0
+margin_right = 234.0
+margin_bottom = 14.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 mouse_filter = 2
@@ -244,8 +207,33 @@ lines_skipped = 0
 max_lines_visible = -1
 _sections_unfolded = [ "Mouse", "Size Flags" ]
 
-[node name="build_progress_bar" type="ProgressBar" parent="." index="1"]
+[node name="build_progress_bar" type="ProgressBar" parent="hover_panel/VBoxContainer"]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_top = 162.0
+margin_right = 234.0
+margin_bottom = 176.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+mouse_filter = 2
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+min_value = 0.0
+max_value = 100.0
+step = 1.0
+page = 0.0
+value = 0.0
+exp_edit = false
+rounded = false
+allow_greater = false
+allow_lesser = false
+percent_visible = true
+_sections_unfolded = [ "Size Flags" ]
 
+[node name="build_progress_bar" type="ProgressBar" parent="."]
 visible = false
 anchor_left = 0.5
 anchor_top = 1.0
@@ -267,10 +255,11 @@ page = 0.0
 value = 0.0
 exp_edit = false
 rounded = false
+allow_greater = false
+allow_lesser = false
 percent_visible = false
 
-[node name="build_progress_tweener" type="Tween" parent="." index="2"]
-
+[node name="build_progress_tweener" type="Tween" parent="."]
 repeat = false
 playback_process_mode = 1
 playback_speed = 1.0
@@ -278,22 +267,16 @@ playback/active = false
 playback/repeat = false
 playback/speed = 1.0
 
-[node name="hover_timer" type="Timer" parent="." index="3"]
-
+[node name="hover_timer" type="Timer" parent="."]
 process_mode = 1
 wait_time = 0.5
 one_shot = true
 autostart = false
 
 [connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
-
-[connection signal="pressed" from="hover_panel/HBoxContainer/settings_button" to="." method="_on_settings_button_pressed"]
-
-[connection signal="item_edited" from="hover_panel/devices_group/devices_list" to="." method="_on_devices_list_item_edited"]
-
+[connection signal="pressed" from="hover_panel/VBoxContainer/HBoxContainer/settings_button" to="." method="_on_settings_button_pressed"]
+[connection signal="item_edited" from="hover_panel/VBoxContainer/devices_group/devices_list" to="." method="_on_devices_list_item_edited"]
 [connection signal="changed" from="build_progress_bar" to="." method="_on_build_progress_bar_changed"]
-
 [connection signal="timeout" from="hover_timer" to="." method="_on_hover_timer_timeout"]
 
-
-[editable path="hover_panel/devices_group"]
+[editable path="hover_panel/VBoxContainer/devices_group"]
