@@ -112,8 +112,11 @@ func meets_software_requirements():
 		_log.error('macOS is needed to build and deploy iOS projects')
 		meets = false
 
-	if not ext_sw_exists('/usr/local/bin/ios-deploy'):
-		# TODO: don't hard code path to ios-deploy
+	var ios_deploy_tool_path = stc.get_config().get_value(
+		'deploy', 'ios_deploy_tool_path',
+		stc.DEFAULT_IOSDEPLOY_TOOL_PATH
+	)
+	if not ext_sw_exists(ios_deploy_tool_path):
 		_log.error('ios-deploy is missing: install ios-deploy with homebrew -- brew install ios-deploy')
 		meets = false
 
