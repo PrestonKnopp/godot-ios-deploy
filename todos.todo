@@ -4,9 +4,6 @@
 
 
 [ ] refactor Device -> DeviceInfo
-[ ] rename comment headers
-	[ ] Subtypes -> Dependencies
-	[ ] Sub Classes -> Inner Classes
 [ ] multi deploy tool support
 	[X] implement low level api for libimobiledevice
 	[ ] write a deploy tool interface
@@ -22,6 +19,9 @@
 [ ] what to do when:
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
+[X] rename comment headers
+	[X] Subtypes -> Dependencies
+	[X] Sub Classes -> Inner Classes
 [X] add api to Shell.Result for getting stdout and stderr string and lines
 [X] Config
 	[X] update readme
