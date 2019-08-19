@@ -80,8 +80,8 @@ func save():
 	
 	var args = _build_pbuddy_args()
 	res = _pbuddy.run(args, _path)
-	if res.output.size() > 0 and res.output[0].length() > 0:
-		_log.debug(res.output[0])
+	if res.get_stdout_string().length() > 0:
+		_log.debug(res.get_stdout_string())
 		_log.verbose('TODO: check how to find out if pbuddy failed')
 	
 	return OK

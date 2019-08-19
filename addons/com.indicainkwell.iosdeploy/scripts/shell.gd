@@ -12,9 +12,19 @@ var PoolStringConverter = stc.get_gdscript('pool_string_converter.gd')
 
 
 class Result:
+	const STDOUT = 0
+	const STDERR = 1
 	var output = []
 	var code = 0
 	var pid = -1
+	func get_stdout_string():
+		return output[STDOUT]
+	func get_stdout_lines():
+		return output[STDOUT].split('\n', false)
+	func get_stderr_string():
+		return output[STDERR]
+	func get_stderr_lines():
+		return output[STDERR].split('\n', false)
 
 
 class Command:

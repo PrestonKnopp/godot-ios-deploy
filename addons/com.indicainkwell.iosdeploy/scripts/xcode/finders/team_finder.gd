@@ -41,7 +41,7 @@ func _on_listteamsjson_finished(command, result):
 		_finished([])
 		return
 
-	_json.parse(result.output[0])
+	_json.parse(result.get_stdout_string())
 	if _json.get_result().error != OK:
 		_log.error('Failed to parse team json')
 		_log.error('\t'+str(_json.get_result().error)+' :: '+_json.get_result().error_string)

@@ -58,7 +58,7 @@ func _instruments_find_devices():
 	var devices = []
 
 	# for some reason multiline output is all in first element
-	for line in res.output[0].split('\n', false):
+	for line in res.get_stdout_lines():
 		# skip sims until add support for x86 project gen
 		if line.find('] (Simulator)') != -1:
 			continue
@@ -98,7 +98,7 @@ func _on_ios_deploy_device_detection_finished(iosdeploy, result):
 	var devices = []
 
 	# Parse device information from detect_devices output
-	for line in result.output[0].split('\n', false):
+	for line in result.get_stdout_lines():
 		var captures = _regex.search(line)
 		if captures.size() == 0:
 			# Whole pattern didn't match

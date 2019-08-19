@@ -218,7 +218,7 @@ func _copy_ios_export_template_v3(zip_path):
 
 
 func _on_v2_unzip_finished(command, result):
-	_log.info('UNZIP LOG: %s' % result.output[0])
+	_log.info('UNZIP LOG: %s' % result.get_stdout_string())
 
 	var dst = get_destination_path(true, false)
 	var unzip_dst = dst.get_base_dir().plus_file('godot_ios_xcode')
@@ -229,7 +229,7 @@ func _on_v2_unzip_finished(command, result):
 
 
 func _on_v3_unzip_finished(command, result):
-	_log.info('UNZIP LOG: %s' % result.output[0])
+	_log.info('UNZIP LOG: %s' % result.get_stdout_string())
 
 	var d = Directory.new()
 	var f = File.new()

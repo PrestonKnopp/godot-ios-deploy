@@ -3,14 +3,26 @@
 # ------------------------------------------------------------------------------
 
 
-[-] plan out crossplatform
-	[ ] abstract ios-deploy behind an interface to support libimobiledevice
+[ ] refactor Device -> DeviceInfo
+[ ] rename comment headers
+	[ ] Subtypes -> Dependencies
+	[ ] Sub Classes -> Inner Classes
+[ ] multi deploy tool support
+	[-] implement low level api for libimobiledevice
+	[ ] write a deploy tool interface
+	[ ] write wrapper for libimobiledevice and ios-deploy implementing interface
+	[ ] create a class that implements interface that changes build tool
+	    strategy depending on what user configures in real time
+[ ] plist
+	[ ] write parser using XMLParser
+	[ ] write writer to save plist as xml
 [ ] properly fill in xcodeproj so user can open and edit it if needed
 [ ] better build status using errors and tips to fix
 [ ] properly destroy threads before exiting
 [ ] what to do when:
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
+[X] add api to Shell.Result for getting stdout and stderr string and lines
 [X] Config
 	[X] update readme
 	[X] test
