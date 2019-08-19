@@ -146,7 +146,7 @@ func _launch_on(device_id, install, async):
 		_iosdeploy.run_async(args, self, '_deploy_finished', [device_id])
 	else:
 		var res = _iosdeploy.run(args)
-		return res.output[0].split('\n', false)
+		return res.get_stdout_lines()
 	return []
 
 

@@ -8,7 +8,7 @@
 	[ ] Subtypes -> Dependencies
 	[ ] Sub Classes -> Inner Classes
 [ ] multi deploy tool support
-	[-] implement low level api for libimobiledevice
+	[X] implement low level api for libimobiledevice
 	[ ] write a deploy tool interface
 	[ ] write wrapper for libimobiledevice and ios-deploy implementing interface
 	[ ] create a class that implements interface that changes build tool
