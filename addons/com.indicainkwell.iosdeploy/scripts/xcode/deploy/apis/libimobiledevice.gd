@@ -79,26 +79,26 @@ func get_tool_directory():
 func get_default_tool_directory():
 	return DEFAULT_TOOL_DIR
 
-func get_tool_installer():
+func tool_get_installer():
 	return get_tool_directory().plus_file('ideviceinstaller')
 
-func get_tool_image_mounter():
+func tool_get_image_mounter():
 	return get_tool_directory().plus_file('ideviceimagemounter')
 
-func get_tool_debug():
+func tool_get_debug():
 	return get_tool_directory().plus_file('idevicedebug')
 
-func get_tool_info():
+func tool_get_info():
 	return get_tool_directory().plus_file('ideviceinfo')
 
-func get_tool_id():
+func tool_get_id():
 	return get_tool_directory().plus_file('idevice_id')
 
 
 func get_connected_device_ids():
 	_log.verbose('Getting connected device ids')
 	var result = _shell.execute(
-		get_tool_id(), ['--list'],
+		tool_get_id(), ['--list'],
 		DOMAIN
 	)
 	if result.code != OK:
@@ -118,7 +118,7 @@ func _parse_device_ids_string(string):
 func get_device_info(device_id):
 	_log.verbose('Getting device<%s> info'%device_id)
 	var result = _shell.execute(
-		get_tool_info(), [UDID_ARG_SPEC, device_id],
+		tool_get_info(), [UDID_ARG_SPEC, device_id],
 		DOMAIN
 	)
 	if result.code != OK:
@@ -155,7 +155,7 @@ func mount_developer_image(device_id, developer_img_path, developer_img_sig):
 		_log.error('Error<%s>: Developer image signature path not found: %s'%[ERR_FILE_NOT_FOUND, developer_img_sig])
 		return ERR_FILE_NOT_FOUND
 	var result = _shell.execute(
-		get_tool_image_mounter(), [UDID_ARG_SPEC, device_id, developer_img_path, developer_img_sig],
+		tool_get_image_mounter(), [UDID_ARG_SPEC, device_id, developer_img_path, developer_img_sig],
 		DOMAIN
 	)
 	if result.code != OK:
@@ -169,7 +169,7 @@ func install_app(device_id, app_bundle_path):
 		_log.error('Error<%s>: App bundle path<%s> not found'%[ERR_FILE_NOT_FOUND, app_bundle_path])
 		return ERR_FILE_NOT_FOUND
 	var result = _shell.execute(
-		get_tool_installer(), [UDID_ARG_SPEC, device_id, '--install', app_bundle_path],
+		tool_get_installer(), [UDID_ARG_SPEC, device_id, '--install', app_bundle_path],
 		DOMAIN
 	)
 	if result.code != OK:
@@ -183,7 +183,7 @@ func launch_app(device_id, app_bundle_id, arguments=[], environment={}):
 	_log.verbose('Launching bundle<%s> on device<%s> with arguments<%s> and
 			environment<%s>'%[app_bundle_id, device_id, arguments, environment])
 	var result = _shell.execute(
-		get_tool_debug(), _build_launch_app_args(device_id, app_bundle_id, arguments, environment)
+		tool_get_debug(), _build_launch_app_args(device_id, app_bundle_id, arguments, environment)
 		DOMAIN
 	)
 	if result.code != OK:
