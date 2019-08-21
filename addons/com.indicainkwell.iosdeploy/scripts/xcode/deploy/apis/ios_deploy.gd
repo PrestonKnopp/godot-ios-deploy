@@ -202,24 +202,7 @@ func _build_launch_args(device_id, install=true):
 func _build_app_args():
 	if app_args.size() == 0:
 		return []
-	return ['--args', _join(app_args)]
-
-
-func _join(arr, delim=' '):
-	"""
-	Implementation for joining arrays as Godotv2 does not support it.
-	"""
-	assert(arr != null and typeof(arr) == TYPE_ARRAY)
-	var size = arr.size()
-	if size == 1:
-		return arr[0]
-	if size == 0:
-		return ''
-	var res = ''
-	for i in range(0, size - 1):
-		res += str(arr[i]) + delim
-	res += arr[size - 1]
-	return res
+	return ['--args', stc.join_array(app_args)]
 
 
 # ------------------------------------------------------------------------------

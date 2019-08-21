@@ -44,6 +44,23 @@ const shell = {
 }
 
 
+static func join_array(arr, delim=' '):
+	"""
+	Implementation for joining arrays as Godotv2 does not support it.
+	"""
+	assert(arr != null and typeof(arr) == TYPE_ARRAY)
+	var size = arr.size()
+	if size == 1:
+		return arr[0]
+	if size == 0:
+		return ''
+	var res = ''
+	for i in range(0, size - 1):
+		res += str(arr[i]) + delim
+	res += arr[size - 1]
+	return res
+
+
 static func isa(obj, type):
 	return get_gdscript('isa.gd').test(obj, type)
 
