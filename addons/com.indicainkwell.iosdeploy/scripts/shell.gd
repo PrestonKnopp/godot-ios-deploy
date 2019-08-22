@@ -17,14 +17,19 @@ class Result:
 	var output = []
 	var code = 0
 	var pid = -1
+	func get_lines(fd):
+		var out = output[fd]
+		if not (typeof(out) == TYPE_STRING):
+			return []
+		return out.split('\n', false)
 	func get_stdout_string():
 		return output[STDOUT]
 	func get_stdout_lines():
-		return output[STDOUT].split('\n', false)
+		return get_lines(STDOUT)
 	func get_stderr_string():
 		return output[STDERR]
 	func get_stderr_lines():
-		return output[STDERR].split('\n', false)
+		return get_lines(STDERR)
 
 
 class Command:
