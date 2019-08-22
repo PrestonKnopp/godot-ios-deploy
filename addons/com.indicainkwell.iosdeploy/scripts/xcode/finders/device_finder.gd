@@ -11,42 +11,17 @@ var Device = stc.get_gdscript('xcode/device.gd')
 
 
 # ------------------------------------------------------------------------------
-#                                     Variables
-# ------------------------------------------------------------------------------
-
-
-var _regex = stc.get_gdscript('regex.gd').new()
-var _ios_deploy = stc.get_gdscript('xcode/ios_deploy.gd').new()
-
-
-# ------------------------------------------------------------------------------
 #                                     Overrides
 # ------------------------------------------------------------------------------
 
 
 func _init():
-	# Captures:
-	# 1. device id
-	# 2. device type info
-	# 3. name
-	# 4. connection
-	#                    1         2                     3                       4
-	var pattern = "Found (\\w*) \\((.*)\\) a\\.k\\.a\\. '(.*)' connected through (\\w*)\\."
-	assert(_regex.compile(pattern) == OK)
-
-	_ios_deploy.connect('device_detection_finished', self,
-			'_on_ios_deploy_device_detection_finished')
+	pass
 
 
 # ------------------------------------------------------------------------------
 #                                      Methods
 # ------------------------------------------------------------------------------
-
-# ios-deploy Output Example, first line is always there:
-# [....] Waiting up to 1 seconds for iOS device to be connected
-# [....] Found 3345abc45b3cab4c5eb5c4bfb3c5998abc3b320a (P105AP, iPad mini, iphoneos, armv7) a.k.a. 'iPad Name' connected through USB.
-func _ios_deploy_find_devices():
-	_ios_deploy.detect_devices()
 
 
 func _instruments_find_devices():
@@ -90,47 +65,10 @@ func _instruments_find_devices():
 
 
 # ------------------------------------------------------------------------------
-#                                     Handlers
-# ------------------------------------------------------------------------------
-
-
-func _on_ios_deploy_device_detection_finished(iosdeploy, result):
-	var devices = []
-
-	# Parse device information from detect_devices output
-	for line in result.get_stdout_lines():
-		var captures = _regex.search(line)
-		if captures.size() == 0:
-			# Whole pattern didn't match
-			continue
-
-		var device = Device.new()
-		device.id = captures[1]
-		device.type_info = captures[2]
-		device.name = captures[3]
-
-		# extra required capture checks
-
-		# device.type will never be sim or mac
-		# from ios-deploy
-		if device.type_info.find('iPhone') > -1:
-			device.type = Device.Type.iPhone
-		elif device.type_info.find('iPad') > -1:
-			device.type = Device.Type.iPad
-
-		if captures[4].find('USB') == -1:
-			device.connection = Device.Connection.WIFI
-
-		devices.append(device)
-
-	_finished(devices)
-
-
-# ------------------------------------------------------------------------------
 #                                     Overrides
 # ------------------------------------------------------------------------------
 
 
 func begin_find():
-	_ios_deploy_find_devices()
+	assert(false)
 

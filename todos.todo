@@ -6,10 +6,12 @@
 [ ] refactor Device -> DeviceInfo
 [ ] multi deploy tool support
 	[X] implement low level api for libimobiledevice
+	[X] de-async low level api for ios-deploy
 	[ ] write a deploy tool interface
 	[ ] write wrapper for libimobiledevice and ios-deploy implementing interface
 	[ ] create a class that implements interface that changes build tool
 	    strategy depending on what user configures in real time
+	[ ] use tool strategy class aggregate
 [ ] plist
 	[ ] write parser using XMLParser
 	[ ] write writer to save plist as xml
