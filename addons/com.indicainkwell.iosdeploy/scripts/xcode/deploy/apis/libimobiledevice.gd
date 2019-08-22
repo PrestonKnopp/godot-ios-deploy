@@ -104,16 +104,10 @@ func get_connected_device_ids():
 	if result.code != OK:
 		_log.error('Error<%s>: Failed to get connected device ids: %s'%[result.code, result.output])
 		return []
-	var ids = _parse_device_ids_string(result.get_stdout_string())
+	var ids = result.get_stdout_lines()
 	_log.debug(str('Connected device ids: ', ids))
 	return ids
 
-func _parse_device_ids_string(string):
-	_log.verbose(str('Parsing device id output: ', string))
-	var ids = []
-	for line in string.split('\n', false):
-		ids.append(line)
-	return ids
 
 func get_device_info(device_id):
 	_log.verbose('Getting device<%s> info'%device_id)
@@ -124,14 +118,14 @@ func get_device_info(device_id):
 	if result.code != OK:
 		_log.error('Error<%s>: Failed to get device<%s> info:\n%s'%[result.code, device_id result.output])
 		return null
-	var info = _parse_device_info_string(result.get_stdout_string())
+	var info = _parse_device_info_output(result.get_stdout_lines())
 	if info != null: info.id = device_id
 	_log.debug(str('Parsed device: ', Device.new().ToDict(info)))
 	return info
 
-func _parse_device_info_string(string):
+func _parse_device_info_output(output):
 	var info = Device.new()
-	for line in string.split('\n', false):
+	for line in output:
 		for key in DEVICE_INFO_KEY_MAP:
 			if not line.begins_with(key):
 				continue
