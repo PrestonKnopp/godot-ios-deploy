@@ -1,17 +1,7 @@
 # ios_deploy.gd
 #
 # API for ios-deploy binary
-#
-extends Reference
-
-
-# ------------------------------------------------------------------------------
-#                                      Signals
-# ------------------------------------------------------------------------------
-
-
-signal deployed(this, result, errors, device_id)
-signal device_detection_finished(this, result)
+extends 'DeployTool.gd'
 
 
 # ------------------------------------------------------------------------------
@@ -20,7 +10,6 @@ signal device_detection_finished(this, result)
 
 
 const DEFAULT_TOOL_PATH = '/usr/local/bin'
-const stc = preload('../static.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -39,8 +28,6 @@ class LaunchResult extends Reference:
 
 var ErrorCapturer = stc.get_gdscript('xcode/error_capturer.gd')
 var Regex = stc.get_gdscript('regex.gd')
-var Device = stc.get_gdscript('xcode/device.gd')
-var Shell = stc.get_gdscript('shell.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -56,7 +43,6 @@ var ignore_wifi_devices = false
 # ------------------------------------------------------------------------------
 
 
-var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.ios-deploy')
 var _error_capturer = ErrorCapturer.new()
 var _regex = Regex.new()
 var _iosdeploy
@@ -86,20 +72,23 @@ func _init():
 	var pattern = "Found (\\w*) \\((.*)\\) a\\.k\\.a\\. '(.*)' connected through (\\w*)\\."
 	assert(_regex.compile(pattern) == OK)
 
-	set_tool_path(get_default_tool_path())
-
 
 # ------------------------------------------------------------------------------
-#                                Setters and Getters
+#                                     Overrides
 # ------------------------------------------------------------------------------
 
 
-var tool_path setget set_tool_path,get_tool_path
-func set_tool_path(tool_path):
-	_iosdeploy = Shell.new().make_command(tool_path)
+func set_path(path):
+	_iosdeploy = Shell.new().make_command(path)
+	.set_path(path)
 
-func get_tool_path():
-	return _iosdeploy.name
+
+func get_default_path():
+	return DEFAULT_TOOL_PATH
+
+
+func get_name():
+	return 'ios-deploy'
 
 
 # ------------------------------------------------------------------------------
@@ -107,14 +96,7 @@ func get_tool_path():
 # ------------------------------------------------------------------------------
 
 
-func get_default_tool_path():
-	return DEFAULT_TOOL_PATH
-
-
 func get_detected_devices():
-	"""
-	@returns Array<Device>
-	"""
 	var args = ['--detect', '--timeout', '1']
 	if ignore_wifi_devices:
 		args.append('--no-wifi')

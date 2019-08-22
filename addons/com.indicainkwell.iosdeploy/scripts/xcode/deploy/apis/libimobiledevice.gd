@@ -21,7 +21,7 @@
 #
 # - launch an app on a device:
 #	`idevicedebug --udid <UUID> [--env <KEY>=<VAL>...] run <BUNDLE_ID> <RUN_ARGS...>`
-extends Reference
+extends 'DeployTool.gd'
 
 
 # ------------------------------------------------------------------------------
@@ -38,16 +38,6 @@ const DEVICE_INFO_KEY_MAP = {
 	ProductType = 'type', # or use DeviceClass?
 	ProductVersion = 'version'
 }
-const stc = preload('../static.gd')
-
-
-# ------------------------------------------------------------------------------
-#                                   Dependencies
-# ------------------------------------------------------------------------------
-
-
-var Device = stc.get_gdscript('xcode/device.gd')
-var Shell = stc.get_gdscript('shell.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -56,19 +46,19 @@ var Shell = stc.get_gdscript('shell.gd')
 
 
 var _shell = Shell.new()
-var _log = stc.get_logger().make_module_logger(stc.PLUGIN_DOMAIN + '.libimobiledevice')
 
 
 # ------------------------------------------------------------------------------
-#                                Setters and Getters
+#                                     Overrides
 # ------------------------------------------------------------------------------
 
 
-var tool_directory setget get_tool_directory
-func get_tool_directory():
-	if tool_directory == null:
-		return tool_directory
+func get_default_path():
 	return DEFAULT_TOOL_DIR
+
+
+func get_name():
+	return 'libimobiledevice'
 
 
 # ------------------------------------------------------------------------------
@@ -76,23 +66,20 @@ func get_tool_directory():
 # ------------------------------------------------------------------------------
 
 
-func get_default_tool_directory():
-	return DEFAULT_TOOL_DIR
-
 func tool_get_installer():
-	return get_tool_directory().plus_file('ideviceinstaller')
+	return get_path().plus_file('ideviceinstaller')
 
 func tool_get_image_mounter():
-	return get_tool_directory().plus_file('ideviceimagemounter')
+	return get_path().plus_file('ideviceimagemounter')
 
 func tool_get_debug():
-	return get_tool_directory().plus_file('idevicedebug')
+	return get_path().plus_file('idevicedebug')
 
 func tool_get_info():
-	return get_tool_directory().plus_file('ideviceinfo')
+	return get_path().plus_file('ideviceinfo')
 
 func tool_get_id():
-	return get_tool_directory().plus_file('idevice_id')
+	return get_path().plus_file('idevice_id')
 
 
 func get_connected_device_ids():
