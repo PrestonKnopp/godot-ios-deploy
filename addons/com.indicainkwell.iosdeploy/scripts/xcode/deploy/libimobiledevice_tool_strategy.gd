@@ -64,17 +64,21 @@ func _handle_task(task, arguments, result):
 		if err == FAILED:
 			result.message = 'Failed to launch app'
 			return
+
+		result.error = err
+		result.message = 'Finished launching app'
+
 	elif task == TASK_LIST_CONNECTED_DEVICES:
 		_task_emit_progress(task, 'Finding connected device ids', 0, 1)
 		var devices = []
 		var ids = _tool.get_connected_device_ids()
 		var size = ids.size()
 		for i in size:
-			_task_emit_progress(task, 'Getting device id info', i, size)
+			_task_emit_progress(task, 'Getting device id info', i, size-1)
 			var device = _tool.get_device_info(ids[i])
 			if device != null:
 				devices.append(device)
 		result.result = devices
 		result.error = OK
-		result.message = ''
+		result.message = 'Finished list connected devices.'
 
