@@ -5,6 +5,9 @@
 
 [ ] refactor Device -> DeviceInfo
 [ ] multi deploy tool support
+	- libimobiledevice needs to be manually mounted before installing and launching apps
+		- can libimobiledevice check if it is mounted and not remount?
+		- how would the interface look to support pre-actions?
 	[X] implement low level api for libimobiledevice
 	[X] de-async low level api for ios-deploy
 	[ ] write a deploy tool interface
