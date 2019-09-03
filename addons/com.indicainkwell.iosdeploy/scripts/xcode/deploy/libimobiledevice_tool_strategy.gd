@@ -19,6 +19,22 @@ func _init().():
 	_tool = Libimobiledevice.new()
 
 
+func tool_available():
+	var available = true
+	var f = File.new()
+	var tool_paths = [_tool.tool_get_installer(),
+			_tool.tool_get_image_mounter(),
+			_tool.tool_get_debug(),
+			_tool.tool_get_info(),
+			_tool.tool_get_id()]
+	for tool_path in tool_paths:
+		if not f.file_exists(tool_path):
+			_log.debug('Tool<%s> does not exist at
+					path<%s>.'%[get_tool_name(), tool_path])
+			available = false
+	return available
+
+
 func _handle_task(task, arguments, result):
 	if task == TASK_LAUNCH_APP:
 		_task_emit_progress(task, 'Mounting developer image', 1, 3)

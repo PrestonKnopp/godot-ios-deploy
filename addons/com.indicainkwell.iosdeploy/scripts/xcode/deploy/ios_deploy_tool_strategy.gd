@@ -19,6 +19,10 @@ func _init().():
 	_tool = iOSDeployTool.new()
 
 
+func tool_available():
+	return File.new().file_exists(get_tool_path())
+
+
 func _handle_task(task, arguments, result):
 	if task == TASK_LAUNCH_APP:
 		_task_emit_progress(task, 'installing and launching app', 1, 1)
