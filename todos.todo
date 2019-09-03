@@ -8,13 +8,13 @@
 	- libimobiledevice needs to be manually mounted before installing and launching apps
 		- can libimobiledevice check if it is mounted and not remount?
 		- how would the interface look to support pre-actions?
+	[ ] use tool strategy class aggregate
 	[X] implement low level api for libimobiledevice
 	[X] de-async low level api for ios-deploy
-	[ ] write a deploy tool interface
-	[ ] write wrapper for libimobiledevice and ios-deploy implementing interface
-	[ ] create a class that implements interface that changes build tool
+	[X] write a deploy tool interface
+	[X] write wrapper for libimobiledevice and ios-deploy implementing interface
+	[X] create a class that implements interface that changes build tool
 	    strategy depending on what user configures in real time
-	[ ] use tool strategy class aggregate
 [ ] plist
 	[ ] write parser using XMLParser
 	[ ] write writer to save plist as xml
