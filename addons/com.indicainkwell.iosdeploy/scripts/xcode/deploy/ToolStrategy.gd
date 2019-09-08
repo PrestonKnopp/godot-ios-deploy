@@ -10,9 +10,9 @@ extends Reference
 # ------------------------------------------------------------------------------
 
 
-signal task_started(task, message)
-signal task_progressed(task, message, step_current, step_total)
-signal task_finished(task, message, error, result)
+signal task_started(task, args, message)
+signal task_progressed(task, args, message, step_current, step_total)
+signal task_finished(task, args, message, error, result)
 
 
 # ------------------------------------------------------------------------------
@@ -179,9 +179,9 @@ func start_task(task, arguments):
 	}
 	var err = thread.start(self, '_task_thread_func', data)
 	if err != OK:
-		_log.error("Error<%s>: Failed to start thread for task<%s>"%[err,task])
+		_log.error('Error<%s>: Failed to start thread for task<%s>'%[err,task])
 		return
-	emit_signal("task_started", task, "Started task: "+task)
+	emit_signal('task_started', task, arguments, 'Started task: '+task)
 
 
 func _task_thread_func(data):
@@ -191,7 +191,7 @@ func _task_thread_func(data):
 	var wthread = data.weak_thread.get_ref()
 	if wthread != null and wthread.is_active():
 		wthread.wait_to_finish()
-	emit_signal("task_finished", result.message, result.error, result.result)
+	call_deferred('emit_signal', 'task_finished', data.task, data.arguments, result.message, result.error, result.result)
 
 
 func _handle_task(task, arguments, result):
@@ -204,7 +204,8 @@ func _handle_task(task, arguments, result):
 	pass
 
 
-func _task_emit_progress(task, message, step_current, step_total):
-	call_deferred('emit_signal', 'task_progressed', task, message,
+func _task_emit_progress(task, args, message, step_current, step_total):
+	# call_deferred is thread safe
+	call_deferred('emit_signal', 'task_progressed', task, args, message,
 			step_current, step_total)
 

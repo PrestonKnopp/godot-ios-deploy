@@ -13,9 +13,9 @@ extends Reference
 # ------------------------------------------------------------------------------
 
 
-signal task_started(task, message)
-signal task_progressed(task, message, step_current, step_total)
-signal task_finished(task, message, error, result)
+signal task_started(task, args, message)
+signal task_progressed(task, args, message, step_current, step_total)
+signal task_finished(task, args, message, error, result)
 
 
 # ------------------------------------------------------------------------------
@@ -110,9 +110,12 @@ func _use_tool_strategy_by_name(name, with_config):
 # ------------------------------------------------------------------------------
 
 
-
 func get_available_tasks():
 	return _tool_strategy.get_available_tasks()
+
+
+func make_task_arguments():
+	return ToolStrategy.ToolArguments.new()
 
 
 func start_task(task, arguments):

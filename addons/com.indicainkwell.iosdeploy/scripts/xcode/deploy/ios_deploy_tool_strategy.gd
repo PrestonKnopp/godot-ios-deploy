@@ -25,7 +25,7 @@ func tool_available():
 
 func _handle_task(task, arguments, result):
 	if task == TASK_LAUNCH_APP:
-		_task_emit_progress(task, 'installing and launching app', 1, 1)
+		_task_emit_progress(task, arguments, 'installing and launching app', 1, 1)
 		var launch_result = _tool.install_and_launch_app(
 			arguments.device_id,
 			arguments.app_bundle_path,
@@ -34,7 +34,7 @@ func _handle_task(task, arguments, result):
 		result.error = launch_result.result.code
 		result.message = stc.join_array(launch_result.errors)
 	elif task == TASK_LIST_CONNECTED_DEVICES:
-		_task_emit_progress(task, 'detecting devices', 1, 1)
+		_task_emit_progress(task, arguments, 'detecting devices', 1, 1)
 		result.error = OK
 		result.message = ''
 		result.result = _tool.get_detected_devices()
