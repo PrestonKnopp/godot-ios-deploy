@@ -155,23 +155,16 @@ func tool_available():
 # ------------------------------------------------------------------------------
 
 
-func get_available_tasks():
-	return [TASK_LAUNCH_APP, TASK_LIST_CONNECTED_DEVICES]
-
-
 func start_task(task, arguments):
 	if not task in get_available_tasks():
 		_log.error("Error<%s>: Task<%s> not available"%[ERR_INVALID_PARAMETER, task])
 		return
 	var thread
-	if _tool_task_thread_map.has(task):
-		thread = _tool_task_thread_map[task]
-		if thread.is_active():
-			_log.info("Task<%s> already active"%[task])
-			return
+	if max_runs == 0 or (_get_task_run_count(task) < _get_task_max_runs(task)):
+		thread = _make_task_run_thread(task)
 	else:
-		thread = Thread.new()
-		_tool_task_thread_map[task] = thread
+		_log.info("Task<%s> already active"%[task])
+		return
 	var data = {
 		task = task,
 		arguments = arguments,
@@ -182,6 +175,49 @@ func start_task(task, arguments):
 		_log.error('Error<%s>: Failed to start thread for task<%s>'%[err,task])
 		return
 	emit_signal('task_started', task, arguments, 'Started task: '+task)
+
+
+func get_available_tasks():
+	""" @override
+	When overriding append additional tool specific tasks to array.
+	@returns Array<int>
+	"""
+	return [TASK_LAUNCH_APP, TASK_LIST_CONNECTED_DEVICES]
+
+
+func _get_available_task_max_runs_map():
+	""" @override
+	A max of 0 means there is no max. A max of n will allow the task to run
+	up to n times. When overriding, append to the dict returned by super and
+	then return it.
+	@returns Dict<int, int>
+	"""
+	return { TASK_LAUNCH_APP: 0, TASK_LIST_CONNECTED_DEVICES: 1 }
+
+
+func _get_task_max_runs(task):
+	return _get_available_task_max_runs_map()[task]
+
+
+func _get_task_run_count(task):
+	if not _tool_task_thread_map.has(task):
+		return 0
+	var count = 0
+	for thread in _tool_task_thread_map[task]:
+		if thread.is_active():
+			count += 1
+	return count
+
+
+func _make_task_run_thread(task):
+	if not _tool_task_thread_map.has(task):
+		_tool_task_thread_map[task] = []
+	for thread in _tool_task_thread_map[task]:
+		if not thread.is_active():
+			return thread
+	var thread = Thread.new()
+	_tool_task_thread_map[task].append(thread)
+	return thread
 
 
 func _task_thread_func(data):
