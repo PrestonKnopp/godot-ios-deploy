@@ -8,6 +8,15 @@ extends 'Finder.gd'
 
 
 var Device = stc.get_gdscript('xcode/device.gd')
+var Deploy = stc.get_gdscript('xcode/deploy.gd')
+
+
+# ------------------------------------------------------------------------------
+#                                     Variables
+# ------------------------------------------------------------------------------
+
+
+var _deploy = Deploy.new()
 
 
 # ------------------------------------------------------------------------------
@@ -16,7 +25,7 @@ var Device = stc.get_gdscript('xcode/device.gd')
 
 
 func _init():
-	pass
+	_deploy.connect('task_finished', self, '_on_deploy_task_finished')
 
 
 # ------------------------------------------------------------------------------
@@ -70,5 +79,22 @@ func _instruments_find_devices():
 
 
 func begin_find():
-	assert(false)
+	_deploy.start_task(
+		_deploy.ToolStrategy.TASK_LIST_CONNECTED_DEVICES,
+		_deploy.make_task_arguments())
+
+
+# ------------------------------------------------------------------------------
+#                                     Handlers
+# ------------------------------------------------------------------------------
+
+
+func _on_deploy_task_finished(task, args, message, error, result):
+	if task != _deploy.ToolStrategy.TASK_LIST_CONNECTED_DEVICES:
+		return
+
+	if typeof(result) == TYPE_ARRAY:
+		_finished(result)
+	else:
+		_finished([])
 

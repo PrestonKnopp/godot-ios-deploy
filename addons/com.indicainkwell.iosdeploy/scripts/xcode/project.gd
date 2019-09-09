@@ -11,7 +11,9 @@ extends Reference
 
 
 signal built(this, result, errors)
-signal deployed(this, result, errors, device_id)
+signal deploy_started(this, device_count)
+signal deploy_progessed(this, device, message, step_current, step_total)
+signal deploy_finished(this, device, message, error, result)
 
 
 # ------------------------------------------------------------------------------
@@ -32,7 +34,7 @@ const PBXPROJ_UUIDS = {
 
 
 var Shell = stc.get_gdscript('shell.gd')
-var iOSDeploy = stc.get_gdscript('xcode/ios_deploy.gd')
+var Deploy = stc.get_gdscript('xcode/deploy.gd')
 var PList = stc.get_gdscript('xcode/plist.gd')
 var PBX = stc.get_gdscript('xcode/pbx.gd')
 var Team = stc.get_gdscript('xcode/team.gd')
@@ -65,9 +67,10 @@ var custom_info = {}
 # always update pbx on first build
 var _pbx_needs_updating = true
 var _needs_building = true
-var _iosdeploy = iOSDeploy.new()
+var _deploy = Deploy.new()
 var _runningdeploys = 0
 var _devices = []
+var _device_id_map = {}
 
 var _path
 
@@ -84,7 +87,9 @@ var _error_capturer = ErrorCapturer.new()
 
 
 func _init():
-	_iosdeploy.connect('deployed', self, '_on_deployed')
+	_deploy.connect('task_started', self, '_on_deploy_task_started')
+	_deploy.connect('task_progressed', self, '_on_deploy_task_progressed')
+	_deploy.connect('task_finished', self, '_on_deploy_task_finished')
 
 	# 1. Error Category (system)
 	# 2. Error Message
@@ -206,6 +211,9 @@ func set_devices(devices):
 	These devices will also be used to deploy to.
 	"""
 	_devices = devices
+	_device_id_map.clear()
+	for d in _devices:
+		_device_id_map[d.id] = d
 
 
 # ------------------------------------------------------------------------------
@@ -489,25 +497,47 @@ func deploy():
 	"""
 	Deploy project to devices associated with project.
 	"""
-	# TODO: shell.gd command should be able to kill running command.
-	# TODO: add option to install or just launch
-	_iosdeploy.bundle = get_app_path()
-	_iosdeploy.app_args.clear()
 	var v2 = stc.get_version().is2()
-	if remote_debug:
-		assert(remote_addr != null)
-		assert(remote_port != null)
-		_iosdeploy.app_args.append('-rdebug' if v2 else '--remote-debug')
-		_iosdeploy.app_args.append('%s:%s' % [remote_addr, remote_port])
-	if debug_collisions:
-		_iosdeploy.app_args.append('-debugcol' if v2 else '--debug-collisions')
-	if debug_navigation:
-		_iosdeploy.app_args.append('-debugnav' if v2 else '--debug-navigation')
 	_runningdeploys = get_devices().size()
+
+	if _runningdeploys > 0:
+		emit_signal('deploy_started', self, _runningdeploys)
+
 	for device in get_devices():
-		_iosdeploy.install_and_launch_on(device.id)
+		var task_args = _deploy.make_task_arguments()
+		task_args.device_id = device.id
+		task_args.app_bundle_path = get_app_path()
+
+		if remote_debug:
+			assert(remote_addr != null)
+			assert(remote_port != null)
+			task_args.optional.arguments.append('-rdebug' if v2 else '--remote-debug')
+			task_args.optional.arguments.append('%s:%s' % [remote_addr, remote_port])
+		if debug_collisions:
+			task_args.optional.arguments.append('-debugcol' if v2 else '--debug-collisions')
+		if debug_navigation:
+			task_args.optional.arguments.append('-debugnav' if v2 else '--debug-navigation')
+
+		_deploy.start_task(_deploy.ToolStrategy.TASK_LAUNCH_APP, task_args)
 
 
-func _on_deployed(command, result, errors, device_id):
+func _on_deploy_task_started(task, args, message):
+	if task != _deploy.ToolStrategy.TASK_LAUNCH_APP:
+		return
+
+
+func _on_deploy_task_progressed(task, args, message, step_current, step_total):
+	if task != _deploy.ToolStrategy.TASK_LAUNCH_APP:
+		return
+	var device = _device_id_map[args.device_id]
+	emit_signal('deploy_progessed', self, device, message, step_current,
+			step_total)
+
+
+func _on_deploy_task_finished(task, args, message, error, result):
+	if task != _deploy.ToolStrategy.TASK_LAUNCH_APP:
+		return
+	var device = _device_id_map[args.device_id]
 	_runningdeploys -= 1
-	emit_signal('deployed', self, result, errors, device_id)
+	emit_signal('deploy_finished', self, device, message, error, result)
+

@@ -89,7 +89,9 @@ func _init_xcode_project():
 	Only call after _xcode.make_project_async() successfully completes.
 	"""
 	_xcode.project.connect('built', self, '_on_xcode_project_built')
-	_xcode.project.connect('deployed', self, '_on_device_deployed')
+	_xcode.project.connect('deploy_started', self, '_on_xcode_project_deploy_started')
+	_xcode.project.connect('deploy_progressed', self, '_on_xcode_project_deploy_progressed')
+	_xcode.project.connect('deploy_finished', self, '_on_xcode_project_deploy_finished')
 	_log.debug('Xcode Project App Path: ' + _xcode.project.get_app_path())
 
 
@@ -223,7 +225,7 @@ func valid_xcode_project():
 	# Conditions for automanaged project to be valid
 	if _xcode.project.provision == null and _xcode.project.automanaged and\
 	   _xcode.project.team      != null:
-		   return true
+		return true
 	# Conditions for non automanaged project to be valid
 	return _xcode.project        != null and\
 	   (_xcode.project.provision != null and\
@@ -348,7 +350,6 @@ func _on_xcode_project_built(xcode_project, result, errors):
 		emit_signal('finished_pipeline', self)
 		view.update_build_progress(1.0, 'Failed', true)
 	elif xcode_project.get_devices().size() > 0:
-		view.update_build_progress(0.5, 'Deploying %s/%s'%[1, xcode_project.get_devices().size()])
 		# can't find a better place to set these debug flags
 		# remote_debug doesn't just work like this. Godot editor needs
 		# to know about it but I don't think that functionality is
@@ -368,25 +369,60 @@ func _on_xcode_project_built(xcode_project, result, errors):
 		view.update_build_progress(1.0, 'Done', true)
 
 
-func _on_device_deployed(xcode_project, result, errors, device_id):
+var  _device_deploy_progress_map = {}
 
-	_log.info('DEPLOY RESULT:\n' + str(result.output))
 
-	if errors.size() > 0:
-		log_errors(errors, 'iOSDeploy errors found while deploying to %s' % device_id)
+func _on_xcode_project_deploy_started(project, device_count):
+	_device_deploy_progress_msg_map.clear()
 
-	var runningdeploys = xcode_project.get_running_deploys_count()
-	var devsiz = xcode_project.get_devices().size()
-	var devnum = devsiz - runningdeploys
-	view.update_build_progress(
-		0.5 + float(devnum) / float(devsiz) * 0.5,
-		'Deploying %s/%s' % [devnum, devsiz]
-	)
 
-	_log.debug('RUNNING DEPLOY %s' % runningdeploys)
+func _on_xcode_project_deploy_progessed(project, device, message, step_current, step_total):
+	_device_deploy_progress_map[device] = {
+		n=device.name, msg=message, sc=step_current, st=step_total
+	}
+	_update_deploy_progress_status()
 
-	if not xcode_project.is_deploying():
-		# this is the last device
+
+func _on_xcode_project_deploy_finished(project, device, message, error, result):
+	var d
+	if _device_deploy_progress_map.has(device):
+		d = _device_deploy_progress_map[device]
+	else:
+		d = { sc=1, st=1 }
+	
+	d.n = device.name
+	d.msg = message
+	d.err = error
+	d.res = result
+	d.fin = not project.is_deploying()
+	_device_deploy_progress_map[device] = d
+
+	_update_deploy_progress_status()
+
+	if d.fin:
 		_log.debug('Last device has deployed.')
 		emit_signal('finished_pipeline', self)
-		view.update_build_progress(1.0, 'Done', true)
+
+
+func _update_deploy_progress_status():
+	var statuses = []
+	var total_steps_completed = 0
+	var total_steps = 0
+	for prog in _device_deploy_progress_map.values():
+		total_steps += prog.st
+		total_steps_completed += prog.sc
+		var status = '%s: %s %s/%s' % [prog.n, prog.msg, prog.sc, prog.st]
+		if prog.has('err'):
+			status += ' -- Error<%s>' % [prog.err]
+		if prog.has('res'):
+			status += ' -- Result<%s>' % [prog.res]
+		statuses.append(status)
+	# protect against division by 0
+	if total_steps == 0 and total_steps_completed > 0:
+		total_steps = total_steps_completed
+	view.update_build_progress(
+		float(total_steps_completed) / float(total_steps),
+		stc.join_array(statuses, '\n'),
+		prog.has('fin') and prog.fin
+	)
+

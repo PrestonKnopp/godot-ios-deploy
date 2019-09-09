@@ -17,6 +17,7 @@ const stc = preload('scripts/static.gd')
 
 var MainController = stc.get_gdscript('controllers/main_controller.gd')
 var PoolStringConverter = stc.get_gdscript('pool_string_converter.gd')
+var Deploy = stc.get_gdscript('xcode/deploy.gd')
 
 
 # ------------------------------------------------------------------------------
@@ -111,14 +112,24 @@ func meets_software_requirements():
 	if OS.get_name() != 'OSX':
 		_log.error('macOS is needed to build and deploy iOS projects')
 		meets = false
+	
 
-	var ios_deploy_tool_path = stc.get_config().get_value(
-		'deploy', 'ios_deploy_tool_path',
-		stc.DEFAULT_IOSDEPLOY_TOOL_PATH
-	)
-	if not ext_sw_exists(ios_deploy_tool_path):
-		_log.error('ios-deploy is missing: install ios-deploy with homebrew -- brew install ios-deploy')
-		meets = false
+	var deploy = Deploy.new()
+	var at_least_one_available = false
+	for strat in deploy.get_supported_strategies():
+		for key in strat.get_config_keys():
+			var value = stc.get_config().get_value(
+					strat.get_config_section(), key)
+			strat.handle_config_key_change(key, value)
+		var available = strat.tool_available()
+		if not available:
+			var tname = strat.get_tool_name()
+			_log.error('%s is missing: Install if needed with `brew
+					install %s`' % [tname, tname])
+		if not at_least_one_available:
+			at_least_one_available = available
+	if meets:
+		meets = at_least_one_available
 
 	if not ext_sw_exists('xcodebuild'):
 		_log.error('xcodebuild is missing: install xcode command line tools -- xcode-select --install')
