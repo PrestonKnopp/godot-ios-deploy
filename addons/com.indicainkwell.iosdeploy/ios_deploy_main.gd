@@ -126,7 +126,7 @@ func meets_software_requirements():
 			var tname = strat.get_tool_name()
 			_log.error('%s is missing: Install if needed with `brew
 					install %s`' % [tname, tname])
-		if not at_least_one_available:
+		if available:
 			at_least_one_available = available
 	if meets:
 		meets = at_least_one_available
