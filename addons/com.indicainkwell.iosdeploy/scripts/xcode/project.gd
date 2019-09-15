@@ -485,6 +485,10 @@ func _build_xcodebuild_args():
 # ------------------------------------------------------------------------------
 
 
+func get_deploy():
+	return _deploy
+
+
 func get_running_deploys_count():
 	return _runningdeploys
 

@@ -8,8 +8,8 @@
 	- libimobiledevice needs to be manually mounted before installing and launching apps
 		- can libimobiledevice check if it is mounted and not remount?
 		- how would the interface look to support pre-actions?
-	[ ] add settings menu entries
 	[ ] test
+	[X] add settings menu entries
 	[X] use tool strategy class aggregate
 	[X] implement low level api for libimobiledevice
 	[X] de-async low level api for ios-deploy
@@ -425,3 +425,6 @@ Reasons:
 Reasons:
 	- Unsupported device version i.e. (11.2 vs 11.3)
 		- Update Xcode for device support files
+		- If necessary, you may be able to copy/link to another version to
+		create a "proxy". E.g. your device has iOS v12.4 and you only have xcode
+		10 installed with v11.3. Use the command `ln -s 11.3 12.4`. This may not work.
