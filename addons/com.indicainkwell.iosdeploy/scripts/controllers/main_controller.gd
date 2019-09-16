@@ -373,7 +373,7 @@ var  _device_deploy_progress_map = {}
 
 
 func _on_xcode_project_deploy_started(project, device_count):
-	_device_deploy_progress_msg_map.clear()
+	_device_deploy_progress_map.clear()
 
 
 func _on_xcode_project_deploy_progessed(project, device, message, step_current, step_total):
@@ -423,6 +423,6 @@ func _update_deploy_progress_status():
 	view.update_build_progress(
 		float(total_steps_completed) / float(total_steps),
 		stc.join_array(statuses, '\n'),
-		prog.has('fin') and prog.fin
+		_device_deploy_progress_map.has('fin') and _device_deploy_progress_map.fin
 	)
 

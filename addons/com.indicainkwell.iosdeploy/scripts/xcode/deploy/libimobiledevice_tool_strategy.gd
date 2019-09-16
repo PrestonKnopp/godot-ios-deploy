@@ -29,8 +29,7 @@ func tool_available():
 			_tool.tool_get_id()]
 	for tool_path in tool_paths:
 		if not f.file_exists(tool_path):
-			_log.debug('Tool<%s> does not exist at
-					path<%s>.'%[get_tool_name(), tool_path])
+			_log.debug('Tool<%s> does not exist at path<%s>.'%[get_tool_name(), tool_path])
 			available = false
 	return available
 

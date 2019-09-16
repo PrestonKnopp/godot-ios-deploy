@@ -49,7 +49,7 @@ static func forward_signals(signals, src_obj, dst_obj, disconnect=false):
 		if disconnect:
 			src_obj.disconnect(sig, dst_obj, 'emit_signal')
 		else:
-			src_obj.connect(sig, dst_obj, 'emit_signal', sig)
+			src_obj.connect(sig, dst_obj, 'emit_signal', [sig])
 
 
 static func join_array(arr, delim=' '):

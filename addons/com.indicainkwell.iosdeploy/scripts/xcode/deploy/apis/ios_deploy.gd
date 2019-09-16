@@ -105,16 +105,16 @@ func get_detected_devices():
 	if result.code != OK:
 		_log.error('Error<%s>: Failed to get any detected device ids: %s'%[result.code, result.output])
 		return []
-	return _parse_iosdeploy_result(result.get_stdout_lines())
+	return _parse_iosdeploy_output(result.get_stdout_lines())
 
 
 # ios-deploy Output Example, first line is always there:
 # [....] Waiting up to 1 seconds for iOS device to be connected
 # [....] Found 3345abc45b3cab4c5eb5c4bfb3c5998abc3b320a (P105AP, iPad mini, iphoneos, armv7) a.k.a. 'iPad Name' connected through USB.
-func _parse_iosdeploy_output(output):
+func _parse_iosdeploy_output(lines):
 	var devices = []
 
-	for line in output:
+	for line in lines:
 		var captures = _regex.search(line)
 		if captures.size() == 0:
 			# Whole pattern didn't match
@@ -167,8 +167,7 @@ func launch_app(device_id, app_path, app_args, install):
 	@app_args: [String] the args to pass to app when launching it.
 	@install: bool install the app first?
 	"""
-	var args = _build_launch_args(device_id, app_path, app_args
-			install)
+	var args = _build_launch_args(device_id, app_path, app_args, install)
 	_log.debug('launch app built args: '+str(args))
 	var result = _iosdeploy.run(args)
 	var errors = _error_capturer.capture_from(result.output)

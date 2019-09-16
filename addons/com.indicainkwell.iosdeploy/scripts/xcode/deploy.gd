@@ -23,7 +23,7 @@ signal task_finished(task, args, message, error, result)
 # ------------------------------------------------------------------------------
 
 
-const stc = preload('../../static.gd')
+const stc = preload('../static.gd')
 const DEPLOY_CONFIG_SECTION = 'deploy'
 const DEPLOY_TOOL_CONFIG_KEY = 'tool'
 
@@ -65,7 +65,7 @@ func _init(subscribes_to_tool_changes=true, use_config_tool_name=true):
 		if deploy_tool_name == null:
 			var avail = get_available_strategies()
 			if avail.size() > 0:
-				_use_tool_strategy_by_name(avail[0].get_tool_name())
+				_use_tool_strategy_by_name(avail[0].get_tool_name(), cfg)
 		else:
 			_use_tool_strategy_by_name(deploy_tool_name, cfg)
 	if subscribes_to_tool_changes:

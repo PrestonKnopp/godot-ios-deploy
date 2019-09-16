@@ -54,7 +54,7 @@ func set_path(path):
 	else:
 		_path = path
 
-func get_path(path):
+func get_path():
 	"""
 	@returns String
 	"""

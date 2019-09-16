@@ -103,7 +103,7 @@ func get_device_info(device_id):
 		DOMAIN
 	)
 	if result.code != OK:
-		_log.error('Error<%s>: Failed to get device<%s> info:\n%s'%[result.code, device_id result.output])
+		_log.error('Error<%s>: Failed to get device<%s> info:\n%s'%[result.code, device_id, result.output])
 		return null
 	var info = _parse_device_info_output(result.get_stdout_lines())
 	if info != null: info.id = device_id
@@ -154,22 +154,21 @@ func install_app(device_id, app_bundle_path):
 		DOMAIN
 	)
 	if result.code != OK:
-		_log.error('Error<%s>: Failed to install app<%s> to
-				device<%s>:\n%s'%[result.code, app_bundle_path, device_id, result.output])
+		_log.error('Error<%s>: Failed to install app<%s> to device<%s>:\n%s'%[result.code, app_bundle_path, device_id, result.output])
 		return FAILED
 	return OK
 
 
 func launch_app(device_id, app_bundle_id, arguments=[], environment={}):
-	_log.verbose('Launching bundle<%s> on device<%s> with arguments<%s> and
-			environment<%s>'%[app_bundle_id, device_id, arguments, environment])
+	_log.verbose('Launching bundle<%s> on device<%s> with arguments<%s> and environment<%s>'%[app_bundle_id, device_id, arguments, environment])
 	var result = _shell.execute(
-		tool_get_debug(), _build_launch_app_args(device_id, app_bundle_id, arguments, environment)
+		tool_get_debug(),
+		_build_launch_app_args(device_id, app_bundle_id, arguments, environment),
 		DOMAIN
 	)
 	if result.code != OK:
-		_log.error('Error<%s>: Failed to launch bundle<%s> on device<%s> with arguments<%s> and
-				environment<%s>: '%[app_bundle_id, device_id, arguments, environment, result.output])
+		var _msgs = [app_bundle_id, device_id, arguments, environment, result.output]
+		_log.error('Error<%s>: Failed to launch bundle<%s> on device<%s> with arguments<%s> and environment<%s>: '%_msgs)
 		return FAILED
 	return OK
 

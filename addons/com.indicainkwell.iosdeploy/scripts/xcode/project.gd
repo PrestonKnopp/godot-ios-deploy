@@ -12,7 +12,7 @@ extends Reference
 
 signal built(this, result, errors)
 signal deploy_started(this, device_count)
-signal deploy_progessed(this, device, message, step_current, step_total)
+signal deploy_progressed(this, device, message, step_current, step_total)
 signal deploy_finished(this, device, message, error, result)
 
 
@@ -534,7 +534,7 @@ func _on_deploy_task_progressed(task, args, message, step_current, step_total):
 	if task != _deploy.ToolStrategy.TASK_LAUNCH_APP:
 		return
 	var device = _device_id_map[args.device_id]
-	emit_signal('deploy_progessed', self, device, message, step_current,
+	emit_signal('deploy_progressed', self, device, message, step_current,
 			step_total)
 
 

@@ -160,7 +160,7 @@ func start_task(task, arguments):
 		_log.error("Error<%s>: Task<%s> not available"%[ERR_INVALID_PARAMETER, task])
 		return
 	var thread
-	if max_runs == 0 or (_get_task_run_count(task) < _get_task_max_runs(task)):
+	if (_get_task_max_runs(task) == 0) or (_get_task_run_count(task) < _get_task_max_runs(task)):
 		thread = _make_task_run_thread(task)
 	else:
 		_log.info("Task<%s> already active"%[task])

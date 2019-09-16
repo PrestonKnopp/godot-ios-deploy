@@ -116,7 +116,8 @@ func meets_software_requirements():
 
 	var deploy = Deploy.new()
 	var at_least_one_available = false
-	for strat in deploy.get_supported_strategies():
+	for strat_class in deploy.get_supported_strategies():
+		var strat = strat_class.new()
 		for key in strat.get_config_keys():
 			var value = stc.get_config().get_value(
 					strat.get_config_section(), key)
@@ -124,8 +125,7 @@ func meets_software_requirements():
 		var available = strat.tool_available()
 		if not available:
 			var tname = strat.get_tool_name()
-			_log.error('%s is missing: Install if needed with `brew
-					install %s`' % [tname, tname])
+			_log.error('%s is missing: Install if needed with `brew install %s`' % [tname, tname])
 		if available:
 			at_least_one_available = available
 	if meets:
