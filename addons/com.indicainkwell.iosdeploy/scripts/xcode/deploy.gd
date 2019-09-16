@@ -94,7 +94,7 @@ func _use_tool_strategy_by_name(name, with_config):
 			break
 	if _tool_strategy == null:
 		_tool_strategy = ToolStrategy.new()
-	if with_config != null:
+	elif with_config != null:
 		for key in _tool_strategy.get_config_keys():
 			var value = with_config.get_value(
 				_tool_strategy.get_config_section(),
