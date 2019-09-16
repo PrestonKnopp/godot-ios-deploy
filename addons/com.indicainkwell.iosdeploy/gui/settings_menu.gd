@@ -79,8 +79,12 @@ func set_section_value(section, value):
 	var section_control = get_section_control(section)
 	if section == SECTION.REMOTE_DEBUG:
 		return section_control.set_pressed(value)
-	elif section in [SECTION.LOG_LEVEL, SECTION.DEPLOY_TOOL]:
+	elif section == SECTION.LOG_LEVEL:
 		return section_control.select(value)
+	elif section == SECTION.DEPLOY_TOOL:
+		for i in section_control.get_item_count():
+			if value == section_control.get_item_text(i):
+				return section_control.select(i)
 	elif section in [SECTION.IOSDEPLOY_TOOL, SECTION.LIBIMOBILE_TOOL, SECTION.GODOT_BIN, SECTION.LOG_FILE]:
 		return section_control.set_text(value)
 
