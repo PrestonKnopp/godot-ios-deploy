@@ -101,8 +101,19 @@ func _use_tool_strategy_by_name(name, with_config):
 				key
 			)
 			_tool_strategy.handle_config_key_change(key, value)
-	stc.forward_signals(['task_started', 'task_progressed',
-		'task_finished'], _tool_strategy, self)
+	_tool_strategy.connect('task_started', self, '_forward_task_started')
+	_tool_strategy.connect('task_progressed', self, '_forward_task_progressed')
+	_tool_strategy.connect('task_finished', self, '_forward_task_finished')
+
+
+func _forward_task_started(task, args, message):
+	emit_signal('task_started', task, args, message)
+
+func _forward_task_progressed(task, args, message, step_current, step_total):
+	emit_signal('task_progressed', task, args, message, step_current, step_total)
+
+func _forward_task_finished(task, args, message, error, result):
+	emit_signal('task_finished', task, args, message, error, result)
 
 
 # ------------------------------------------------------------------------------

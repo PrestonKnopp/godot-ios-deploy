@@ -44,14 +44,6 @@ const shell = {
 }
 
 
-static func forward_signals(signals, src_obj, dst_obj, disconnect=false):
-	for sig in signals:
-		if disconnect:
-			src_obj.disconnect(sig, dst_obj, 'emit_signal')
-		else:
-			src_obj.connect(sig, dst_obj, 'emit_signal', [sig])
-
-
 static func join_array(arr, delim=' '):
 	"""
 	Implementation for joining arrays as Godotv2 does not support it.
