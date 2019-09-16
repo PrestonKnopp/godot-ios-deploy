@@ -59,7 +59,7 @@ func _on_hide():
 	var ios_dep_strat = dep.IOSDeployToolStrategy.new()
 	var libimobile_strat = dep.LibimobiledeviceToolStrategy.new()
 
-	var cfg = stc.get_confg()
+	var cfg = stc.get_config()
 	var v = get_view()
 	cfg.set_value('meta', 'log_level', v.log_level)
 	cfg.set_value('meta', 'log_file', v.log_file)
