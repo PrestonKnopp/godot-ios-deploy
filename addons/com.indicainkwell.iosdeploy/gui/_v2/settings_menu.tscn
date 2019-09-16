@@ -468,7 +468,7 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
-[node name="libimobile_tool_path" type="LineEdit" parent="MarginContainer/General/libimobiledevice_tool"]
+[node name="libimobiledevice_tool_path" type="LineEdit" parent="MarginContainer/General/libimobiledevice_tool"]
 
 hint/tooltip = "libimobile device has multiple tools such as: idevice_info, idevice_id, idevice_installer, etc. These tools a typically kept in a single folder. If installed with homebrew, these tools will be in the /usr/local/bin folder."
 focus/ignore_mouse = false

@@ -106,7 +106,7 @@ func get_section_control(section):
 	elif section == SECTION.IOSDEPLOY_TOOL:
 		return find_node('iosdeploy_tool_path')
 	elif section == SECTION.LIBIMOBILE_TOOL:
-		return find_node('libimobile_tool_path')
+		return find_node('libimobiledevice_tool_path')
 	elif section == SECTION.GODOT_BIN:
 		return find_node('godot_bin_path')
 
