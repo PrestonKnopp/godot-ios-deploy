@@ -219,8 +219,8 @@ margin_bottom = 29.0
 hint_tooltip = "Set the path to the ios-deploy tool. It is a single binary file. If installed with homebrew it defaults to /usr/local/bin/ios-deploy."
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 3 )
-text = "/usr/local/bin/ios-deploy"
 context_menu_enabled = false
+placeholder_text = "/usr/local/bin/ios-deploy"
 
 [node name="select_file_butt" type="Button" parent="MarginContainer/General/iosdeploy_tool"]
 margin_left = 500.0
@@ -262,8 +262,8 @@ margin_bottom = 29.0
 hint_tooltip = "libimobile device has multiple tools such as: idevice_info, idevice_id, idevice_installer, etc. These tools a typically kept in a single folder. If installed with homebrew, these tools will be in the /usr/local/bin folder."
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 3 )
-text = "/usr/local/bin"
 context_menu_enabled = false
+placeholder_text = "/usr/local/bin"
 
 [node name="select_file_butt" type="Button" parent="MarginContainer/General/libimobiledevice_tool"]
 margin_left = 500.0

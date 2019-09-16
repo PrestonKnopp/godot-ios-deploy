@@ -9,7 +9,7 @@ extends 'DeployTool.gd'
 # ------------------------------------------------------------------------------
 
 
-const DEFAULT_TOOL_PATH = '/usr/local/bin'
+const DEFAULT_TOOL_PATH = '/usr/local/bin/ios-deploy'
 
 
 # ------------------------------------------------------------------------------

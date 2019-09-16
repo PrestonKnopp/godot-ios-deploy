@@ -67,6 +67,5 @@ func _on_hide():
 	cfg.set_value(dep.DEPLOY_CONFIG_SECTION, dep.DEPLOY_TOOL_CONFIG_KEY, v.deploy_tool)
 	cfg.set_value(ios_dep_strat.get_config_section(), ios_dep_strat.KEY_PATH, v.ios_deploy_tool_path)
 	cfg.set_value(libimobile_strat.get_config_section(), libimobile_strat.KEY_PATH, v.libimobile_tool_path)
-	cfg.set_value('deploy', 'ios_deploy_tool_path', v.ios_deploy_tool_path)
 	cfg.set_value('xcode/project', 'godot_bin_path', v.godot_bin_path)
 	cfg.save()
