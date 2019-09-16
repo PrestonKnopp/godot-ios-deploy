@@ -66,8 +66,11 @@ func get_section_value(section):
 	var section_control = get_section_control(section)
 	if section == SECTION.REMOTE_DEBUG:
 		return section_control.is_pressed()
-	elif section in [SECTION.LOG_LEVEL, SECTION.DEPLOY_TOOL]:
+	elif section == SECTION.LOG_LEVEL:
 		return section_control.get_selected()
+	elif section == SECTION.DEPLOY_TOOL:
+		var selected = section_control.get_selected()
+		return section_control.get_item_text(selected)
 	elif section in [SECTION.IOSDEPLOY_TOOL, SECTION.LIBIMOBILE_TOOL, SECTION.GODOT_BIN, SECTION.LOG_FILE]:
 		return section_control.get_text()
 
