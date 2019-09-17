@@ -146,7 +146,7 @@ func mount_developer_image(device_id, developer_img_path, developer_img_sig):
 
 func install_app(device_id, app_bundle_path):
 	_log.verbose('Installing bundle at path<%s> to device<%s>'%[app_bundle_path, device_id])
-	if not File.new().file_exists(app_bundle_path):
+	if not Directory.new().dir_exists(app_bundle_path):
 		_log.error('Error<%s>: App bundle path<%s> not found'%[ERR_FILE_NOT_FOUND, app_bundle_path])
 		return ERR_FILE_NOT_FOUND
 	var result = _shell.execute(
