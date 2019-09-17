@@ -158,12 +158,12 @@
 
 # -- GUI Todos
 
-[ ] react to build / deploy error results
 [ ] hover_panel needs to resize
-[X] apple button smooth update progress overlay
 [ ] add plist entry menu
 [ ] refactor settings menu
 [ ] fix hover menu
+[X] react to build / deploy error results
+[X] apple button smooth update progress overlay
 [X] fix control overflow in v2 for onboarding flow
 [X] onboarding flow
 	[X] if provision is not a wild card then
