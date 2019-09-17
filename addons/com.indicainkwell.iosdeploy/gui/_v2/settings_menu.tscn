@@ -16,7 +16,7 @@ size_flags/vertical = 2
 margin/left = 260.0
 margin/top = 191.0
 margin/right = -260.0
-margin/bottom = -177.0
+margin/bottom = -208.0
 popup/exclusive = false
 window/title = ""
 script/script = ExtResource( 1 )
@@ -47,7 +47,7 @@ size_flags/vertical = 3
 margin/left = 10.0
 margin/top = 10.0
 margin/right = 510.0
-margin/bottom = 360.0
+margin/bottom = 389.0
 alignment = 0
 
 [node name="title_box" parent="MarginContainer/General" instance=ExtResource( 2 )]
@@ -62,9 +62,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 50.0
+margin/top = 35.0
 margin/right = 500.0
-margin/bottom = 60.0
+margin/bottom = 45.0
 custom_constants/separation = 10
 
 [node name="open_onboarding_flow_butt" type="Button" parent="MarginContainer/General"]
@@ -74,9 +74,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 64.0
+margin/top = 49.0
 margin/right = 500.0
-margin/bottom = 84.0
+margin/bottom = 69.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -91,9 +91,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 88.0
+margin/top = 73.0
 margin/right = 500.0
-margin/bottom = 108.0
+margin/bottom = 93.0
 alignment = 0
 
 [node name="open_xcproj_butt" type="Button" parent="MarginContainer/General/xcodeproj_box"]
@@ -136,9 +136,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 112.0
+margin/top = 97.0
 margin/right = 500.0
-margin/bottom = 122.0
+margin/bottom = 107.0
 custom_constants/separation = 10
 
 [node name="remote_debug_butt" type="CheckButton" parent="MarginContainer/General"]
@@ -148,9 +148,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 126.0
+margin/top = 111.0
 margin/right = 500.0
-margin/bottom = 148.0
+margin/bottom = 133.0
 toggle_mode = true
 enabled_focus_mode = 2
 shortcut = null
@@ -166,9 +166,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 152.0
+margin/top = 137.0
 margin/right = 500.0
-margin/bottom = 162.0
+margin/bottom = 147.0
 custom_constants/separation = 10
 
 [node name="log_level_box" type="HBoxContainer" parent="MarginContainer/General"]
@@ -179,9 +179,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 166.0
+margin/top = 151.0
 margin/right = 500.0
-margin/bottom = 186.0
+margin/bottom = 171.0
 alignment = 0
 
 [node name="Label" type="Label" parent="MarginContainer/General/log_level_box"]
@@ -226,9 +226,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 190.0
+margin/top = 175.0
 margin/right = 500.0
-margin/bottom = 214.0
+margin/bottom = 199.0
 alignment = 0
 
 [node name="Label" type="Label" parent="MarginContainer/General/log_file_box"]
@@ -306,9 +306,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 218.0
+margin/top = 203.0
 margin/right = 500.0
-margin/bottom = 228.0
+margin/bottom = 213.0
 custom_constants/separation = 10
 
 [node name="deploy_tool_box" type="HBoxContainer" parent="MarginContainer/General"]
@@ -319,9 +319,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 232.0
+margin/top = 217.0
 margin/right = 500.0
-margin/bottom = 252.0
+margin/bottom = 237.0
 alignment = 0
 
 [node name="Label" type="Label" parent="MarginContainer/General/deploy_tool_box"]
@@ -366,9 +366,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 256.0
+margin/top = 241.0
 margin/right = 500.0
-margin/bottom = 280.0
+margin/bottom = 265.0
 alignment = 0
 
 [node name="Label" type="Label" parent="MarginContainer/General/iosdeploy_tool"]
@@ -447,9 +447,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 284.0
+margin/top = 269.0
 margin/right = 500.0
-margin/bottom = 308.0
+margin/bottom = 293.0
 alignment = 0
 
 [node name="Label" type="Label" parent="MarginContainer/General/libimobiledevice_tool"]
@@ -528,9 +528,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 312.0
+margin/top = 297.0
 margin/right = 500.0
-margin/bottom = 322.0
+margin/bottom = 307.0
 custom_constants/separation = 10
 
 [node name="custom_godot_bin" type="HBoxContainer" parent="MarginContainer/General"]
@@ -540,9 +540,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 326.0
+margin/top = 311.0
 margin/right = 500.0
-margin/bottom = 350.0
+margin/bottom = 335.0
 alignment = 0
 
 [node name="Label" type="Label" parent="MarginContainer/General/custom_godot_bin"]
@@ -628,8 +628,6 @@ show_hidden_files = false
 [connection signal="file_selected" from="MarginContainer/General/iosdeploy_tool/select_file_butt/FileDialog" to="MarginContainer/General/iosdeploy_tool/iosdeploy_tool_path" method="set_text"]
 
 [connection signal="pressed" from="MarginContainer/General/libimobiledevice_tool/select_file_butt" to="MarginContainer/General/libimobiledevice_tool/select_file_butt/FileDialog" method="popup_centered"]
-
-[connection signal="dir_selected" from="MarginContainer/General/libimobiledevice_tool/select_file_butt/FileDialog" to="MarginContainer/General/libimobiledevice_tool/libimobile_tool_path" method="set_text"]
 
 [connection signal="pressed" from="MarginContainer/General/custom_godot_bin/select_file_butt" to="MarginContainer/General/custom_godot_bin/select_file_butt/FileDialog" method="popup_centered"]
 
