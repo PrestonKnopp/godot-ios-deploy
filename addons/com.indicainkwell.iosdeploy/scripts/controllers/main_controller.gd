@@ -348,7 +348,7 @@ func _on_xcode_project_built(xcode_project, result, errors):
 	if errors.size() > 0:
 		log_errors(errors, 'Errors found while building Xcode Project')
 		emit_signal('finished_pipeline', self)
-		view.update_build_progress(1.0, 'Failed', true)
+		view.update_build_progress(1.0, 'Failed', true, false)
 	elif xcode_project.get_devices().size() > 0:
 		# can't find a better place to set these debug flags
 		# remote_debug doesn't just work like this. Godot editor needs
@@ -394,17 +394,19 @@ func _on_xcode_project_deploy_finished(project, device, message, error, result):
 	d.msg = message
 	d.err = error
 	d.res = result
-	d.fin = not project.is_deploying()
 	_device_deploy_progress_map[device] = d
 
-	_update_deploy_progress_status()
+	var finished = not project.is_deploying()
 
-	if d.fin:
+	_update_deploy_progress_status(finished)
+
+	if finished:
 		_log.debug('Last device has deployed.')
 		emit_signal('finished_pipeline', self)
 
 
-func _update_deploy_progress_status():
+func _update_deploy_progress_status(finished=false):
+	var has_error = false
 	var statuses = []
 	var total_steps_completed = 0
 	var total_steps = 0
@@ -414,6 +416,8 @@ func _update_deploy_progress_status():
 		var status = '%s: %s %s/%s' % [prog.n, prog.msg, prog.sc, prog.st]
 		if prog.has('err'):
 			status += ' -- Error<%s>' % [prog.err]
+			if prog.err != OK:
+				has_error = true
 		if prog.has('res'):
 			status += ' -- Result<%s>' % [prog.res]
 		statuses.append(status)
@@ -423,6 +427,7 @@ func _update_deploy_progress_status():
 	view.update_build_progress(
 		float(total_steps_completed) / float(total_steps),
 		stc.join_array(statuses, '\n'),
-		_device_deploy_progress_map.has('fin') and _device_deploy_progress_map.fin
+		finished,
+		not has_error
 	)
 
