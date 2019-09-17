@@ -15,6 +15,8 @@
 [ ] what to do when:
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
+[X] ERROR: get_value: Couldn't find the given section/key and no default was given
+	- editor_debug_settings gives error when section/key doesn't exist
 [X] multi deploy tool support
 	- libimobiledevice needs to be manually mounted before installing and launching apps
 		- can libimobiledevice check if it is mounted and not remount?

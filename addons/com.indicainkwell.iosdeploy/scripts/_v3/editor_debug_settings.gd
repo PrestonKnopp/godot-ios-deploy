@@ -11,7 +11,7 @@ func _get_value(key, default):
 	var sect = 'debug_options'
 	if _editor_settings.has_method('get_project_metadata'):
 		# >=3.1 has builtin support for editor project metadata
-		return _editor_settings.get_project_metadata(sect, key)
+		return _editor_settings.get_project_metadata(sect, key, false)
 	var cfg = _get_editor_project_metadata_config()
 	return cfg.get_value(sect, key, false)
 
