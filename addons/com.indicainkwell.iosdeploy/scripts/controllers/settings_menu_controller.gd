@@ -37,19 +37,35 @@ func _on_pressed(view, press_section):
 
 
 func _on_about_to_show():
+	# TODO: get rid of these hard coded references to deploy tools.
+	var dep = _xcode.project.get_deploy()
+	var ios_dep_strat = dep.IOSDeployToolStrategy.new()
+	var libimobile_strat = dep.LibimobiledeviceToolStrategy.new()
+
+	var cfg = stc.get_config()
 	var v = get_view()
-	v.remote_debug = stc.get_config().get_value('xcode/project', 'remote_debug', false)
-	v.ios_deploy_tool_path = stc.get_config().get_value('deploy', 'ios_deploy_tool_path', stc.DEFAULT_IOSDEPLOY_TOOL_PATH)
-	v.godot_bin_path = stc.get_config().get_value('xcode/project', 'godot_bin_path', '')
-	v.log_level = stc.get_config().get_value('meta', 'log_level', stc.get_logger().get_default_output_level())
-	v.log_file = stc.get_config().get_value('meta', 'log_file', '')
+	v.remote_debug = cfg.get_value('xcode/project', 'remote_debug', false)
+	v.deploy_tool = cfg.get_value(dep.DEPLOY_CONFIG_SECTION, dep.DEPLOY_TOOL_CONFIG_KEY, libimobile_strat.get_tool_name())
+	v.ios_deploy_tool_path = cfg.get_value(ios_dep_strat.get_config_section(), ios_dep_strat.KEY_PATH, ios_dep_strat.get_default_tool_path())
+	v.libimobile_tool_path = cfg.get_value(libimobile_strat.get_config_section(), libimobile_strat.KEY_PATH, libimobile_strat.get_default_tool_path())
+	v.godot_bin_path = cfg.get_value('xcode/project', 'godot_bin_path', '')
+	v.log_level = cfg.get_value('meta', 'log_level', stc.get_logger().get_default_output_level())
+	v.log_file = cfg.get_value('meta', 'log_file', '')
 
 
 func _on_hide():
+	# TODO: get rid of these hard coded references to deploy tools.
+	var dep = _xcode.project.get_deploy()
+	var ios_dep_strat = dep.IOSDeployToolStrategy.new()
+	var libimobile_strat = dep.LibimobiledeviceToolStrategy.new()
+
+	var cfg = stc.get_config()
 	var v = get_view()
-	stc.get_config().set_value('meta', 'log_level', v.log_level)
-	stc.get_config().set_value('meta', 'log_file', v.log_file)
-	stc.get_config().set_value('xcode/project', 'remote_debug', v.remote_debug)
-	stc.get_config().set_value('deploy', 'ios_deploy_tool_path', v.ios_deploy_tool_path)
-	stc.get_config().set_value('xcode/project', 'godot_bin_path', v.godot_bin_path)
-	stc.get_config().save()
+	cfg.set_value('meta', 'log_level', v.log_level)
+	cfg.set_value('meta', 'log_file', v.log_file)
+	cfg.set_value('xcode/project', 'remote_debug', v.remote_debug)
+	cfg.set_value(dep.DEPLOY_CONFIG_SECTION, dep.DEPLOY_TOOL_CONFIG_KEY, v.deploy_tool)
+	cfg.set_value(ios_dep_strat.get_config_section(), ios_dep_strat.KEY_PATH, v.ios_deploy_tool_path)
+	cfg.set_value(libimobile_strat.get_config_section(), libimobile_strat.KEY_PATH, v.libimobile_tool_path)
+	cfg.set_value('xcode/project', 'godot_bin_path', v.godot_bin_path)
+	cfg.save()

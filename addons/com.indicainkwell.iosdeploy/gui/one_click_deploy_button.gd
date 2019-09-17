@@ -159,25 +159,52 @@ func _on_devices_list_item_edited():
 # ------------------------------------------------------------------------------
 
 
+const _BS_NEUTRAL_COLOR = Color(1, 1, 1, 0.4) # white
+const _BS_SUCCESS_COLOR = Color(0.2, 0.8, 0.2, 0.4) # limegreen
+const _BS_FAILURE_COLOR = Color(1, 0.39, 0.28, 0.4) # tomato
+var _bs_interp_color = _BS_NEUTRAL_COLOR
+
+
 func set_build_status(status):
 	_get_hover_panel().find_node('build_status').set_text(status)
 
 
-func update_build_progress(percent, status=null, finished=false):
+func update_build_progress(percent, status=null, finished=false, succeeded=true):
 	var tween = get_node('build_progress_tweener')
 	var bar = get_node('build_progress_bar')
 	bar.share(_get_hover_panel().find_node('build_progress_bar'))
 
 	if status != null:
 		set_build_status(status)
-
+	
 	tween.stop_all()
+
+	var target_val = percent * 100.0
+	var target_col = _BS_NEUTRAL_COLOR
 	if finished:
-		bar.set_value(0.0)
-		bar.hide()
-	else:
-		tween.interpolate_method(bar, 'set_value', bar.get_value(), percent * 100.0, 0.5, 0, 0)
-		tween.start()
+		if succeeded:
+			target_val = 100.0
+			target_col = _BS_SUCCESS_COLOR
+			var c = _bs_interp_color
+			c.a = 0.0
+			tween.interpolate_method(self, '_interp_bar_color',
+					_bs_interp_color, c, 0.5, 0, 0, 0.5)
+		else:
+			target_val = 0.0
+			target_col = _BS_FAILURE_COLOR
+
+	tween.interpolate_method(self, '_interp_bar_color', _bs_interp_color, target_col, 0.5, 0, 0)
+	tween.interpolate_method(self, '_interp_bar_value', bar.get_value(), target_val, 0.5, 0, 0)
+	tween.start()
+
+func _interp_bar_color(value):
+	_bs_interp_color = value
+	update()
+
+func _interp_bar_value(value):
+	var bar = get_node('build_progress_bar')
+	bar.set_value(value)
+	update()
 
 
 func _draw_build_progress_overlay():
@@ -191,17 +218,11 @@ func _draw_build_progress_overlay():
 		r.size.x *= bar.ratio
 		r.position = Vector2()
 
-	var c = ColorN('white')
-	c.a = 0.4
-	draw_rect(r, c)
+	draw_rect(r, _bs_interp_color)
 
 
 func _draw():
 	_draw_build_progress_overlay()
-
-
-func _on_build_progress_bar_changed():
-	update()
 
 
 # ------------------------------------------------------------------------------

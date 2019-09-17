@@ -3,7 +3,7 @@ extends Reference
 
 
 # ------------------------------------------------------------------------------
-#                                    Sub Classes
+#                                   Inner Classes
 # ------------------------------------------------------------------------------
 
 
@@ -80,7 +80,7 @@ const stc = preload('../static.gd')
 
 
 # ------------------------------------------------------------------------------
-#                                     Subtypes
+#                                   Dependencies
 # ------------------------------------------------------------------------------
 
 
@@ -166,7 +166,7 @@ func open(path):
 	var pbxproj2json = stc.get_shell_script(stc.shell.pbxproj2json)
 	var sh_res = _sh.run(pbxproj2json, path)
 
-	_json.parse(sh_res.output[0])
+	_json.parse(sh_res.get_stdout_string())
 	if _json.get_result().error != OK:
 		_log.error('parsing json: ' + _json.get_result().error_string)
 		return _json.get_result().error

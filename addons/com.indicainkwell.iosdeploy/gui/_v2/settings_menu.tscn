@@ -14,9 +14,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 260.0
-margin/top = 170.0
+margin/top = 191.0
 margin/right = -260.0
-margin/bottom = -170.0
+margin/bottom = -208.0
 popup/exclusive = false
 window/title = ""
 script/script = ExtResource( 1 )
@@ -47,32 +47,12 @@ size_flags/vertical = 3
 margin/left = 10.0
 margin/top = 10.0
 margin/right = 510.0
-margin/bottom = 330.0
+margin/bottom = 389.0
 alignment = 0
 
 [node name="title_box" parent="MarginContainer/General" instance=ExtResource( 2 )]
 
 margin/right = 500.0
-
-[node name="title" parent="MarginContainer/General/title_box"]
-
-margin/right = 500.0
-
-[node name="Label" parent="MarginContainer/General/title_box/title"]
-
-margin/left = 141.0
-margin/right = 255.0
-
-[node name="Label_1" parent="MarginContainer/General/title_box/title"]
-
-margin/left = 259.0
-margin/right = 359.0
-text = "SETTINGS"
-
-[node name="subtitle" parent="MarginContainer/General/title_box"]
-
-margin/right = 500.0
-text = "CONFIGURE IOSDEPLOY"
 
 [node name="HSeparator" type="HSeparator" parent="MarginContainer/General"]
 
@@ -82,9 +62,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 50.0
+margin/top = 35.0
 margin/right = 500.0
-margin/bottom = 60.0
+margin/bottom = 45.0
 custom_constants/separation = 10
 
 [node name="open_onboarding_flow_butt" type="Button" parent="MarginContainer/General"]
@@ -94,9 +74,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 64.0
+margin/top = 49.0
 margin/right = 500.0
-margin/bottom = 84.0
+margin/bottom = 69.0
 toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
@@ -111,9 +91,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 88.0
+margin/top = 73.0
 margin/right = 500.0
-margin/bottom = 108.0
+margin/bottom = 93.0
 alignment = 0
 
 [node name="open_xcproj_butt" type="Button" parent="MarginContainer/General/xcodeproj_box"]
@@ -156,9 +136,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 112.0
+margin/top = 97.0
 margin/right = 500.0
-margin/bottom = 122.0
+margin/bottom = 107.0
 custom_constants/separation = 10
 
 [node name="remote_debug_butt" type="CheckButton" parent="MarginContainer/General"]
@@ -168,9 +148,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 126.0
+margin/top = 111.0
 margin/right = 500.0
-margin/bottom = 148.0
+margin/bottom = 133.0
 toggle_mode = true
 enabled_focus_mode = 2
 shortcut = null
@@ -186,9 +166,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 152.0
+margin/top = 137.0
 margin/right = 500.0
-margin/bottom = 162.0
+margin/bottom = 147.0
 custom_constants/separation = 10
 
 [node name="log_level_box" type="HBoxContainer" parent="MarginContainer/General"]
@@ -199,9 +179,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 166.0
+margin/top = 151.0
 margin/right = 500.0
-margin/bottom = 186.0
+margin/bottom = 171.0
 alignment = 0
 
 [node name="Label" type="Label" parent="MarginContainer/General/log_level_box"]
@@ -246,9 +226,9 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 190.0
+margin/top = 175.0
 margin/right = 500.0
-margin/bottom = 214.0
+margin/bottom = 199.0
 alignment = 0
 
 [node name="Label" type="Label" parent="MarginContainer/General/log_file_box"]
@@ -326,10 +306,57 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 218.0
+margin/top = 203.0
 margin/right = 500.0
-margin/bottom = 228.0
+margin/bottom = 213.0
 custom_constants/separation = 10
+
+[node name="deploy_tool_box" type="HBoxContainer" parent="MarginContainer/General"]
+
+editor/display_folded = true
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 217.0
+margin/right = 500.0
+margin/bottom = 237.0
+alignment = 0
+
+[node name="Label" type="Label" parent="MarginContainer/General/deploy_tool_box"]
+
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 3.0
+margin/right = 104.0
+margin/bottom = 17.0
+text = "Set Deploy Tool:"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="deploy_tool_opt" type="OptionButton" parent="MarginContainer/General/deploy_tool_box"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 108.0
+margin/top = 0.0
+margin/right = 500.0
+margin/bottom = 20.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "libimobiledevice"
+flat = false
+align = 0
+selected = 0
+items = [ "libimobiledevice", null, false, -1, null, "ios-deploy", null, false, -1, null ]
 
 [node name="iosdeploy_tool" type="HBoxContainer" parent="MarginContainer/General"]
 
@@ -339,13 +366,14 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 232.0
+margin/top = 241.0
 margin/right = 500.0
-margin/bottom = 256.0
+margin/bottom = 265.0
 alignment = 0
 
 [node name="Label" type="Label" parent="MarginContainer/General/iosdeploy_tool"]
 
+hint/tooltip = "Set the path to the ios-deploy tool. It is a single binary file. If installed with homebrew it defaults to /usr/local/bin/ios-deploy."
 focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -361,6 +389,7 @@ max_lines_visible = -1
 
 [node name="iosdeploy_tool_path" type="LineEdit" parent="MarginContainer/General/iosdeploy_tool"]
 
+hint/tooltip = "Set the path to the ios-deploy tool. It is a single binary file. If installed with homebrew it defaults to /usr/local/bin/ios-deploy."
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 3
@@ -410,7 +439,7 @@ access = 2
 filters = StringArray(  )
 show_hidden_files = false
 
-[node name="custom_godot_bin" type="HBoxContainer" parent="MarginContainer/General"]
+[node name="libimobiledevice_tool" type="HBoxContainer" parent="MarginContainer/General"]
 
 editor/display_folded = true
 focus/ignore_mouse = false
@@ -418,13 +447,107 @@ focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 0.0
-margin/top = 260.0
+margin/top = 269.0
 margin/right = 500.0
-margin/bottom = 284.0
+margin/bottom = 293.0
+alignment = 0
+
+[node name="Label" type="Label" parent="MarginContainer/General/libimobiledevice_tool"]
+
+hint/tooltip = "libimobile device has multiple tools such as: idevice_info, idevice_id, idevice_installer, etc. These tools a typically kept in a single folder. If installed with homebrew, these tools will be in the /usr/local/bin folder."
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 0.0
+margin/top = 5.0
+margin/right = 159.0
+margin/bottom = 19.0
+text = "Set libimobile base path:"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="libimobiledevice_tool_path" type="LineEdit" parent="MarginContainer/General/libimobiledevice_tool"]
+
+hint/tooltip = "libimobile device has multiple tools such as: idevice_info, idevice_id, idevice_installer, etc. These tools a typically kept in a single folder. If installed with homebrew, these tools will be in the /usr/local/bin folder."
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 3
+size_flags/vertical = 2
+margin/left = 163.0
+margin/top = 0.0
+margin/right = 418.0
+margin/bottom = 24.0
+placeholder/text = "/usr/local/bin"
+placeholder/alpha = 0.6
+focus_mode = 2
+caret/caret_blink = false
+caret/caret_blink_speed = 0.65
+
+[node name="select_file_butt" type="Button" parent="MarginContainer/General/libimobiledevice_tool"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 422.0
+margin/top = 0.0
+margin/right = 500.0
+margin/bottom = 24.0
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+text = "Select File"
+flat = false
+
+[node name="FileDialog" type="FileDialog" parent="MarginContainer/General/libimobiledevice_tool/select_file_butt"]
+
+visibility/visible = false
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 0.0
+margin/right = 215.0
+margin/bottom = 197.0
+popup/exclusive = false
+window/title = "Open a File"
+dialog/hide_on_ok = false
+mode = 0
+access = 2
+filters = StringArray(  )
+show_hidden_files = false
+
+[node name="HSeparator4" type="HSeparator" parent="MarginContainer/General"]
+
+rect/min_size = Vector2( 0, 10 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 297.0
+margin/right = 500.0
+margin/bottom = 307.0
+custom_constants/separation = 10
+
+[node name="custom_godot_bin" type="HBoxContainer" parent="MarginContainer/General"]
+
+focus/ignore_mouse = false
+focus/stop_mouse = false
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 0.0
+margin/top = 311.0
+margin/right = 500.0
+margin/bottom = 335.0
 alignment = 0
 
 [node name="Label" type="Label" parent="MarginContainer/General/custom_godot_bin"]
 
+hint/tooltip = "A custom compiled godot binary to deploy with instead of the binary that comes with godot's export templates."
 focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -440,6 +563,7 @@ max_lines_visible = -1
 
 [node name="godot_bin_path" type="LineEdit" parent="MarginContainer/General/custom_godot_bin"]
 
+hint/tooltip = "A custom compiled godot binary to deploy with instead of the binary that comes with godot's export templates."
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 3
@@ -503,9 +627,10 @@ show_hidden_files = false
 
 [connection signal="file_selected" from="MarginContainer/General/iosdeploy_tool/select_file_butt/FileDialog" to="MarginContainer/General/iosdeploy_tool/iosdeploy_tool_path" method="set_text"]
 
+[connection signal="pressed" from="MarginContainer/General/libimobiledevice_tool/select_file_butt" to="MarginContainer/General/libimobiledevice_tool/select_file_butt/FileDialog" method="popup_centered"]
+
 [connection signal="pressed" from="MarginContainer/General/custom_godot_bin/select_file_butt" to="MarginContainer/General/custom_godot_bin/select_file_butt/FileDialog" method="popup_centered"]
 
 [connection signal="file_selected" from="MarginContainer/General/custom_godot_bin/select_file_butt/FileDialog" to="MarginContainer/General/custom_godot_bin/godot_bin_path" method="set_text"]
 
 
-[editable path="MarginContainer/General/title_box"]

@@ -3,14 +3,39 @@
 # ------------------------------------------------------------------------------
 
 
-[-] plan out crossplatform
-	[ ] abstract ios-deploy behind an interface to support libimobiledevice
+[ ] allow user to pass arguments and environment variables to app
+[ ] when template builds for the first time it builds as "Null.app" for some
+    reason
+[ ] plist
+	[ ] write parser using XMLParser
+	[ ] write writer to save plist as xml
+[ ] use xcconfig
 [ ] properly fill in xcodeproj so user can open and edit it if needed
 [ ] better build status using errors and tips to fix
 [ ] properly destroy threads before exiting
 [ ] what to do when:
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
+[X] ERROR: get_value: Couldn't find the given section/key and no default was given
+	- editor_debug_settings gives error when section/key doesn't exist
+[X] multi deploy tool support
+	- libimobiledevice needs to be manually mounted before installing and launching apps
+		- can libimobiledevice check if it is mounted and not remount?
+		- how would the interface look to support pre-actions?
+	[X] test
+		- works so far
+	[X] add settings menu entries
+	[X] use tool strategy class aggregate
+	[X] implement low level api for libimobiledevice
+	[X] de-async low level api for ios-deploy
+	[X] write a deploy tool interface
+	[X] write wrapper for libimobiledevice and ios-deploy implementing interface
+	[X] create a class that implements interface that changes build tool
+	    strategy depending on what user configures in real time
+[X] rename comment headers
+	[X] Subtypes -> Dependencies
+	[X] Sub Classes -> Inner Classes
+[X] add api to Shell.Result for getting stdout and stderr string and lines
 [X] Config
 	[X] update readme
 	[X] test
@@ -136,10 +161,13 @@
 
 # -- GUI Todos
 
+[ ] hover_panel needs to resize
 [ ] add plist entry menu
 [ ] refactor settings menu
-[ ] fix control overflow in v2 for onboarding flow
 [ ] fix hover menu
+[X] react to build / deploy error results
+[X] apple button smooth update progress overlay
+[X] fix control overflow in v2 for onboarding flow
 [X] onboarding flow
 	[X] if provision is not a wild card then
 		- bundleid shouldn't be changed
@@ -405,3 +433,6 @@ Reasons:
 Reasons:
 	- Unsupported device version i.e. (11.2 vs 11.3)
 		- Update Xcode for device support files
+		- If necessary, you may be able to copy/link to another version to
+		create a "proxy". E.g. your device has iOS v12.4 and you only have xcode
+		10 installed with v11.3. Use the command `ln -s 11.3 12.4`. This may not work.

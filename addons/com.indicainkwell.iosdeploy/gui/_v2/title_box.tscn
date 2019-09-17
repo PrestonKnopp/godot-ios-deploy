@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=1]
+[gd_scene load_steps=3 format=1]
 
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Light.ttf" type="DynamicFontData" id=2]
 
 [sub_resource type="DynamicFont" id=1]
 
@@ -10,16 +9,8 @@ font/use_mipmaps = false
 font/use_filter = true
 font/font = ExtResource( 1 )
 
-[sub_resource type="DynamicFont" id=2]
-
-font/size = 12
-font/use_mipmaps = false
-font/use_filter = true
-font/font = ExtResource( 2 )
-
 [node name="title_box" type="VBoxContainer"]
 
-editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 2
@@ -27,13 +18,12 @@ size_flags/vertical = 2
 margin/left = 0.0
 margin/top = 0.0
 margin/right = 352.0
-margin/bottom = 46.0
+margin/bottom = 31.0
 custom_constants/separation = 0
 alignment = 0
 
 [node name="title" type="HBoxContainer" parent="."]
 
-editor/display_folded = true
 focus/ignore_mouse = false
 focus/stop_mouse = false
 size_flags/horizontal = 3
@@ -50,9 +40,9 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 61.0
+margin/left = 67.0
 margin/top = 0.0
-margin/right = 175.0
+margin/right = 181.0
 margin/bottom = 31.0
 custom_fonts/font = SubResource( 1 )
 text = "IOSDEPLOY"
@@ -66,32 +56,13 @@ focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 179.0
+margin/left = 185.0
 margin/top = 0.0
-margin/right = 290.0
+margin/right = 285.0
 margin/bottom = 31.0
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
-text = "PROVISION"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="subtitle" type="Label" parent="."]
-
-focus/ignore_mouse = true
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 0
-margin/left = 0.0
-margin/top = 31.0
-margin/right = 352.0
-margin/bottom = 46.0
-custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
-text = "SELECT PROVISIONING PROFILE"
-align = 1
-valign = 1
+text = "SETTINGS"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1

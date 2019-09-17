@@ -1,124 +1,37 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/RobotoCondensed-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://addons/com.indicainkwell.iosdeploy/resources/fonts/Roboto-Light.ttf" type="DynamicFontData" id=2]
 
 [sub_resource type="DynamicFont" id=1]
-
 size = 25
-use_mipmaps = false
 use_filter = true
 font_data = ExtResource( 1 )
 
-[sub_resource type="DynamicFont" id=2]
-
-size = 12
-use_mipmaps = false
-use_filter = true
-font_data = ExtResource( 2 )
-
 [node name="title_box" type="VBoxContainer"]
-
-editor/display_folded = true
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 436.0
-margin_bottom = 46.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 1
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 1
-custom_constants/separation = 0
-alignment = 0
-_sections_unfolded = [ "Size Flags" ]
-
-[node name="title" type="HBoxContainer" parent="." index="0"]
-
-editor/display_folded = true
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
 margin_right = 436.0
 margin_bottom = 31.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 1
-mouse_default_cursor_shape = 0
+custom_constants/separation = 0
+
+[node name="title" type="HBoxContainer" parent="."]
+margin_right = 436.0
+margin_bottom = 31.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
-_sections_unfolded = [ "Size Flags" ]
 
-[node name="Label" type="Label" parent="title" index="0"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 103.0
-margin_right = 217.0
+[node name="Label" type="Label" parent="title"]
+margin_left = 109.0
+margin_right = 223.0
 margin_bottom = 31.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
 size_flags_vertical = 0
 custom_fonts/font = SubResource( 1 )
 text = "IOSDEPLOY"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
 
-[node name="Label_1" type="Label" parent="title" index="1"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 221.0
-margin_right = 332.0
+[node name="Label_1" type="Label" parent="title"]
+margin_left = 227.0
+margin_right = 327.0
 margin_bottom = 31.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
 size_flags_vertical = 0
 custom_fonts/font = SubResource( 1 )
 custom_colors/font_color = Color( 0.346507, 0.321808, 0.445312, 1 )
-text = "PROVISION"
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-[node name="subtitle" type="Label" parent="." index="1"]
-
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_top = 31.0
-margin_right = 436.0
-margin_bottom = 46.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 2
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 1
-size_flags_vertical = 0
-custom_fonts/font = SubResource( 2 )
-custom_colors/font_color = Color( 0.379687, 0.369141, 0.421875, 1 )
-text = "SELECT PROVISIONING PROFILE"
-align = 1
-valign = 1
-percent_visible = 1.0
-lines_skipped = 0
-max_lines_visible = -1
-
-
+text = "SETTINGS"

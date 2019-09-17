@@ -144,7 +144,7 @@ func is_copy_version_valid():
 
 func copy_exists():
 	"""
-	Check if copy used for ios-deploy exists.
+	Check if copy has already been made by us.
 	"""
 	return Directory.new().dir_exists(get_destination_path())
 
@@ -156,7 +156,7 @@ func copy_remove():
 	# TODO: abstract this out
 	var d = Directory.new()
 	var trashed = OS.get_environment('HOME').plus_file('.Trash')
-	trashed = trashed.plus_file('iOSDeployOldXcodeTemplateCopy')
+	trashed = trashed.plus_file('OldGodotXcodeTemplateCopy')
 	var i = 0
 	while d.dir_exists(trashed + str(i)):
 		i += 1
@@ -166,7 +166,7 @@ func copy_remove():
 
 func copy_install_async():
 	"""
-	Async install copy of xcode template for ios-deploy.
+	Async install copy of xcode template for deploy.
 	@emits copy_install_failed, copy_installed
 	"""
 	var zip_path = get_existing_zip_path()
@@ -218,7 +218,7 @@ func _copy_ios_export_template_v3(zip_path):
 
 
 func _on_v2_unzip_finished(command, result):
-	_log.info('UNZIP LOG: %s' % result.output[0])
+	_log.info('UNZIP LOG: %s' % result.get_stdout_string())
 
 	var dst = get_destination_path(true, false)
 	var unzip_dst = dst.get_base_dir().plus_file('godot_ios_xcode')
@@ -229,7 +229,7 @@ func _on_v2_unzip_finished(command, result):
 
 
 func _on_v3_unzip_finished(command, result):
-	_log.info('UNZIP LOG: %s' % result.output[0])
+	_log.info('UNZIP LOG: %s' % result.get_stdout_string())
 
 	var d = Directory.new()
 	var f = File.new()

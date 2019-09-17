@@ -3,7 +3,7 @@ extends 'Finder.gd'
 
 
 # ------------------------------------------------------------------------------
-#                                     Subtypes
+#                                   Dependencies
 # ------------------------------------------------------------------------------
 
 
@@ -94,7 +94,7 @@ func _thread_func(data):
 			_log.info('Failed to convert provision<%s> to json'%file)
 			continue
 
-		var json = Json.new().parse(res.output[0])
+		var json = Json.new().parse(res.get_stdout_string())
 		if json.get_result().error != OK:
 			_log.info('Failed to parse provision<%s> json'%file)
 			_log.info('\t%s'%json.get_result().error_string)

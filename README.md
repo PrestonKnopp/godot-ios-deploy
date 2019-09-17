@@ -30,9 +30,11 @@ hearing about ways to improve workflow, usability, and QoL.
     - sign up on [developer.apple.com](https://developer.apple.com), its free
     - Open Xcode and register your account
 4. [Godot export templates](https://godotengine.org/download)
-6. [ios-deploy](https://github.com/ios-control/ios-deploy)
+6. [ios-deploy](https://github.com/ios-control/ios-deploy) OR see below
     - Install with [homebrew](https://brew.sh): `brew install ios-deploy`
-7. To automatically launch your installed game by ensuring debugger support for
+7. [libimobiledevice](https://www.libimobiledevice.org) OR see above
+    - Install with [homebrew](https://brew.sh): `brew install libimobiledevice`
+8. To automatically launch your installed game by ensuring debugger support for
    your device
     1. Open Xcode and go to *Window > Devices and Simulators* while device is
        connected.
@@ -67,7 +69,8 @@ The settings menu allows you to
 
 * Open onboarding flow
 * Open or copy path to generated xcode project
-* Set custom path to ios-deploy tool
+* Choose deploy tool: ios-deploy or libimobiledevice
+* Set custom path to deploy tool
 * Set custom godot binary
 * Fill in ios export presets
 	- requires restarting godot
@@ -77,7 +80,7 @@ The settings menu allows you to
 
 Enable debug collisions, and debug navigation through Godot > Debug.
 
-See [here](https://docs.godotengine.org/en/3.0/tutorials/debug/overview_of_debugging_tools.html).
+See [here](https://docs.godotengine.org/en/3.1/tutorials/debug/overview_of_debugging_tools.html).
 
 ## Troubleshooting
 
@@ -88,6 +91,8 @@ If all goes well it will attempt to deploy it, but can fail for multiple reasons
       to `Settings > General > Device Management > Your account` and tap verify.
 2. More in todos.todo
 3. ...
+
+Check Godot's output panel for errors and messages.
 
 Control logging by exporting any of the following environment variables:
 
