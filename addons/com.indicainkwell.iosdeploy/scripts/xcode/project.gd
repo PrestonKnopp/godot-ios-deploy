@@ -508,10 +508,17 @@ func deploy():
 	if _runningdeploys > 0:
 		emit_signal('deploy_started', self, _runningdeploys)
 
+	# TODO: don't hardcode
+	var dev_img_path = \
+		'/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/DeviceSupport/%s/DeveloperDiskImage.dmg'
+	var dev_img_sig_path = dev_img_path + '.signature'
 	for device in get_devices():
 		var task_args = _deploy.make_task_arguments()
 		task_args.device_id = device.id
+		task_args.app_bundle_id = bundle_id
 		task_args.app_bundle_path = get_app_path()
+		task_args.optional.developer_image_path = dev_img_path % device.version
+		task_args.optional.developer_image_sig_path = dev_img_sig_path % device.version
 
 		if remote_debug:
 			assert(remote_addr != null)
