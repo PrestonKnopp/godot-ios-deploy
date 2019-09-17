@@ -132,7 +132,7 @@ func meets_software_requirements():
 		meets = at_least_one_available
 
 	if not ext_sw_exists('xcodebuild'):
-		_log.error('xcodebuild is missing: install xcode command line tools -- xcode-select --install')
+		_log.error('xcodebuild is missing: install xcode command line tools: `xcode-select --install`')
 		meets = false
 
 	return meets
