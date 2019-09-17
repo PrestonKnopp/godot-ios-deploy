@@ -196,6 +196,7 @@ func _build_launch_app_args(device_id, app_bundle_id, arguments, environment):
 	for key in environment:
 		args.append('--env')
 		args.append(str(key, '=', environment[key]))
+	args.append('run')
 	args.append(app_bundle_id)
 	for run_arg in arguments:
 		args.append(run_arg)
