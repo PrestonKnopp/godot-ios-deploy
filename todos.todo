@@ -3,20 +3,8 @@
 # ------------------------------------------------------------------------------
 
 
-[ ] refactor Device -> DeviceInfo
-[ ] multi deploy tool support
-	- libimobiledevice needs to be manually mounted before installing and launching apps
-		- can libimobiledevice check if it is mounted and not remount?
-		- how would the interface look to support pre-actions?
-	[ ] test
-	[X] add settings menu entries
-	[X] use tool strategy class aggregate
-	[X] implement low level api for libimobiledevice
-	[X] de-async low level api for ios-deploy
-	[X] write a deploy tool interface
-	[X] write wrapper for libimobiledevice and ios-deploy implementing interface
-	[X] create a class that implements interface that changes build tool
-	    strategy depending on what user configures in real time
+[ ] when template builds for the first time it builds as "Null.app" for some
+    reason
 [ ] plist
 	[ ] write parser using XMLParser
 	[ ] write writer to save plist as xml
@@ -27,6 +15,20 @@
 [ ] what to do when:
 	[ ] theres no provisioning profiles
 	[ ] theres no teams
+[X] multi deploy tool support
+	- libimobiledevice needs to be manually mounted before installing and launching apps
+		- can libimobiledevice check if it is mounted and not remount?
+		- how would the interface look to support pre-actions?
+	[X] test
+		- works so far
+	[X] add settings menu entries
+	[X] use tool strategy class aggregate
+	[X] implement low level api for libimobiledevice
+	[X] de-async low level api for ios-deploy
+	[X] write a deploy tool interface
+	[X] write wrapper for libimobiledevice and ios-deploy implementing interface
+	[X] create a class that implements interface that changes build tool
+	    strategy depending on what user configures in real time
 [X] rename comment headers
 	[X] Subtypes -> Dependencies
 	[X] Sub Classes -> Inner Classes
@@ -156,10 +158,13 @@
 
 # -- GUI Todos
 
+[ ] react to build / deploy error results
+[ ] hover_panel needs to resize
+[X] apple button smooth update progress overlay
 [ ] add plist entry menu
 [ ] refactor settings menu
-[ ] fix control overflow in v2 for onboarding flow
 [ ] fix hover menu
+[X] fix control overflow in v2 for onboarding flow
 [X] onboarding flow
 	[X] if provision is not a wild card then
 		- bundleid shouldn't be changed

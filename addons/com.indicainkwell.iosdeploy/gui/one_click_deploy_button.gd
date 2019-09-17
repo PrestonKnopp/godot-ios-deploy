@@ -170,14 +170,21 @@ func update_build_progress(percent, status=null, finished=false):
 
 	if status != null:
 		set_build_status(status)
-
-	tween.stop_all()
+	
 	if finished:
-		bar.set_value(0.0)
-		bar.hide()
-	else:
-		tween.interpolate_method(bar, 'set_value', bar.get_value(), percent * 100.0, 0.5, 0, 0)
-		tween.start()
+		# TODO
+		pass
+
+	var target_val = percent * 100.0
+	tween.stop_all()
+	tween.interpolate_method(self, '_interp_bar_value', bar.get_value(), target_val, 0.5, 0, 0)
+	tween.start()
+
+
+func _interp_bar_value(value):
+	var bar = get_node('build_progress_bar')
+	bar.set_value(value)
+	update()
 
 
 func _draw_build_progress_overlay():
@@ -198,10 +205,6 @@ func _draw_build_progress_overlay():
 
 func _draw():
 	_draw_build_progress_overlay()
-
-
-func _on_build_progress_bar_changed():
-	update()
 
 
 # ------------------------------------------------------------------------------
