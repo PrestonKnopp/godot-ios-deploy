@@ -83,9 +83,11 @@ func tool_get_id():
 
 
 func get_connected_device_ids():
-	_log.verbose('Getting connected device ids')
+	var id_tool = tool_get_id()
+	var exec_args = ['--list']
+	_log.verbose('Getting connected device ids: '+str(id_tool,' ',exec_args))
 	var result = _shell.execute(
-		tool_get_id(), ['--list'],
+		id_tool, exec_args,
 		DOMAIN
 	)
 	if result.code != OK:
@@ -97,11 +99,14 @@ func get_connected_device_ids():
 
 
 func get_device_info(device_id):
-	_log.verbose('Getting device<%s> info'%device_id)
+	var info_tool = tool_get_info()
+	var exec_args = [UDID_ARG_SPEC, device_id]
+	_log.verbose('Getting device<%s> info: %s'%[device_id,str(info_tool,' ',exec_args)])
 	var result = _shell.execute(
-		tool_get_info(), [UDID_ARG_SPEC, device_id],
+		info_tool, exec_args,
 		DOMAIN
 	)
+	_log.verbose(str('Getting device info code<%s>'%result.code, ' output: ' ,result.output))
 	if result.code != OK:
 		_log.error('Error<%s>: Failed to get device<%s> info:\n%s'%[result.code, device_id, result.output])
 		return null
@@ -127,6 +132,7 @@ func _parse_device_info_output(output):
 			break
 	return info
 
+
 func mount_developer_image(device_id, developer_img_path, developer_img_sig):
 	_log.verbose('Mounting developer image<%s> to device<%s>'%[developer_img_path, device_id])
 	if not File.new().file_exists(developer_img_path):
@@ -135,24 +141,33 @@ func mount_developer_image(device_id, developer_img_path, developer_img_sig):
 	if not File.new().file_exists(developer_img_sig):
 		_log.error('Error<%s>: Developer image signature path not found: %s'%[ERR_FILE_NOT_FOUND, developer_img_sig])
 		return ERR_FILE_NOT_FOUND
+	var img_mount_tool = tool_get_image_mounter()
+	var exec_args = [UDID_ARG_SPEC, device_id, developer_img_path, developer_img_sig]
+	_log.verbose(str('Mount dev img command: ', img_mount_tool, ' ', exec_args))
 	var result = _shell.execute(
-		tool_get_image_mounter(), [UDID_ARG_SPEC, device_id, developer_img_path, developer_img_sig],
+		img_mount_tool, exec_args,
 		DOMAIN
 	)
+	_log.verbose(str('Mount dev img code<%s>'%result.code, ' output: ', result.output))
 	if result.code != OK:
 		_log.error('Error<%s>: Failed to mount developer image on device<%s>\n%s'%[result.code, device_id, result.output])
 		return FAILED
 	return OK
 
+
 func install_app(device_id, app_bundle_path):
-	_log.verbose('Installing bundle at path<%s> to device<%s>'%[app_bundle_path, device_id])
+	_log.verbose('Installing app at path<%s> to device<%s>'%[app_bundle_path, device_id])
 	if not Directory.new().dir_exists(app_bundle_path):
 		_log.error('Error<%s>: App bundle path<%s> not found'%[ERR_FILE_NOT_FOUND, app_bundle_path])
 		return ERR_FILE_NOT_FOUND
+	var install_tool = tool_get_installer()
+	var exec_args = [UDID_ARG_SPEC, device_id, '--install', app_bundle_path]
+	_log.verbose(str('Install app command: ', install_tool, ' ', exec_args))
 	var result = _shell.execute(
-		tool_get_installer(), [UDID_ARG_SPEC, device_id, '--install', app_bundle_path],
+		tool_get_installer(), exec_args,
 		DOMAIN
 	)
+	_log.verbose(str('Install app code<%s>'%result.code, ' output: ', result.output))
 	if result.code != OK:
 		_log.error('Error<%s>: Failed to install app<%s> to device<%s>:\n%s'%[result.code, app_bundle_path, device_id, result.output])
 		return FAILED
@@ -160,12 +175,15 @@ func install_app(device_id, app_bundle_path):
 
 
 func launch_app(device_id, app_bundle_id, arguments=[], environment={}):
-	_log.verbose('Launching bundle<%s> on device<%s> with arguments<%s> and environment<%s>'%[app_bundle_id, device_id, arguments, environment])
+	_log.verbose('Launching app<%s> on device<%s> with arguments<%s> and environment<%s>'%[app_bundle_id, device_id, arguments, environment])
+	var debug_tool = tool_get_debug()
+	var exec_args = _build_launch_app_args(device_id, app_bundle_id, arguments, environment)
+	_log.verbose(str('Launch app command: ', debug_tool, ' ', exec_args))
 	var result = _shell.execute(
-		tool_get_debug(),
-		_build_launch_app_args(device_id, app_bundle_id, arguments, environment),
+		tool_get_debug(), exec_args,
 		DOMAIN
 	)
+	_log.verbose(str('Launch app code<%s>'%result.code, ' output: ', result.output))
 	if result.code != OK:
 		var _msgs = [app_bundle_id, device_id, arguments, environment, result.output]
 		_log.error('Error<%s>: Failed to launch bundle<%s> on device<%s> with arguments<%s> and environment<%s>: '%_msgs)
@@ -182,3 +200,4 @@ func _build_launch_app_args(device_id, app_bundle_id, arguments, environment):
 	for run_arg in arguments:
 		args.append(run_arg)
 	return args
+
