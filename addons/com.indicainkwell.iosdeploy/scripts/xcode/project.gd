@@ -148,11 +148,12 @@ func _init_from_config():
 	)
 	team = Team.new().FromDict(cfg.get_value('xcode/project', 'team', team))
 
+	var devices = []
 	var saved_device_dicts = cfg.get_value('xcode/project', 'devices', [])
 	if saved_device_dicts.size() != 0:
-		_devices.clear()
 		for dev in saved_device_dicts:
-			_devices.append(Device.new().FromDict(dev))
+			devices.append(Device.new().FromDict(dev))
+	set_devices(devices)
 
 
 # -- Updating (config)
