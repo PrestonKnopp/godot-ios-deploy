@@ -3,6 +3,7 @@
 # ------------------------------------------------------------------------------
 
 
+[ ] allow user to pass arguments and environment variables to app
 [ ] when template builds for the first time it builds as "Null.app" for some
     reason
 [ ] plist
