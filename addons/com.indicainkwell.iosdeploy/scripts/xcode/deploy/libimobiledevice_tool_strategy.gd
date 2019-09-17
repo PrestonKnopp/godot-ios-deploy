@@ -88,7 +88,7 @@ func _handle_task(task, arguments, result):
 		var devices = []
 		var ids = _tool.get_connected_device_ids()
 		var size = ids.size()
-		for i in size:
+		for i in range(size):
 			_task_emit_progress(task, arguments, 'Getting device id info', i, size-1)
 			var device = _tool.get_device_info(ids[i])
 			if device != null:

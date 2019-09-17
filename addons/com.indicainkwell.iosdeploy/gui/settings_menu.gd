@@ -85,7 +85,7 @@ func set_section_value(section, value):
 	elif section == SECTION.LOG_LEVEL:
 		return section_control.select(value)
 	elif section == SECTION.DEPLOY_TOOL:
-		for i in section_control.get_item_count():
+		for i in range(section_control.get_item_count()):
 			if value == section_control.get_item_text(i):
 				return section_control.select(i)
 	elif section in [SECTION.IOSDEPLOY_TOOL, SECTION.LIBIMOBILE_TOOL, SECTION.GODOT_BIN, SECTION.LOG_FILE]:
