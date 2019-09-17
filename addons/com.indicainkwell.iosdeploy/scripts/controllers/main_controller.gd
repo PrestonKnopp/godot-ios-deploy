@@ -376,7 +376,7 @@ func _on_xcode_project_deploy_started(project, device_count):
 	_device_deploy_progress_map.clear()
 
 
-func _on_xcode_project_deploy_progessed(project, device, message, step_current, step_total):
+func _on_xcode_project_deploy_progressed(project, device, message, step_current, step_total):
 	_device_deploy_progress_map[device] = {
 		n=device.name, msg=message, sc=step_current, st=step_total
 	}

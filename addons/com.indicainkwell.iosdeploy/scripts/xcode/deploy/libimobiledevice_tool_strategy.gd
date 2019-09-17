@@ -42,7 +42,7 @@ func _handle_task(task, arguments, result):
 		err = _tool.mount_developer_image(
 			arguments.device_id,
 			arguments.optional.developer_image_path,
-			arguments.options.developer_image_sig_path
+			arguments.optional.developer_image_sig_path
 		)
 
 		if err == ERR_FILE_NOT_FOUND:
